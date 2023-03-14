@@ -1,0 +1,1 @@
+<button type="button" name="btexcluir" id="btexcluir" class="btn btn-danger" onclick="javascript: executafuncao2('EX', <?php echo $nr_sequencial; ?>);" title="EXCLUIR" alt="EXCLUIR"><span class="glyphicon glyphicon-remove"></span></button>

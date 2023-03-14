@@ -1,0 +1,1 @@
+<button type=button name="btsalvar" id="btsalvar" class="btn btn-success" onClick="javascript: executafuncao('save');"><span class="glyphicon glyphicon-ok"></span> SALVAR</button>

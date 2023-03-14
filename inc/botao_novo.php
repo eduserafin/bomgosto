@@ -1,0 +1,1 @@
+<button type=button name="btnovo" id="btnovo" class="btn btn-info" onClick="javascript: executafuncao('new');"><span class="glyphicon glyphicon-file"></span> NOVO</button>

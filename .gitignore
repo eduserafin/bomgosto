@@ -1,0 +1,11 @@
+**/*.xls
+**/*.xlsx
+**/*.zip
+**/*.xml
+**/*.pdf
+**/*.csv
+**/*.txt
+deployments.log
+deploy.php
+stats/*
+.vscode/

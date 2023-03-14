@@ -1,0 +1,1 @@
+<button type=button name="btexcluir" id="btexcluir" class="btn btn-danger" onClick="javascript: executafuncao('delete');"><span class="glyphicon glyphicon-remove"></span> EXCLUIR</button>

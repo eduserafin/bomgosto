@@ -1,0 +1,115 @@
+/* DEFINI��O DA FONTE ENCONTRADA NA MAIORIA DOS COMPUTADORES */
+body{
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    margin:0px;
+    font-family: verdana;
+    text-size: 8pt;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+}
+
+/*	ESTILO DOS OBJETOS */
+.selectboxnormal{
+    BORDER-RIGHT: #a1adb9 1px solid;
+    BORDER-TOP: #a1adb9 1px solid;
+    BORDER-LEFT: #a1adb9 1px solid;
+    BORDER-BOTTOM: #a1adb9 1px solid;
+    COLOR: black;
+    FONT-SIZE: 9px;
+    FONT-FAMILY: Verdana;
+    /*BACKGROUND-COLOR: #c6dae9;*/
+    BACKGROUND-COLOR: #FFFFFF;
+}
+/*	ESTILO PARA CABE�ALHOS */
+.cabecalho{
+    BORDER-RIGHT: buttonshadow 1px solid;
+    BORDER-TOP: buttonhighlight 1px solid;
+    FONT-SIZE: 11px;
+    BORDER-LEFT: buttonhighlight 1px solid;
+    CURSOR: default;
+    BORDER-BOTTOM: buttonshadow 1px solid;
+    FONT-FAMILY: Verdana;
+    BACKGROUND-COLOR: #517DAE
+}
+/*	ESTILO DOS BOT�ES SEM FOCO E NA SA�DA DO FOCO */
+.flatActv{
+    BORDER-RIGHT: 1px solid;
+    BORDER-TOP: 1px solid;
+    BORDER-LEFT: 1px solid;
+    BORDER-BOTTOM: 1px solid;
+    border-right-color: #000000;
+    border-bottom-color: #000000;
+    border-left-color: #000000;
+    border-top-color: #000000;
+    WIDTH: 100px;
+    COLOR: black;
+    HEIGHT: 20px;
+    BACKGROUND-COLOR: #CCCCCC;
+    CURSOR:hand
+}
+/*	ESTILO DOS BOT�ES COM FOCO */
+.flatDActv{
+    BORDER-RIGHT: 1px solid;
+    BORDER-TOP: 1px solid;
+    BORDER-LEFT: 1px solid;
+    BORDER-BOTTOM: 1px solid;
+    border-right-color: #999999;
+    border-bottom-color: #999999;
+    border-left-color: #999999;
+    border-top-color: #999999;
+    WIDTH: 100px;
+    COLOR: black;
+    HEIGHT: 20px;
+    BACKGROUND-COLOR: #CCCCCC;
+    CURSOR:hand
+}
+
+/*ESTILO DAS TABELAS DA P�GINA DE ENTRADA*/
+.inicio{
+    border-collapse:collapse;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    border-top-color: #666666;
+    font-family:verdana;
+    font-size:14px;
+}
+
+.iniciofilial{
+    border-collapse:collapse;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    border-top-color: #666666;
+    font-family:verdana;
+    font-size:18px;
+}
+
+.tabelas{
+    font-family:verdana;
+    font-size:14px;
+    border-collapse:collapse;
+    border-color:#CCCCCC;
+}
+
+
+/*TOOLTIP*/
+a.tooltip span {display:none; padding:2px 3px; margin-left:8px; width:130px;}
+a.tooltip:hover span{display:inline; position:absolute; background:#000000; border:0px solid #cccccc; color:#FFFFFF;}
+
+/*BOTAO*/
+.botao {
+    border: 1px solid #cccccc;
+    margin: 1px;
+    width: 70px; 
+    height: 25px;
+}
+
+.toten{
+    font-family:verdana;
+    font-size:16px;
+    border-collapse:collapse;
+    border-color:#CCCCCC;
+}

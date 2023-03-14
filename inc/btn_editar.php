@@ -1,0 +1,1 @@
+<button type="button" class="btn btn-warning" onclick="javascript: executafuncao2('ED', <?php echo $nr_sequencial; ?>);" title="EDITAR" alt="EDITAR"><span class="glyphicon glyphicon-edit"></span></button>
