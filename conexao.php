@@ -10,7 +10,7 @@ if (session_id() == '') {
 }
 //=============== CONEXÃO LOCAL ======================================
 
-$conexao = new mysqli("localhost", "root", "", "viveiro");
+$conexao = new mysqli("localhost", "root", "", "bomgosto");
 
 if($conexao -> connect_error) {
 
