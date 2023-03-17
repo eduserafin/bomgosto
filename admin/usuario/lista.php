@@ -6,10 +6,9 @@ foreach($_GET as $key => $value){
 <div class="col-md-12">
     <div class="row">
         <fieldset>
-            <legend>Pesquisar por</legend>
             <div class="form-group form-inline col-md-12">
-                <label for="txtpesquisausuario">NOME:</label>
-                <input type="text" name="txtpesquisanome" id="txtpesquisanome" size="35" class="form-control">
+                <br>
+                <input type="text" name="txtpesquisanome" id="txtpesquisanome" size="35" class="form-control" placeholder="Pesquisar">
                 <?php include "inc/botao_consultar.php"; ?>
             </div>
         </fieldset>

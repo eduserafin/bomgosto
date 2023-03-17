@@ -70,6 +70,7 @@
         <link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
         <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
         <script type="text/javascript" src="obj/jquery-1.4.2.js"></script>
+        <script type="text/javascript" src="plugins/sweetalert/sweetalert2.all.min.js"></script>
         
         <script type='text/javascript' src="obj/jquery.autocomplete.js"></script>
         <link rel="stylesheet" type="text/css" href="obj/jquery.autocomplete.css" />

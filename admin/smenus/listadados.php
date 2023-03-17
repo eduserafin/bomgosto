@@ -42,7 +42,7 @@ if ($descricao !== "") {
                 <tr>
                     <th style="vertical-align:middle;">MENU</th>
                     <th style="vertical-align:middle;">SUB-MENU</th>
-                    <th style="vertical-align:middle; text-align:center">M&Oacute;DULO</th>
+                    <th style="vertical-align:middle;">M&Oacute;DULO</th>
                     <th style="vertical-align:middle;">LINK</th>
                     <th colspan=2 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
                 </tr>

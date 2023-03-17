@@ -1,8 +1,11 @@
 <?php
-foreach($_GET as $key => $value){
-	$$key = $value;
-}
+
+    foreach($_GET as $key => $value){
+        $$key = $value;
+    }
+    
 ?>
+
 <div class="col-md-12">
     <div class="row">
         <fieldset>
@@ -13,13 +16,16 @@ foreach($_GET as $key => $value){
             </div>
         </fieldset>
     </div>
-    <div class="row table-responsive" id="rslistavande">
-        <?php include "admin/libera/listadados.php";?>
+    <br>
+    <div class="row table-responsive" id="rslista">
+        <?php include "produtos/categorias/listadados.php";?>
     </div>
 </div>
 
 <script language="JavaScript">
-function consultar(pg) {
-  Buscar(document.getElementById('txtpesquisanome').value, pg);
-}
+
+    function consultar(pg) {
+        Buscar(document.getElementById('txtpesquisanome').value, pg);
+    }
+
 </script>

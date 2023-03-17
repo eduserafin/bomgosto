@@ -32,12 +32,12 @@ foreach($_GET as $key => $value){
 
 <div class="tab-content">
     <div class="tab-pane active" id="geral">
-        <div class="row">          
+        <div class="row-100">          
             <?php include "formulario.php"; ?>          
         </div>
     </div>
     <div class = "tab-pane" id = "lista">
-        <div class="row">
+        <div class="row-100">
             <fieldset>
                 
                 <div id="rslista">

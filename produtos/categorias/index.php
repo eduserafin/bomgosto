@@ -1,21 +1,24 @@
 <?php
-foreach($_GET as $key => $value){
-	$$key = $value;
-}
+
+    foreach($_GET as $key => $value){
+        $$key = $value;
+    }
+
 ?>
 <script type="text/javascript">
 
-    function Buscar(descricao, pg) {
+    function Buscar(categoria, pg) {
+        
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'admin/usuario/listadados.php?consulta=sim&pg=' + pg + '&descricao=' + descricao;
+        var url = 'produtos/categorias/listadados.php?consulta=sim&pg=' + pg + '&categoria=' + categoria;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });
+
     }
 
 </script>
-
 
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
 <ul class="nav nav-tabs" id="myTab">
