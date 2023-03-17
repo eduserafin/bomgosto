@@ -1,21 +1,24 @@
 <?php
-foreach($_GET as $key => $value){
-	$$key = $value;
-}
+
+    foreach($_GET as $key => $value){
+        $$key = $value;
+    }
+
 ?>
 <script type="text/javascript">
 
-    function Buscar(produto, pg) {
+    function Buscar(categoria, pg) {
+        
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'produtos/cadastros/listadados.php?consulta=sim&pg=' + pg + '&produto=' + produto;
+        var url = 'produtos/categorias/listadados.php?consulta=sim&pg=' + pg + '&categoria=' + categoria;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });
+
     }
 
 </script>
-
 
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
 <ul class="nav nav-tabs" id="myTab">
@@ -25,12 +28,12 @@ foreach($_GET as $key => $value){
 
 <div class="tab-content">
     <div class="tab-pane active" id="geral">
-        <div class="row">          
+        <div class="row-100">          
             <?php include "formulario.php"; ?>          
         </div>
     </div>
     <div class = "tab-pane" id = "lista">
-        <div class="row">
+        <div class="row-100">
             <?php include 'lista.php'; ?>        
         </div>
     </div>

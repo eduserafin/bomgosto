@@ -1,5 +1,5 @@
-<body onLoad="document.getElementById('txtcategoria').focus();">
-    <input type="hidden" name="cd_categoria" id="cd_categoria" value="">
+<body onLoad="document.getElementById('txtproduto').focus();">
+    <input type="hidden" name="cd_produto" id="cd_produto" value="">
     <div class="form-group col-md-12">
         <div class="row">
             <?php include "inc/botao_novo.php"; ?>
@@ -9,8 +9,42 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <label for="txtcategoria">CATEGORIA:</label>                    
-            <input type="text" name="txtcategoria" id="txtcategoria" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;"></td>
+            <label for="txtproduto">PRODUTO:</label>                    
+            <input type="text" name="txtproduto" id="txtproduto" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;"></td>
+        </div>
+
+        <div class="col-md-3">
+            <label for="selcategoria">CATEGORIA:</label>                    
+            <select id="selcategoria" class="form-control" style="background:#E0FFFF;">
+                <option value='0'>Selecione uma categoria</option>
+                <?php
+                    $sql = "SELECT nr_sequencial, ds_categoria
+                                FROM categorias
+                            ORDER BY ds_categoria";
+                    $res = mysqli_query($conexao, $sql);
+                    while($lin=mysqli_fetch_row($res)){
+                        $codigo = $lin[0];
+                        $desc = $lin[1];
+
+                        echo "<option value='$codigo'>$desc</option>";
+                    }
+                ?>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="txtunidade">UNIDADE/TAMANHO:</label>                    
+            <input type="number" name="txtunidade" id="txtunidade" size="15" maxlength="10" class="form-control" style="background:#E0FFFF;"></td>
+        </div>
+
+        <div class="col-md-6">
+            <label for="txtvalor">VALOR R$:</label>                    
+            <input type="number" name="txtvalor" id="txtvalor" size="15" maxlength="10" class="form-control" style="background:#E0FFFF;"></td>
+        </div>
+
+        <div class="col-md-6">
+            <label for="txtdescricao">DESCRIÇÃO DO PRODUTO:</label>                    
+            <input type="text" name="txtdescricao" id="txtdescricao" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;"></td>
         </div>
 
         <div class="col-md-2">
@@ -26,14 +60,14 @@
 
         if (id=='new'){
 
-            document.getElementById('cd_categoria').value = "";
+            document.getElementById('cd_produto').value = "";
             document.getElementById('txtcategoria').value = "";
             document.getElementById("ativo").value = 1;
             document.getElementById('txtcategoria').focus();
 
         } else if (id=="save"){  
 
-            var codigo = document.getElementById('cd_categoria').value;
+            var codigo = document.getElementById('cd_produto').value;
             var categoria = document.getElementById('txtcategoria').value;
             var status = document.getElementById("ativo").value;
         
@@ -63,7 +97,7 @@
 
         } else if (id == "delete") {
 
-            var codigo = document.getElementById('cd_categoria').value;
+            var codigo = document.getElementById('cd_produto').value;
 
             if(codigo==''){  
 
