@@ -58,7 +58,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Bom Gosto</title>
+        <title>Public</title>
         <!--<link rel="icon" href="https://ginfo.i9ss.com.br/favicon.ico">-->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -86,7 +86,7 @@
                 <?php if ($AtivaMenu == true) { ?>
 
                     <a href="dashboard.php" class="logo">
-                        <span class="logo-lg"><b>BOM GOSTO</b></span>
+                        <span class="logo-lg"><b>PUBLIC</b></span>
                     </a>
 
                 <?php } ?>
@@ -101,7 +101,7 @@
                         <ul class="nav navbar-nav">
                             <li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="img/favicon.ico" class="user-image" alt="User Image">
+                                    <img src="img/perfil-de-usuario.png" class="user-image" alt="User Image">
                                     <span class="hidden-xs"><b><?php echo $NmUsuario; ?></b></span>
                                 </a>
                                 <ul class="dropdown-menu">

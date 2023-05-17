@@ -22,9 +22,9 @@
   $porpagina = 15;
   $inicio = $pg * $porpagina;
 
-  $categoria = $_GET['categoria'];
-  if ($categoria != "") {
-    $v_sql = " AND UPPER(ds_categoria) like UPPER('%" . $categoria . "%')";
+  $nome = $_GET['nome'];
+  if ($nome != "") {
+    $v_sql = " AND UPPER(ds_plano) like UPPER('%" . $nome . "%')";
   }
 
 ?>
@@ -35,22 +35,22 @@
     <body>
       <table width="100%" class="table table-bordered table-striped">
         <tr>
-          <th style="vertical-align:middle;">CATEGORIA</th>
+          <th style="vertical-align:middle;">PLANOS</th>
           <th style="vertical-align:middle;">STATUS</th>
           <th colspan=2 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
         </tr>
 
         <?php
         
-          $SQL = "SELECT nr_sequencial, ds_categoria, st_status
-                    FROM categorias
+          $SQL = "SELECT nr_sequencial, ds_plano, st_status
+                    FROM consorcio_planos
                   WHERE 1 = 1 $v_sql 
-                  ORDER BY ds_categoria ASC LIMIT $porpagina offset $inicio";
+                  ORDER BY ds_plano ASC LIMIT $porpagina offset $inicio";
                   // echo $SQL;
           $RSS = mysqli_query($conexao, $SQL);
           while ($linha = mysqli_fetch_row($RSS)) {
             $nr_sequencial = $linha[0];
-            $ds_categoria = $linha[1];
+            $ds_plano = $linha[1];
             $st_status = $linha[2];
 
             if( $st_status == "1"){$status = 'ATIVO';}
@@ -59,7 +59,7 @@
             ?>
 
             <tr>
-              <td><?php echo $ds_categoria; ?></td>
+              <td><?php echo $ds_plano; ?></td>
               <td><?php echo $status; ?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
@@ -83,7 +83,7 @@
       if (tipo == 'ED'){
 
         document.getElementById('tabgeral').click();
-        window.open("produtos/categorias/acao.php?Tipo=D&Codigo=" + id, "acao");
+        window.open("parametros/planos/acao.php?Tipo=D&Codigo=" + id, "acao");
 
       } else if (tipo == 'EX'){
 
@@ -98,7 +98,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 
-                window.open("produtos/categorias/acao.php?Tipo=E&codigo="+id, "acao");
+                window.open("parametros/planos/acao.php?Tipo=E&codigo="+id, "acao");
 
             } else {
 

@@ -7,11 +7,11 @@
 ?>
 <script type="text/javascript">
 
-    function Buscar(categoria, pg) {
+    function Buscar(nome, pg) {
         
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'produtos/categorias/listadados.php?consulta=sim&pg=' + pg + '&categoria=' + categoria;
+        var url = 'parametros/tipos/listadados.php?consulta=sim&pg=' + pg + '&nome=' + nome;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });
@@ -32,9 +32,9 @@
             <?php include "formulario.php"; ?>          
         </div>
     </div>
-    <div class = "tab-pane" id = "lista">
+    <div class="tab-pane" id="lista">
         <div class="row-100">
-            <?php include 'lista.php'; ?>        
+            <?php include "lista.php"; ?>        
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BG | Login</title>
+    <title>Public | Login</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -34,13 +34,13 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
         <div class="row form-login">
             <div class="col-12 col-sm-6 login-esquerda">
                 <div class="cabecalho-esquerda" style="justify-content: center; display: flex; margin-bottom: -80px;">
-                    <img class="logo" src="img/logo.png" alt="" height="350" width="350">
+                    <img class="logo" src="img/logo1.png" alt="" height="350" width="350">
                 </div>
                 <p class="conteudo-esquerda">
-                    Bom gosto é melhor que mau gosto, mas mau gosto é melhor que gosto nenhum..<br><b style="font-size: 12px;
+                    <br>Pense grande, mire alto, trabalhe duro e nunca desista!<b style="font-size: 12px;
                     font-weight: 400;
                     display: flex;
-                    justify-content: right;">(Arnold Bennett).</b></p>
+                    justify-content: left;">(ANTONIO CAMOROTTI)</b></p>
 
             </div>
             <div class="col-12 col-sm-6 login-direita">
@@ -51,10 +51,10 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
                     <h3 class="titulo-h3">&nbsp;</h3>
                     <div class="pt-5">
                         <?php if (!defined('ALIAS_EMPRESA') or strpos($host, 'bkp.ginfo.i9ss.com.br') !== FALSE) : ?>
-                            <div class="inputBox">
+                            <!--<div class="inputBox">
                                 <input type="text" name="nomeempresa" id="nomeempresa" class="inputUser">
                                 <label for="nome" class="labelInput">Empresa</label>
-                            </div>
+                            </div>-->
                         <?php else : ?>
                             <input type="hidden" name="nomeempresa" value="<?php echo $ALIAS_EMPRESA ?>">
                         <?php endif; ?>
