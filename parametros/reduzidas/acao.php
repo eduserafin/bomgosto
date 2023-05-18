@@ -16,15 +16,17 @@
   if ($Tipo == "D") {
 
       $SQL = "SELECT * 
-                FROM consorcio_tipo_lance
+                FROM consorcio_parcelas_reduzidas
               WHERE nr_sequencial=" . $Codigo;
       $RSS = mysqli_query($conexao, $SQL);
       $RS = mysqli_fetch_assoc($RSS);
 
       if ($RS["nr_sequencial"] == $Codigo) {
 
-        echo "<script language='javascript'>window.parent.document.getElementById('cd_tipo').value='" . $RS["nr_sequencial"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_tipo"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('cd_reduzida').value='" . $RS["nr_sequencial"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_plano"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtpercentual').value='" . $RS["pc_percentual"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtquantidade').value='" . $RS["nr_quantidade"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('ativo').value='" . $RS["st_status"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
       
@@ -37,8 +39,8 @@
   if ($Tipo == "I") {
 
       $SQL = "SELECT nr_sequencial 
-                FROM consorcio_tipo_lance
-              WHERE UPPER(ds_tipo)=UPPER('" . $nome . "') 
+                FROM consorcio_parcelas_reduzidas
+              WHERE UPPER(ds_plano)=UPPER('" . $nome . "') 
               LIMIT 1"; 
               //echo  $SQL;
       $RSS = mysqli_query($conexao, $SQL);
@@ -50,21 +52,24 @@
                 window.parent.Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'J\u00e1 tem um tipo cadastrado com esse nome! Verifique.'
+                  text: 'J\u00e1 tem uma parcela reduzida cadastrado com esse nome! Verifique.'
                 });
               </script>";
       
       } else {
+
+        if($percentual == "") {$percentual = "NULL";}
+        if($quantidade == "") {$quantidade = "NULL";}
   
-        $insert = "INSERT INTO consorcio_tipo_lance (ds_tipo, st_status, cd_usercadastro) 
-                    VALUES (UPPER('" . $nome . "'), '" . $status . "', " . $_SESSION["CD_USUARIO"] . ") ";
+        $insert = "INSERT INTO consorcio_parcelas_reduzidas (ds_plano, pc_percentual, nr_quantidade, st_status, cd_usercadastro) 
+                    VALUES (UPPER('" . $nome . "'), " . $percentual . ", " . $quantidade . ", '" . $status . "', " . $_SESSION["CD_USUARIO"] . ") ";
                     //echo $insert;
         $rss_insert = mysqli_query($conexao, $insert);
     
         $SQL1 = "SELECT nr_sequencial
-                    FROM consorcio_tipo_lance
-                  WHERE nr_sequencial = (SELECT max(nr_sequencial) FROM consorcio_tipo_lance)
-                  AND UPPER(ds_tipo)=UPPER('" . $nome . "')";       
+                    FROM consorcio_parcelas_reduzidas
+                  WHERE nr_sequencial = (SELECT max(nr_sequencial) FROM consorcio_parcelas_reduzidas)
+                  AND UPPER(ds_plano)=UPPER('" . $nome . "')";       
                   // echo $SQL1;
         $RSS1 = mysqli_query($conexao, $SQL1);
         while ($linha1 = mysqli_fetch_row($RSS1)) {
@@ -77,7 +82,7 @@
                   window.parent.Swal.fire({
                     icon: 'success',
                     title: 'Show...',
-                    text: 'Tipo cadastrado com sucesso!'
+                    text: 'Parcela reduzida cadastrado com sucesso!'
                   }); 
                   window.parent.executafuncao('new');
                   window.parent.consultar(0);  
@@ -102,9 +107,14 @@
   //==================================-ALTERACAO DOS DADOS-===============================================
 
   if ($Tipo == "A") {
+
+    if($percentual == "") {$percentual = "NULL";}
+    if($quantidade == "") {$quantidade = "NULL";}
     
-      $update = "UPDATE consorcio_tipo_lance
-                    SET ds_tipo=UPPER('" . $nome . "'),
+      $update = "UPDATE consorcio_parcelas_reduzidas
+                    SET ds_plano=UPPER('" . $nome . "'),
+                        pc_percentual=" . $percentual . ",
+                        nr_quantidade=" . $quantidade . ",
                         st_status='" . $status . "', 
                         cd_useralterado=" . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado=CURRENT_TIMESTAMP   
@@ -115,7 +125,7 @@
                 window.parent.Swal.fire({
                   icon: 'success',
                   title: 'Show...',
-                  text: 'Tipo alterado com sucesso!'
+                  text: 'Parcela reduzida alterada com sucesso!'
                 }); 
                 window.parent.executafuncao('new');
                 window.parent.consultar(0);  
@@ -129,7 +139,7 @@
     $v_existe = 0;
     $SQL = "SELECT nr_sequencial  
               FROM consorcio_propostas 
-            WHERE nr_seq_tipo=".$codigo;
+            WHERE nr_seq_reduzida=".$codigo;
     $RSS = mysqli_query($conexao, $SQL);
     while ($line = mysqli_fetch_row($RSS)) {$v_existe = $line[0];}
 
@@ -139,20 +149,20 @@
               window.parent.Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Tipo vinculado a uma proposta! Verifique.'
+                text: 'Parcela reduzida vinculada a uma proposta! Verifique.'
               });
             </script>";
 
 	  } else {
 
-      $update = "DELETE FROM consorcio_tipo_lance WHERE nr_sequencial=" . $codigo;
+      $update = "DELETE FROM consorcio_parcelas_reduzidas WHERE nr_sequencial=" . $codigo;
       mysqli_query($conexao, $update);
       
       echo "<script language='JavaScript'>
               window.parent.Swal.fire({
                 icon: 'success',
                 title: 'Show...',
-                text: 'Tipo excluído com sucesso!'
+                text: 'Parcela reduzida com sucesso!'
               });
               window.parent.executafuncao('new');
               window.parent.consultar(0);

@@ -11,7 +11,7 @@
         
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'parametros/tipos/listadados.php?consulta=sim&pg=' + pg + '&nome=' + nome;
+        var url = 'parametros/reduzidas/listadados.php?consulta=sim&pg=' + pg + '&nome=' + nome;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });

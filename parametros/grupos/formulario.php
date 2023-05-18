@@ -37,7 +37,7 @@
             var prazo = document.getElementById('txtprazo').value;
             var status = document.getElementById("ativo").value;
         
-            if (prazo == 0) {
+            if (prazo == "") {
 
                 Swal.fire({
 					icon: 'warning',

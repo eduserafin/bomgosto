@@ -24,7 +24,7 @@
 
   $nome = $_GET['nome'];
   if ($nome != "") {
-    $v_sql = " AND UPPER(ds_tipo) like UPPER('%" . $nome . "%')";
+    $v_sql = " AND UPPER(ds_plano) like UPPER('%" . $nome . "%')";
   }
 
 ?>
@@ -35,23 +35,29 @@
     <body>
       <table width="100%" class="table table-bordered table-striped">
         <tr>
-          <th style="vertical-align:middle;">TIPOS DE LANCE</th>
+          <th style="vertical-align:middle;">PARCELAS REDUZIDAS</th>
+          <th style="vertical-align:middle;">PERCENTUAL</th>
+          <th style="vertical-align:middle;">QUANTIDADE DE MESES</th>
           <th style="vertical-align:middle;">STATUS</th>
           <th colspan=2 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
         </tr>
 
         <?php
         
-          $SQL = "SELECT nr_sequencial, ds_tipo, st_status
-                    FROM consorcio_tipo_lance
+          $SQL = "SELECT nr_sequencial, ds_plano, nr_quantidade, pc_percentual, st_status
+                    FROM consorcio_parcelas_reduzidas
                   WHERE 1 = 1 $v_sql 
-                  ORDER BY ds_tipo ASC LIMIT $porpagina offset $inicio";
+                  ORDER BY ds_plano ASC LIMIT $porpagina offset $inicio";
                   // echo $SQL;
           $RSS = mysqli_query($conexao, $SQL);
           while ($linha = mysqli_fetch_row($RSS)) {
             $nr_sequencial = $linha[0];
-            $ds_tipo = $linha[1];
-            $st_status = $linha[2];
+            $ds_plano = $linha[1];
+            $nr_quantidade = $linha[2];
+            $pc_percentual = $linha[3];
+            $st_status = $linha[4];
+
+            if( $pc_percentual == 0){$pc_percentual = '';}
 
             if( $st_status == "1"){$status = 'ATIVO';}
             else {$status = 'INATIVO';}
@@ -59,7 +65,9 @@
             ?>
 
             <tr>
-              <td><?php echo $ds_tipo; ?></td>
+              <td><?php echo $ds_plano; ?></td>
+              <td><?php echo $pc_percentual; ?></td>
+              <td><?php echo $nr_quantidade; ?></td>
               <td><?php echo $status; ?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
@@ -83,7 +91,7 @@
       if (tipo == 'ED'){
 
         document.getElementById('tabgeral').click();
-        window.open("parametros/tipos/acao.php?Tipo=D&Codigo=" + id, "acao");
+        window.open("parametros/reduzidas/acao.php?Tipo=D&Codigo=" + id, "acao");
 
       } else if (tipo == 'EX'){
 
@@ -98,7 +106,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 
-                window.open("parametros/tipos/acao.php?Tipo=E&codigo="+id, "acao");
+                window.open("parametros/reduzidas/acao.php?Tipo=E&codigo="+id, "acao");
 
             } else {
 

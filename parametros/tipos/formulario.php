@@ -41,7 +41,7 @@
                 nome = nome.replace("'", "");
             }
         
-            if (nome == 0) {
+            if (nome == "") {
 
                 Swal.fire({
 					icon: 'warning',
