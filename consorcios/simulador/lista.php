@@ -8,12 +8,12 @@
     <div class="row">
         <legend>Pesquisar por</legend>
 
-            <div class="col-md-6">
+            <div class="col-md-2">
                     <label for="pesquisacredito">VALOR CRÉDITO:</label>                  
-                    <input type="text" name="pesquisacredito" id="pesquisacredito" size="15" maxlength="14" class="form-control" Placeholder="Descrição da Despesa">
+                    <input type="number" name="pesquisacredito" id="pesquisacredito" size="15" maxlength="14" class="form-control" Placeholder="">
             </div>
 
-             <div class="col-md-3">
+             <div class="col-md-2">
                 <label for="pesquizaprazo">PRAZO CLIENTE:</label>           
                 <select id="pesquizaprazo" class="form-control">
                     <option value="0">Selecione uma opção</option>

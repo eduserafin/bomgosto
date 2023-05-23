@@ -15,7 +15,7 @@
 
         <div class="col-md-2">
             <label for="txtcredito">CRÉDITO:</label>                    
-            <input type="text" name="txtcredito" id="txtcredito" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;" require onchange="javascript: parcelas(document.getElementById('selplano').value);">
+            <input type="number" name="txtcredito" id="txtcredito" size="15" maxlength="100" class="form-control" style="background:#E0FFFF; text-align: right;" require onchange="javascript: parcelas(document.getElementById('selplano').value);">
         </div>
 
         <div class="col-md-3">
@@ -110,7 +110,8 @@
 
         <div class="col-md-3">
             <label for="txtreduzida">PARCELAS REDUZIDAS:</label>                                       
-            <select id="txtreduzida" class="form-control" style="background:#E0FFFF;">
+            <select id="txtreduzida" class="form-control" style="background:#E0FFFF;"
+                require onchange="javascript: cotas(document.getElementById('txtcotas').value, document.getElementById('txtparcela1').value, document.getElementById('txtparcela2').value);">
                 <option value="0">Selecione uma opção</option>
                 <?php
                     $sql = "SELECT nr_sequencial, ds_plano
@@ -130,7 +131,8 @@
         
         <div class="col-md-2">
             <label for="txttipo">TIPO DE LANCE:</label>                    
-            <select id="txttipo" class="form-control" style="background:#E0FFFF;">
+            <select id="txttipo" class="form-control" style="background:#E0FFFF;"
+                require onchange="javascript: cotas(document.getElementById('txtcotas').value, document.getElementById('txtparcela1').value, document.getElementById('txtparcela2').value);">
                 <option value="0">Selecione uma opção</option>
                 <?php
                     $sql = "SELECT nr_sequencial, ds_tipo
@@ -194,8 +196,14 @@
         var plano = document.getElementById("selplano").value;
         var lance = document.getElementById("txtlance").value;
         var convertidada = document.getElementById("txtconvertidadas").value;
-
-        var url = 'consorcios/simulador/cotas.php?consulta=sim&quantidade=' + quantidade + '&credito=' + credito + '&parcela1=' + parcela1 + '&parcela2=' + parcela2 + '&lance=' + lance + '&convertidada=' + convertidada + '&plano=' + plano;
+        var reduzida = document.getElementById("txtreduzida").value;
+        var tipo = document.getElementById("txttipo").value;
+        var mes = document.getElementById("selmes").value;
+        var taxa = document.getElementById("txttaxa").value;
+        taxa = taxa.replace(",", ".");
+        var seguro = document.getElementById("txtseguro").value;
+        
+        var url = 'consorcios/simulador/cotas.php?consulta=sim&quantidade=' + quantidade + '&credito=' + credito + '&parcela1=' + parcela1 + '&parcela2=' + parcela2 + '&lance=' + lance + '&convertidada=' + convertidada + '&plano=' + plano + '&reduzida=' + reduzida + '&tipo=' + tipo + '&mes=' + mes + '&taxa=' + taxa + '&seguro=' + seguro;
         $.get(url, function(dataReturn) {
             $('#rscotas').html(dataReturn);
         });

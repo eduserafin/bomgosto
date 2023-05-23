@@ -22,9 +22,14 @@
   $porpagina = 15;
   $inicio = $pg * $porpagina;
 
-  $categoria = $_GET['categoria'];
-  if ($categoria != "") {
-    $v_sql = " AND UPPER(ds_categoria) like UPPER('%" . $categoria . "%')";
+  $prazo = $_GET['prazo'];
+  if ($prazo != 0) {
+    $v_sql = " AND cp.nr_seq_mes = $prazo";
+  }
+
+  $credito = $_GET['credito'];
+  if ($credito != "") {
+    $v_sql = " AND cp.vl_credito = $credito";
   }
 
 ?>
@@ -48,6 +53,7 @@
                     FROM consorcio_propostas cp
                     INNER JOIN consorcio_quantidade_mes cqm ON cp.nr_seq_mes = cqm.nr_sequencial
                   WHERE 1 = 1  
+                  $v_sql
                   ORDER BY cp.nr_sequencial ASC LIMIT $porpagina offset $inicio";
                   // echo $SQL;
           $RSS = mysqli_query($conexao, $SQL);
@@ -64,6 +70,7 @@
               <td><?php echo $ds_nome; ?></td>
               <td><?php echo $vl_total; ?></td>
               <td><?php echo $nr_prazo; ?></td>
+              <td width="3%" align="center"><button type="button" class="btn btn-info" onclick="javascript: pdf(<?php echo $nr_sequencial; ?>);" title="PDF" alt="PDF"><span class="glyphicon glyphicon-file"></span></button></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
             </tr>
