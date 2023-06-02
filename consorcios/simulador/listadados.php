@@ -70,7 +70,7 @@
               <td><?php echo $ds_nome; ?></td>
               <td><?php echo $vl_total; ?></td>
               <td><?php echo $nr_prazo; ?></td>
-              <td width="3%" align="center"><button type="button" class="btn btn-info" onclick="javascript: pdf(<?php echo $nr_sequencial; ?>);" title="PDF" alt="PDF"><span class="glyphicon glyphicon-file"></span></button></td>
+              <!--<td width="3%" align="center"><button type="button" class="btn btn-info" onclick="javascript: pdf(<?php echo $nr_sequencial; ?>);" title="PDF" alt="PDF"><span class="glyphicon glyphicon-file"></span></button></td>-->
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
             </tr>

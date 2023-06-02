@@ -210,6 +210,29 @@
 
     }
 
+    function Pdf() {
+
+        var credito = document.getElementById('txtcredito').value;
+        credito = credito.replace(",", ".");
+        var plano = document.getElementById("selplano").value;
+        var lance = document.getElementById("txtlance").value;
+        var convertidada = document.getElementById("txtconvertidadas").value;
+        var reduzida = document.getElementById("txtreduzida").value;
+        var tipo = document.getElementById("txttipo").value;
+        var mes = document.getElementById("selmes").value;
+        var taxa = document.getElementById("txttaxa").value;
+        taxa = taxa.replace(",", ".");
+        var seguro = document.getElementById("txtseguro").value;
+        var quantidade = document.getElementById("txtcotas").value;
+        var parcela1 = document.getElementById("txtparcela1").value;
+        var parcela2 = document.getElementById("txtparcela2").value;    
+        var nome = document.getElementById("txtnome").value;
+
+        window.open('consorcios/simulador/pdf.php?quantidade=' + quantidade + '&credito=' + credito + '&parcela1=' + parcela1 + '&parcela2=' + parcela2 + '&lance=' + lance + '&convertidada=' + convertidada + '&plano=' + plano + '&reduzida=' + reduzida + '&tipo=' + tipo + '&mes=' + mes + '&taxa=' + taxa + '&seguro=' + seguro + '&nome=' + nome, "mensagemrel");
+        document.getElementById("clickModal").click();
+
+    }
+
     function executafuncao(id){
 
         if (id=='new'){

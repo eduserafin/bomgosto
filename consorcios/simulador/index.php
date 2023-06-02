@@ -4,8 +4,6 @@
         $$key = $value;
     }
 
-    include "../../funcoesgerais.php";
-
 ?>
 <script type="text/javascript">
 

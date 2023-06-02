@@ -28,7 +28,7 @@
     <thead>
       <tr style="background-color: RGB(116, 187, 207);">
           <td align="center">Dispon&iacute;vel Em: 
-              <a onClick="javascript: pdf();" title="Exportar para PDF" alt="Exportar para PDF" class="fa fa-file-pdf-o" style="color: green;cursor:pointer; font-size: 16px;"></a>
+              <a onClick="javascript: Pdf();" title="Exportar para PDF" alt="Exportar para PDF" class="fa fa-file-pdf-o" style="color: green;cursor:pointer; font-size: 16px;"></a>
           </td>
       </tr>
     </thead>
@@ -152,10 +152,3 @@
 
       </table>
 
-      <script type="text/javascript">
-
-        var credito = <?php echo $credito; ?>
-    
-        window.open('consorcios/simulador/pdf.php?credito=' + credito, "acao");
-
-      </script>
