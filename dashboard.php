@@ -58,7 +58,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Public</title>
+        <title>Csimulador</title>
         <!--<link rel="icon" href="https://ginfo.i9ss.com.br/favicon.ico">-->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -86,7 +86,7 @@
                 <?php if ($AtivaMenu == true) { ?>
 
                     <a href="dashboard.php" class="logo">
-                        <span class="logo-lg"><b>PUBLIC</b></span>
+                        <span class="logo-lg"><b>SIMULADOR</b></span>
                     </a>
 
                 <?php } ?>
