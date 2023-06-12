@@ -53,8 +53,8 @@ require_once("../../dompdf/dompdf_config.inc.php");
   $html.= "<br>";
 
   $pc_lance = $lance / 100; // Transforma o lance em porcentagem 
-  $lance_embutido = $credito * $pc_lance; //Calcula lance embutido
-  $credito_liquido = $credito - $lance_embutido; //Calcula credito liquido
+  $lance_embutido_proposta = $credito * $pc_lance; //Calcula lance embutido
+  $credito_liquido = $credito - $lance_embutido_proposta; //Calcula credito liquido
 
   if($plano == 1) { // Se for plano DEGRAU
 
@@ -62,7 +62,7 @@ require_once("../../dompdf/dompdf_config.inc.php");
 
       //Calcula o valor de recurso proprio necessario
       $vl_proprio = $convertidada * $parcela2; 
-      $vl_proprio_final = $vl_proprio - $lance_embutido;
+      $vl_proprio_final = $vl_proprio - $lance_embutido_proposta;
 
     } else if ($convertidada > 60) { // Se as parcelas convertidas for > 60
 
@@ -73,7 +73,7 @@ require_once("../../dompdf/dompdf_config.inc.php");
 
       //Calcula o valor de recurso proprio necessario
       $vl_proprio = $vl_proprio1 + $vl_proprio2;
-      $vl_proprio_final = $vl_proprio - $lance_embutido;
+      $vl_proprio_final = $vl_proprio - $lance_embutido_proposta;
 
     }
 
@@ -81,7 +81,7 @@ require_once("../../dompdf/dompdf_config.inc.php");
 
     //Calcula o valor de recurso proprio necessario
     $vl_proprio = $convertidada * $parcela1;
-    $vl_proprio_final = $vl_proprio - $lance_embutido;
+    $vl_proprio_final = $vl_proprio - $lance_embutido_proposta;
     $parcela2 = 0;
 
   }
@@ -95,20 +95,9 @@ require_once("../../dompdf/dompdf_config.inc.php");
 
   $seguro_operacao = ($seguro_prestamista / 100) * $credito_taxa; // calcula o seguro da operação
   
-  $taxa_seguro = $taxa_adm + $seguro_operacao;
+  $taxa_seguro_proposta = $taxa_adm + $seguro_operacao;
 
-  $credito_taxa_seguro = $credito_taxa + $seguro_operacao; // Calcula o valor da operação, credito + taxa calculada + seguro da operação
-
-  $saldo_devedor = $lance_embutido + $vl_proprio_final; // Calcula o saldo devedor + lance embutido + recurso proprio
-
-  $parcela_apos1 = $credito_taxa_seguro - $vl_saldo_devedor; // Calcula a soma da operação - saldo devedor 
-
-  $parcelas_finais1 = $parcela_apos1 / $qtd_mes - 1; // Calcula o valor da parcela apos contemplação - primeiro grupo
-
-  $dif_parcela = $parcela1 - $parcelas_finais1;  // calcula a diferença de valor do grupo 1 para aplicar no grupo 2
-
-  $parcelas_finais2=  $parcela2 - $dif_parcela; // Calcula o valor da parcela apos contemplação - Segundo grupo
-
+  $saldo_devedor = $lance_embutido_proposta + $vl_proprio_final; // Calcula o saldo devedor + lance embutido + recurso proprio
 
   $html.= "<fildset>";
   $html.= "<table width='100%' align='center' bgcolor='#FFFFFF' cellspacing='0' cellpadding='0' class='tabelas' border=1>";
@@ -118,47 +107,27 @@ require_once("../../dompdf/dompdf_config.inc.php");
   $html.= "</tr>";
   $html.= "<tr height='25'>";
   $html.= "<td width=70%><font size=4><b>Crédito Contratado:</b></font></td>";
-  $html.= "<td width=30%><font size=4>".number_format($credito_total, 2, ",", ".")."</font></td>";
+  $html.= "<td width=30%><font size=4>".number_format($credito_total, 2, ",", ".")." R$</font></td>";
   $html.= "</tr>";
   $html.= "<tr height='25'>";
   $html.= "<td width=70%><font size=4><b>Prazo Contrado:</b></font></td>";
   $html.= "<td width=30%><font size=4>$qtd_mes</font></td>";
   $html.= "</tr>";
   $html.= "<tr height='25'>";
-  $html.= "<td width=70%><font size=4><b>Taxa Administrativa Nominal:</b></font></td>";
-  $html.= "<td width=30%><font size=4>$taxa</font></td>";
-  $html.= "</tr>";
-  $html.= "<tr height='25'>";
-  $html.= "<td width=70%><font size=4><b>Seguro Prestamista Nominal/mês:</b></font></td>";
-  $html.= "<td width=30%><font size=4>$seguro</font></td>";
-  $html.= "</tr>";
-  $html.= "<tr height='25'>";
-  $html.= "<td width=70%><font size=4><b>Saldo devedor total:</b></font></td>";
-  $html.= "<td width=30%><font size=4>$saldo_devedor</font></td>";
-  $html.= "</tr>";
-  $html.= "<tr height='25'>";
   $html.= "<td width=70%><font size=4><b>Taxa Administrativa  + Seguro prestamista Total  :</b></font></td>";
-  $html.= "<td width=30%><font size=4>$taxa_seguro</font></td>";
+  $html.= "<td width=30%><font size=4>".number_format($taxa_seguro_proposta, 2, ",", ".")." R$</font></td>";
   $html.= "</tr>";
   $html.= "<tr height='25'>";
   $html.= "<td width=70%><font size=4><b>Lance Recursos próprios:</b></font></td>";
-  $html.= "<td width=30%><font size=4>$vl_proprio</font></td>";
-  $html.= "</tr>";
-  $html.= "<tr height='25'>";
-  $html.= "<td width=70%><font size=4><b>Embutido Percentual:</b></font></td>";
-  $html.= "<td width=30%><font size=4>$lance %</font></td>";
+  $html.= "<td width=30%><font size=4>".number_format($vl_proprio, 2, ",", ".")." R$</font></td>";
   $html.= "</tr>";
   $html.= "<tr height='25'>";
   $html.= "<td width=70%><font size=4><b>Embutido Total:</b></font></td>";
-  $html.= "<td width=30%><font size=4>$lance_embutido</font></td>";
+  $html.= "<td width=30%><font size=4>".number_format($lance_embutido_proposta, 2, ",", ".")." R$</font></td>";
   $html.= "</tr>";
   $html.= "<tr height='25'>";
-  $html.= "<td width=70%><font size=4><b>Crédito disponível :</b></font></td>";
-  $html.= "<td width=30%><font size=4></font></td>";
-  $html.= "</tr>";
-  $html.= "<tr height='25'>";
-  $html.= "<td width=70%><font size=4><b>Taxa Administrativa Nominal sobre o Saldo Líquido por  Mês :</b></font></td>";
-  $html.= "<td width=30%><font size=4></font></td>";
+  $html.= "<td width=70%><font size=4><b>Crédito disponível:</b></font></td>";
+  $html.= "<td width=30%><font size=4>".number_format($lance_embutido, 2, ",", ".")." R$</font></td>";
   $html.= "</tr>";
   $html.= "<tr height='25'>";
   $html.= "<td width=70%><font size=4><b></b></font></td>";
