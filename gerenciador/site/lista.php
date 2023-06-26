@@ -15,7 +15,7 @@ foreach($_GET as $key => $value){
 </div>
 <br>
 <div class="row-100 table-responsive" id="rslista">
-    <?php include "parametros/grupos/listadados.php";?>
+    <?php include "gerenciador/site/listadados.php";?>
 </div>
 
 

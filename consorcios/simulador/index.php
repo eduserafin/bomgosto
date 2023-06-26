@@ -7,11 +7,11 @@
 ?>
 <script type="text/javascript">
 
-    function Buscar(credito, prazo, pg) {
+    function Buscar(credito, nome, pg) {
         
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'consorcios/simulador/listadados.php?consulta=sim&pg=' + pg + '&credito=' + credito + '&prazo=' + prazo;
+        var url = 'consorcios/simulador/listadados.php?consulta=sim&pg=' + pg + '&credito=' + credito + '&nome=' + nome;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });

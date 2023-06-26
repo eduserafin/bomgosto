@@ -76,7 +76,7 @@
                         <td width="10%"><?php echo $i;?></td>
                         <td width="30%"><input type="text" class="form-control" name="txtproduto<?php echo $i;?>" id="txtproduto<?php echo $i;?>" value="<?php echo $ds_produto[$i]; ?>"></td>
                         <td width="20%">  
-                            <select id="selicon<?php echo $i;?>" onchange="showSelectedIcon(<?php echo $i;?>)">
+                            <select id="selicon<?php echo $i;?>" onchange="iconProdutos(<?php echo $i;?>)">
                                 <option value="">Selecione um ícone</option>
                                 <option value="ion-ios-home">Casa</option>
                                 <option value="ion-ios-mail">E-mail</option>
@@ -85,7 +85,7 @@
                             
                             <i id="iconsel<?php echo $i;?>" class="icon"></i>
                         </td>
-                        <td width="40%"><textarea id="txtdescricaoproduto<?php echo $i;?>" rows="3" class="form-control" placeholder="Descreva informações do produto."></textarea></td>
+                        <td width="40%"><textarea id="txtdescricaoproduto<?php echo $i;?>" rows="3" class="form-control" maxlength="500" placeholder="Descreva informações do produto."></textarea></td>
                     </tr>
                 <?php } ?>
 
@@ -95,7 +95,7 @@
 
     <script>
 
-        function showSelectedIcon(i) {
+        function iconProdutos(i) {
 
             var selectElement = document.getElementById("selicon"+i);
             var selectedIcon = selectElement.options[selectElement.selectedIndex].value;

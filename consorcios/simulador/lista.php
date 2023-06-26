@@ -9,29 +9,14 @@
         <legend>Pesquisar por</legend>
 
             <div class="col-md-2">
-                    <label for="pesquisacredito">VALOR CRÉDITO:</label>                  
-                    <input type="number" name="pesquisacredito" id="pesquisacredito" size="15" maxlength="14" class="form-control" Placeholder="">
+                <label for="pesquisacredito">VALOR CRÉDITO:</label>                  
+                <input type="number" name="pesquisacredito" id="pesquisacredito" size="15" maxlength="14" class="form-control" Placeholder="">
             </div>
-
-             <div class="col-md-2">
-                <label for="pesquizaprazo">PRAZO CLIENTE:</label>           
-                <select id="pesquizaprazo" class="form-control">
-                    <option value="0">Selecione uma opção</option>
-                    <?php
-                        $sql = "SELECT nr_sequencial, nr_quantidade
-                                    FROM consorcio_quantidade_mes
-                                ORDER BY nr_quantidade DESC";
-                        $res = mysqli_query($conexao, $sql);
-                        while($lin=mysqli_fetch_row($res)){
-                            $codigo = $lin[0];
-                            $desc = $lin[1];
-
-                            echo "<option value='$codigo'>$desc</option>";
-                        }
-                    ?>
-                </select>
+            <div class="col-md-4">
+                <label for="pesquisanome">NOME PROPOSTA:</label>                  
+                <input type="text" name="pesquisanome" id="pesquisanome" size="15" maxlength="14" class="form-control" Placeholder="Descreva">
             </div>
-        <br>
+            <br>
             <div class="col-md-2">
                 <?php include "inc/botao_consultar.php"; ?>
             </div>
@@ -44,6 +29,6 @@
 
 <script language="JavaScript">
 function consultar(pg) {
-    Buscar(document.getElementById('pesquisacredito').value, document.getElementById('pesquizaprazo').value, pg);
+    Buscar(document.getElementById('pesquisacredito').value, document.getElementById('pesquisanome').value, pg);
 }
 </script>

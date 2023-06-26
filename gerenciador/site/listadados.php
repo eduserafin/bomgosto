@@ -24,7 +24,7 @@
 
   $nome = $_GET['nome'];
   if ($nome != "") {
-    $v_sql = " AND nr_quantidade like UPPER('%" . $nome . "%')";
+    $v_sql = " AND ds_nome like UPPER('%" . $nome . "%')";
   }
 
 ?>
@@ -35,22 +35,22 @@
     <body>
       <table width="100%" class="table table-bordered table-striped">
         <tr>
-          <th style="vertical-align:middle;">PRAZOS</th>
+          <th style="vertical-align:middle;">NOME DA PÁGINA</th>
           <th style="vertical-align:middle;">STATUS</th>
           <th colspan=2 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
         </tr>
 
         <?php
         
-          $SQL = "SELECT nr_sequencial, nr_quantidade, st_status
-                    FROM consorcio_prazo_grupo
+          $SQL = "SELECT nr_sequencial, ds_nome, st_status
+                    FROM consorcio_configuracao
                   WHERE 1 = 1 $v_sql 
-                  ORDER BY nr_quantidade ASC LIMIT $porpagina offset $inicio";
+                  ORDER BY ds_nome ASC LIMIT $porpagina offset $inicio";
                   // echo $SQL;
           $RSS = mysqli_query($conexao, $SQL);
           while ($linha = mysqli_fetch_row($RSS)) {
             $nr_sequencial = $linha[0];
-            $nr_quantidade = $linha[1];
+            $ds_nome = $linha[1];
             $st_status = $linha[2];
 
             if( $st_status == "1"){$status = 'ATIVO';}
@@ -59,8 +59,9 @@
             ?>
 
             <tr>
-              <td><?php echo $nr_quantidade; ?></td>
+              <td><?php echo $ds_nome; ?></td>
               <td><?php echo $status; ?></td>
+              <button type="button" class="btn btn-warning" onclick="javascript: executafuncao2('ST', <?php echo $nr_sequencial; ?>);" title="STATUS" alt="STATUS"><span class="glyphicon glyphicon-edit"></span></button>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
             </tr>
@@ -83,12 +84,17 @@
       if (tipo == 'ED'){
 
         document.getElementById('tabgeral').click();
-        window.open("parametros/grupos/acao.php?Tipo=D&Codigo=" + id, "acao");
+        window.open("gerenciador/site/acao.php?Tipo=D&Codigo=" + id, "acao");
+
+      } else if (tipo == 'ST'){
+
+        document.getElementById('tabgeral').click();
+        window.open("gerenciador/site/acao.php?Tipo=ST&Codigo=" + id, "acao");
 
       } else if (tipo == 'EX'){
 
         Swal.fire({
-            title: 'Deseja excluir a categoria selecionada?',
+            title: 'Deseja excluir o registro selecionado?',
             text: "Não tem como reverter esta ação!",
             icon: 'warning',
             showCancelButton: true,
@@ -98,7 +104,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 
-                window.open("parametros/grupos/acao.php?Tipo=E&codigo="+id, "acao");
+                window.open("gerenciador/site/acao.php?Tipo=E&codigo="+id, "acao");
 
             } else {
 

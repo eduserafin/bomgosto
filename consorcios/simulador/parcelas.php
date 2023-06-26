@@ -22,6 +22,9 @@
         }
     }
 
+    $ds_parcela1 = $mes / 2; //Obtem o numero do primeiro grupo de parcelas
+    $ds_parcela2 = $ds_parcela1 + 1; //Obtem o numero do segundo grupo de parcelas
+
     if($tipo == 1) {
 
         if($credito != 0 && $taxa != 0 && $mes != 0 && $seguro != 0) {
@@ -54,24 +57,24 @@
 <?php if($tipo == 2) { ?>
 
     <div class="col-md-6">
-        <label for="txtparcela1">1º - 60º PARCELAS:</label>                    
+        <label for="txtparcela1">1º - <?php echo $ds_parcela1; ?>º PARCELAS:</label>                    
         <input type="number" name="txtparcela1" id="txtparcela1" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;" value="<?php echo $vl_parcelal1; ?>" disabled onblur="formatarCampo(this)">
     </div>
 
     <div class="col-md-6" hidden>
-        <label for="txtparcela2">61º - 120º PARCELAS:</label>                    
+        <label for="txtparcela2"><?php echo $ds_parcela2; ?>º - <?php echo $mes; ?>º:</label>                    
         <input type="number" name="txtparcela2" id="txtparcela2" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;" value="<?php echo $vl_parcelal2; ?>" disabled onblur="formatarCampo(this)">
     </div>
 
 <?php } else if($tipo == 1) { ?>
 
     <div class="col-md-6">
-        <label for="txtparcela1">1º - 60º PARCELAS:</label>                    
+        <label for="txtparcela1">1º - <?php echo $ds_parcela1; ?>º PARCELAS:</label>                    
         <input type="number" name="txtparcela1" id="txtparcela1" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;" value="<?php echo $vl_parcelad1; ?>" disabled onblur="formatarCampo(this)">
     </div>
 
     <div class="col-md-6">
-        <label for="txtparcela2">61º - 120º PARCELAS:</label>                    
+        <label for="txtparcela2"><?php echo $ds_parcela2; ?>º - <?php echo $mes; ?>º PARCELAS:</label>                    
         <input type="number" name="txtparcela2" id="txtparcela2" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;" value="<?php echo $vl_parcelad2; ?>" disabled onblur="formatarCampo(this)">
     </div>
 
