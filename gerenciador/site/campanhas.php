@@ -24,11 +24,11 @@
     if($configuracao != "") {
 
         $i = 1;
-        $SQL = "SELECT nr_sequencial, ds_campanha, ds_descricao_campanha
-                        FROM conconsorcio_produtos
-                    WHERE nr_seq_configuracao = $configuracao
-                    ORDER BY nr_ordem ASC";
-                    //echo "<pre> $SQL</pre>";
+        $SQL = "SELECT nr_sequencial, ds_campanha, tp_icone
+                    FROM conconsorcio_campanhas
+                WHERE nr_seq_configuracao = $configuracao
+                ORDER BY nr_ordem ASC";
+                //echo "<pre> $SQL</pre>";
         $RES = pg_query($conexao, $SQL);
         while($linha=pg_fetch_row($RES)){
             $nr_sequencial[$i] = $linha[0];

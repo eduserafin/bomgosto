@@ -224,6 +224,33 @@
             var facebook = document.getElementById("txtfacebook").value;
             var instagran= document.getElementById("txtinstagran").value;
             var linkedin = document.getElementById("txtlinkedin").value;
+
+            var produtos = "";
+            for (p = 1; p <= qtdprodutos; p++) {
+                if(produtos == ""){
+
+                    produtos = document.getElementById("txtproduto"+p).value + ";" + document.getElementById("seliconproduto"+p).value + ";" + document.getElementById("txtdescricaoproduto"+p).value;
+
+                } else {
+
+                    produtos = produtos + "|" + document.getElementById("txtproduto"+p).value + ";" + document.getElementById("seliconproduto"+p).value + ";" + document.getElementById("txtdescricaoproduto"+p).value;
+                }
+
+                   
+            }
+
+            var campanhas = "";
+            for (c = 1; c <= qtdcampanhas; c++) {
+                if(campanhas == ""){
+
+                    campanhas = document.getElementById("txtcampanha"+c).value + ";" + document.getElementById("seliconcampanha"+c).value;
+
+                } else {
+
+                    campanhas = campanhas + "|" + document.getElementById("txtcampanha"+c).value + ";" + document.getElementById("seliconcampanha"+c).value;
+                }
+                   
+            }
         
             if (nome == "") {
 
@@ -242,7 +269,7 @@
                     Tipo = "A";
                 }
 
-                window.open('gerenciador/site/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&secao1=' + secao1 + '&subsecao1=' + subsecao1 + '&secao2=' + secao2 + '&subsecao2=' + subsecao2 + '&secao3=' + secao3 + '&subsecao3=' + subsecao3 + '&secao4=' + secao4 + '&subsecao4=' + subsecao4 + '&secao5=' + secao5 + '&subsecao5=' + subsecao5 + '&subsecao5=' + subsecao5 + '&qtdprodutos=' + qtdprodutos + '&qtdcampanhas=' + qtdcampanhas + '&titulo=' + titulo + '&sobre=' + sobre + '&facebook=' + facebook + '&instagran=' + instagran + '&linkedin=' + linkedin, "acao");
+                window.open('gerenciador/site/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&secao1=' + secao1 + '&subsecao1=' + subsecao1 + '&secao2=' + secao2 + '&subsecao2=' + subsecao2 + '&secao3=' + secao3 + '&subsecao3=' + subsecao3 + '&secao4=' + secao4 + '&subsecao4=' + subsecao4 + '&secao5=' + secao5 + '&subsecao5=' + subsecao5 + '&subsecao5=' + subsecao5 + '&qtdprodutos=' + qtdprodutos + '&qtdcampanhas=' + qtdcampanhas + '&titulo=' + titulo + '&sobre=' + sobre + '&facebook=' + facebook + '&instagran=' + instagran + '&linkedin=' + linkedin + '&produtos=' + produtos + '&campanhas=' + campanhas, "acao");
             }
 
         } else if (id == "delete") {

@@ -36,68 +36,57 @@
 
   if ($Tipo == "I") {
 
-      $SQL = "SELECT nr_sequencial 
-                FROM consorcio_prazo_grupo
-              WHERE nr_quantidade = " . $prazo . " 
-              LIMIT 1"; 
-              //echo  $SQL;
-      $RSS = mysqli_query($conexao, $SQL);
-      $RS = mysqli_fetch_assoc($RSS);
+    $insert = "INSERT INTO configuracao_site (ds_nome, ds_secao1, ds_secao2, ds_secao3, ds_secao4, ds_secao5, ds_subsecao1, ds_subsecao2, ds_subsecao3, ds_subsecao4, ds_subsecao5, nr_produtos, nr_campanhas, ds_titulo, ds_descricao, ds_facebook, ds_instagran, ds_linkedin, st_ativo) 
+              VALUES ('" . $nome . "', '" . $secao1 . "',  '" . $secao2 . "', '" . $secao3 . "', '" . $secao4 . "', '" . $secao5 . "', '" . $secao4 . "', '" . $subsecao1 . "', '" . $subsecao2 . "', '" . $subsecao3 . "', '" . $subsecao4 . "', '" . $subsecao5 . "', '" . $qtdprodutos . "', '" . $qtdcampanhas . "', '" . $titulo . "', '" . $sobre . "', '" . $facebook . "', '" . $instagran . "', '" . $linkedin . "', '" . $status . "')";
+    //echo $insert;
+    $rss_insert = mysqli_query($conexao, $insert);
 
-      if ($RS["nr_sequencial"] >0) {
+    $SQL1 = "SELECT nr_sequencial
+                FROM configuracao_site
+              WHERE nr_sequencial = (SELECT max(nr_sequencial) FROM configuracao_site)
+              AND ds_nome = '" . $nome . "'";       
+    // echo $SQL1;
+    $RSS1 = mysqli_query($conexao, $SQL1);
+    while ($linha1 = mysqli_fetch_row($RSS1)) {
+      $configuracao = $linha1[0];
+    }
 
-        echo "<script language='JavaScript'>
-                window.parent.Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'J\u00e1 tem esse prazo cadastrado! Verifique.'
-                });
-              </script>";
-      
-      } else {
+    if ($configuracao != "") {
   
-        $insert = "INSERT INTO consorcio_prazo_grupo (nr_quantidade, st_status, cd_usercadastro) 
-                    VALUES (" . $prazo . ", '" . $status . "', " . $_SESSION["CD_USUARIO"] . ") ";
-                    //echo $insert;
-        $rss_insert = mysqli_query($conexao, $insert);
+      $insert_produto = "INSERT INTO produtos_site (nr_seq_site, nr_ordem, ds_produto, ds_icone, ds_descricao) 
+                        VALUES (" . $configuracao . ", " . $ordem . ",  '" . $produtos . "', '" . $icone . "', '" . $descricao . "')";
+      //echo $insert;
+      $rss_insert_produto = mysqli_query($conexao, $insert_produto);
+
+      $insert_campanha = "INSERT INTO campanhas_site (nr_seq_site, nr_ordem, ds_campanha, ds_icone) 
+                          VALUES (" . $configuracao . ", " . $ordem . ",  '" . $campanha . "', '" . $icone . "')";
+      //echo $insert;
+      $rss_insert_campanha = mysqli_query($conexao, $insert_campanha);
+
     
-        $SQL1 = "SELECT nr_sequencial
-                    FROM consorcio_prazo_grupo
-                  WHERE nr_sequencial = (SELECT max(nr_sequencial) FROM consorcio_prazo_grupo)
-                  AND nr_quantidade = " . $prazo . "";       
-                  // echo $SQL1;
-        $RSS1 = mysqli_query($conexao, $SQL1);
-        while ($linha1 = mysqli_fetch_row($RSS1)) {
-            $nr_plano = $linha1[0];
-        }
-          
-        if ($nr_plano != '') {
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'success',
+                title: 'Show...',
+                text: 'Prazo cadastrado com sucesso!'
+              }); 
+              window.parent.executafuncao('new');
+              window.parent.consultar(0);  
+            </script>";
 
-          echo "<script language='JavaScript'>
-                  window.parent.Swal.fire({
-                    icon: 'success',
-                    title: 'Show...',
-                    text: 'Prazo cadastrado com sucesso!'
-                  }); 
-                  window.parent.executafuncao('new');
-                  window.parent.consultar(0);  
-                </script>";
+    } else {
 
-        } else {
-
-          echo "<script language='JavaScript'>
-                  window.parent.Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Problemas ao gravar!'
-                  });
-                </script>";
-        
-          }
-
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao gravar!'
+              });
+            </script>";
+    
       }
 
-    }
+  }
 
   //==================================-ALTERACAO DOS DADOS-===============================================
 

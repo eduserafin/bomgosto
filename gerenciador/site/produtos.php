@@ -24,7 +24,7 @@
     if($configuracao != "") {
 
         $i = 1;
-        $SQL = "SELECT nr_sequencial, ds_produto, ds_descricao
+        $SQL = "SELECT nr_sequencial, ds_produto, ds_descricao, tp_icone
                         FROM conconsorcio_produtos
                     WHERE nr_seq_configuracao = $configuracao
                     ORDER BY nr_ordem ASC";
@@ -76,7 +76,7 @@
                         <td width="10%"><?php echo $i;?></td>
                         <td width="30%"><input type="text" class="form-control" name="txtproduto<?php echo $i;?>" id="txtproduto<?php echo $i;?>" value="<?php echo $ds_produto[$i]; ?>"></td>
                         <td width="20%">  
-                            <select id="selicon<?php echo $i;?>" onchange="iconProdutos(<?php echo $i;?>)">
+                            <select id="seliconproduto<?php echo $i;?>" onchange="iconProdutos(<?php echo $i;?>)">
                                 <option value="">Selecione um ícone</option>
                                 <option value="ion-ios-home">Casa</option>
                                 <option value="ion-ios-mail">E-mail</option>
@@ -97,7 +97,7 @@
 
         function iconProdutos(i) {
 
-            var selectElement = document.getElementById("selicon"+i);
+            var selectElement = document.getElementById("seliconproduto"+i);
             var selectedIcon = selectElement.options[selectElement.selectedIndex].value;
             
             var iconElement = document.getElementById("iconsel"+i);
