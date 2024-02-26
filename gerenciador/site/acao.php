@@ -41,29 +41,49 @@
     //echo $insert;
     $rss_insert = mysqli_query($conexao, $insert);
 
-    $SQL1 = "SELECT nr_sequencial
-                FROM configuracao_site
-              WHERE nr_sequencial = (SELECT max(nr_sequencial) FROM configuracao_site)
-              AND ds_nome = '" . $nome . "'";       
-    // echo $SQL1;
-    $RSS1 = mysqli_query($conexao, $SQL1);
-    while ($linha1 = mysqli_fetch_row($RSS1)) {
-      $configuracao = $linha1[0];
-    }
+    if ($rss_insert) {
+      // Registro gravado com sucesso
+      $configuracao = mysqli_insert_id($conexao);
 
-    if ($configuracao != "") {
+      $del = "DELETE FROM produtos_site WHERE nr_seq_configuracao = $configuracao";
+      mysqli_query($conexao, $del);
   
-      $insert_produto = "INSERT INTO produtos_site (nr_seq_site, nr_ordem, ds_produto, ds_icone, ds_descricao) 
-                        VALUES (" . $configuracao . ", " . $ordem . ",  '" . $produtos . "', '" . $icone . "', '" . $descricao . "')";
-      //echo $insert;
-      $rss_insert_produto = mysqli_query($conexao, $insert_produto);
+      $campo = array();
+      $dados = array();
+      $campo = explode("|", $produtos);
+  
+      for($i=0;$i<$qtdprodutos;$i++){
 
-      $insert_campanha = "INSERT INTO campanhas_site (nr_seq_site, nr_ordem, ds_campanha, ds_icone) 
-                          VALUES (" . $configuracao . ", " . $ordem . ",  '" . $campanha . "', '" . $icone . "')";
-      //echo $insert;
-      $rss_insert_campanha = mysqli_query($conexao, $insert_campanha);
+          $dados = explode(";", $campo[$i]);
+          $produto = $dados[0];
+          $icone = $dados[1];
+          $descricao = $dados[2];
+  
+          $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, nr_ordem, ds_produto, ds_icone, ds_descricao) 
+                            VALUES (" . $configuracao . ", " . $i . ",  '" . $produto . "', '" . $icone . "', '" . $descricao . "')";
+          //echo $insert_produto;
+          $rss_insert_produto = mysqli_query($conexao, $insert_produto);
+      }
 
-    
+      $del = "DELETE FROM campanhas_site WHERE nr_seq_configuracao = $configuracao";
+      mysqli_query($conexao, $del);
+  
+      $campo1 = array();
+      $dados1 = array();
+      $campo1 = explode("|", $campanhas);
+  
+      for($i=0;$i<$qtdcampanhas;$i++){
+
+          $dados1 = explode(";", $campo1[$i]);
+          $campanha = $dados1[0];
+          $icone = $dados1[1];
+  
+          $insert_campanha = "INSERT INTO campanhas_site (nr_seq_configuracao, nr_ordem, ds_campanha, ds_icone) 
+                            VALUES (" . $configuracao . ", " . $i . ",  '" . $campanha . "', '" . $icone . "')";
+          //echo $insert_campanha;
+          $rss_insert_campanha = mysqli_query($conexao, $insert_campanha);
+      }
+
       echo "<script language='JavaScript'>
               window.parent.Swal.fire({
                 icon: 'success',
@@ -74,7 +94,11 @@
               window.parent.consultar(0);  
             </script>";
 
+
     } else {
+
+      // Erro ao gravar o registro
+      echo "Erro ao gravar o registro: " . mysqli_error($conexao);
 
       echo "<script language='JavaScript'>
               window.parent.Swal.fire({
@@ -83,9 +107,9 @@
                 text: 'Problemas ao gravar!'
               });
             </script>";
-    
-      }
 
+      }
+    
   }
 
   //==================================-ALTERACAO DOS DADOS-===============================================
