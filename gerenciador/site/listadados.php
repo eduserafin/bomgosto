@@ -35,6 +35,7 @@
     <body>
       <table width="100%" class="table table-bordered table-striped">
         <tr>
+          <th style="vertical-align:middle;">CONFIGURAÇÃO</th>
           <th style="vertical-align:middle;">NOME DA PÁGINA</th>
           <th style="vertical-align:middle;">STATUS</th>
           <th colspan=2 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
@@ -43,7 +44,7 @@
         <?php
         
           $SQL = "SELECT nr_sequencial, ds_nome, st_status
-                    FROM consorcio_configuracao
+                    FROM configuracao_site
                   WHERE 1 = 1 $v_sql 
                   ORDER BY ds_nome ASC LIMIT $porpagina offset $inicio";
                   // echo $SQL;
@@ -53,15 +54,15 @@
             $ds_nome = $linha[1];
             $st_status = $linha[2];
 
-            if( $st_status == "1"){$status = 'ATIVO';}
+            if( $st_status == "A"){$status = 'ATIVO';}
             else {$status = 'INATIVO';}
 
             ?>
 
             <tr>
+              <td><?php echo $nr_sequencial; ?></td>
               <td><?php echo $ds_nome; ?></td>
               <td><?php echo $status; ?></td>
-              <button type="button" class="btn btn-warning" onclick="javascript: executafuncao2('ST', <?php echo $nr_sequencial; ?>);" title="STATUS" alt="STATUS"><span class="glyphicon glyphicon-edit"></span></button>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
             </tr>

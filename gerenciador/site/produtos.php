@@ -24,13 +24,13 @@
     if($configuracao != "") {
 
         $i = 1;
-        $SQL = "SELECT nr_sequencial, ds_produto, ds_descricao, tp_icone
-                        FROM conconsorcio_produtos
-                    WHERE nr_seq_configuracao = $configuracao
-                    ORDER BY nr_ordem ASC";
-                    //echo "<pre> $SQL</pre>";
-        $RES = pg_query($conexao, $SQL);
-        while($linha=pg_fetch_row($RES)){
+        $SQL = "SELECT nr_sequencial, ds_produto, ds_descricao, ds_icone
+                    FROM produtos_site
+                WHERE nr_seq_configuracao = $configuracao
+                ORDER BY nr_ordem ASC";
+        //echo "<pre> $SQL</pre>";
+        $RES = mysqli_query($conexao, $SQL);
+        while($linha=mysqli_fetch_row($RES)){
             $nr_sequencial[$i] = $linha[0];
             $ds_produto[$i] = $linha[1];
             $ds_descricao[$i] = $linha[2];

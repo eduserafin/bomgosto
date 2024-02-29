@@ -9,59 +9,67 @@
     </div>
     <div class="row">
 
-        <div class="col-md-12">
+        <div class="col-md-10">
             <label for="txtnome">NOME PÁGINA:</label>                    
             <input type="text" name="txtnome" id="txtnome" size="15" maxlength="100" class="form-control" style="background:#E0FFFF;" placeholder="Nome da página web">
         </div>
 
+        <div class="col-md-2">
+            <label for="txtstatus">STATUS</label>                    
+            <select id="txtstatus" class="form-control" style="background:#E0FFFF;">
+                <option value='A'>ATIVO</option>
+                <option value='I'>INATIVO</option>
+            </select>
+        </div>
+
         <div class="col-md-6">
             <label for="txtsecao1">SEÇÃO INICIAL:</label>    
-            <textarea id="txtsecao1" rows="3" class="form-control" maxlength="500" placeholder="Descreva a apresentação da página."></textarea>
+            <textarea id="txtsecao1" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsubsecao1">SUBSEÇÃO INICIAL:</label>   
-            <textarea id="txtsubsecao1" rows="3" class="form-control" maxlength="500" placeholder="Descreva o subtexto."></textarea>
+            <textarea id="txtsubsecao1" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsecao2">SEÇÃO PRODUTOS:</label>    
-            <textarea id="txtsecao2" rows="3" class="form-control" maxlength="500" placeholder="Descreva a apresentação da página."></textarea>
+            <textarea id="txtsecao2" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsubsecao2">SUBSEÇÃO PRODUTOS:</label>   
-            <textarea id="txtsubsecao2" rows="3" class="form-control" maxlength="500" placeholder="Descreva o subtexto."></textarea>
+            <textarea id="txtsubsecao2" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsecao3">SEÇÃO CAMPANHA:</label>    
-            <textarea id="txtsecao3" rows="3" class="form-control" maxlength="500" placeholder="Descreva a apresentação da página."></textarea>
+            <textarea id="txtsecao3" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsubsecao3">SUBSEÇÃO CAMPANHA:</label>   
-            <textarea id="txtsubsecao3" rows="3" class="form-control" maxlength="500" placeholder="Descreva o subtexto."></textarea>
+            <textarea id="txtsubsecao3" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsecao4">SEÇÃO LIVRE:</label>    
-            <textarea id="txtsecao4" rows="3" class="form-control" maxlength="500" placeholder="Descreva a apresentação da página."></textarea>
+            <textarea id="txtsecao4" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsubsecao4">SUBSEÇÃO LIVRE:</label>   
-            <textarea id="txtsubsecao4" rows="3" class="form-control"  maxlength="500" placeholder="Descreva o subtexto."></textarea>
+            <textarea id="txtsubsecao4" rows="3" class="form-control"  maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsecao5">SEÇÃO CONTATO:</label>    
-            <textarea id="txtsecao5" rows="3" class="form-control" maxlength="500" placeholder="Descreva a apresentação da página."></textarea>
+            <textarea id="txtsecao5" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
             <label for="txtsubsecao5">SUBSEÇÃO CONTATO:</label>   
-            <textarea id="txtsubsecao5" rows="3" class="form-control" maxlength="500" placeholder="Descreva o subtexto."></textarea>
+            <textarea id="txtsubsecao5" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
     </div>
 
@@ -76,7 +84,7 @@
         <div class="row-100">
             <div class="col-md-2">
                 <label for="txtquantidadeprodutos">QUANTIDADE:</label>                    
-                <input type="number" name="txtquantidadeprodutos" id="txtquantidadeprodutos" size="15" maxlength="10" class="form-control" style="background:#E0FFFF;" onchange="javascript: BuscaProdutos(this.value, document.getElementById('cd_configuracao').value);">
+                <input type="number" name="txtquantidadeprodutos" id="txtquantidadeprodutos" size="15" maxlength="10" class="form-control" onchange="javascript: BuscaProdutos(this.value, document.getElementById('cd_configuracao').value);">
             </div>
         </div>
 
@@ -99,7 +107,7 @@
         <div class="row-100">
             <div class="col-md-2">
                 <label for="txtquantidadecampanhas">QUANTIDADE:</label>                    
-                <input type="number" name="txtquantidadecampanhas" id="txtquantidadecampanhas" size="15" maxlength="10" class="form-control" style="background:#E0FFFF;" onchange="javascript: BuscaCampanhas(this.value, document.getElementById('cd_configuracao').value);">
+                <input type="number" name="txtquantidadecampanhas" id="txtquantidadecampanhas" size="15" maxlength="10" class="form-control" onchange="javascript: BuscaCampanhas(this.value, document.getElementById('cd_configuracao').value);">
             </div>
         </div>
 
@@ -126,7 +134,7 @@
 
         <div class="col-md-6">
             <label for="txtsobre">DESCRIÇÃO:</label>     
-            <textarea name="txtsobre" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da empresa."></textarea>
+            <textarea name="txtsobre" id="txtsobre" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da empresa."></textarea>
         </div>
 
     </div>
@@ -201,6 +209,7 @@
             document.getElementById("txtfacebook").value = "";
             document.getElementById("txtinstagran").value = "";
             document.getElementById("txtlinkedin").value = "";
+            document.getElementById("txtstatus").value = "A";
             document.getElementById('txtnome').focus();
 
         } else if (id=="save"){  
@@ -224,6 +233,7 @@
             var facebook = document.getElementById("txtfacebook").value;
             var instagran= document.getElementById("txtinstagran").value;
             var linkedin = document.getElementById("txtlinkedin").value;
+            var status = document.getElementById("txtstatus").value;
 
             var produtos = "";
             for (p = 1; p <= qtdprodutos; p++) {
@@ -269,7 +279,7 @@
                     Tipo = "A";
                 }
 
-                window.open('gerenciador/site/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&secao1=' + secao1 + '&subsecao1=' + subsecao1 + '&secao2=' + secao2 + '&subsecao2=' + subsecao2 + '&secao3=' + secao3 + '&subsecao3=' + subsecao3 + '&secao4=' + secao4 + '&subsecao4=' + subsecao4 + '&secao5=' + secao5 + '&subsecao5=' + subsecao5 + '&subsecao5=' + subsecao5 + '&qtdprodutos=' + qtdprodutos + '&qtdcampanhas=' + qtdcampanhas + '&titulo=' + titulo + '&sobre=' + sobre + '&facebook=' + facebook + '&instagran=' + instagran + '&linkedin=' + linkedin + '&produtos=' + produtos + '&campanhas=' + campanhas, "acao");
+                window.open('gerenciador/site/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&secao1=' + secao1 + '&subsecao1=' + subsecao1 + '&secao2=' + secao2 + '&subsecao2=' + subsecao2 + '&secao3=' + secao3 + '&subsecao3=' + subsecao3 + '&secao4=' + secao4 + '&subsecao4=' + subsecao4 + '&secao5=' + secao5 + '&subsecao5=' + subsecao5 + '&subsecao5=' + subsecao5 + '&qtdprodutos=' + qtdprodutos + '&qtdcampanhas=' + qtdcampanhas + '&titulo=' + titulo + '&sobre=' + sobre + '&facebook=' + facebook + '&instagran=' + instagran + '&linkedin=' + linkedin + '&produtos=' + produtos + '&campanhas=' + campanhas + '&status=' + status, "acao");
             }
 
         } else if (id == "delete") {
@@ -297,7 +307,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         
-                        window.open("parametros/grupos/acao.php?Tipo=E&codigo="+codigo, "acao");
+                        window.open("gerenciador/site/acao.php?Tipo=E&codigo="+codigo, "acao");
 
                     } else {
 

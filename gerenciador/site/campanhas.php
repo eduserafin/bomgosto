@@ -24,13 +24,13 @@
     if($configuracao != "") {
 
         $i = 1;
-        $SQL = "SELECT nr_sequencial, ds_campanha, tp_icone
-                    FROM conconsorcio_campanhas
+        $SQL = "SELECT nr_sequencial, ds_campanha, ds_icone
+                    FROM campanhas_site
                 WHERE nr_seq_configuracao = $configuracao
                 ORDER BY nr_ordem ASC";
                 //echo "<pre> $SQL</pre>";
-        $RES = pg_query($conexao, $SQL);
-        while($linha=pg_fetch_row($RES)){
+        $RES = mysqli_query($conexao, $SQL);
+        while($linha=mysqli_fetch_row($RES)){
             $nr_sequencial[$i] = $linha[0];
             $ds_campanha[$i] = $linha[1];
             $ds_descricao[$i] = $linha[2];
