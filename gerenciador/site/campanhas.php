@@ -33,7 +33,7 @@
         while($linha=mysqli_fetch_row($RES)){
             $nr_sequencial[$i] = $linha[0];
             $ds_campanha[$i] = $linha[1];
-            $ds_descricao[$i] = $linha[2];
+            $ds_icone[$i] = $linha[2];
             $i++;
         }
 
@@ -74,14 +74,26 @@
                     <tr>
                         <td width="10%"><?php echo $i;?></td>
                         <td width="30%"><input type="text" class="form-control" name="txtcampanha<?php echo $i;?>" id="txtcampanha<?php echo $i;?>" value="<?php echo $ds_campanha[$i]; ?>"></td>
-                        <td width="20%">  
-                            <select id="seliconcampanha<?php echo $i;?>" onchange="iconCampanha(<?php echo $i;?>)">
-                                <option value="">Selecione um ícone</option>
-                                <option value="ion-ios-home">Casa</option>
-                                <option value="ion-ios-mail">E-mail</option>
-                                <option value="ion-ios-star">Estrela</option>
+                        <td width="20%">                   
+                            <select class="form-control" id="seliconcampanha<?php echo $i;?>" onchange="iconCampanha(<?php echo $i;?>)">
+                            <option value="0">Selecione uma opção</option>
+                                <?php
+                                    $sql = "SELECT nr_sequencial, ds_icone
+                                                FROM icones
+                                                WHERE st_status = 'A'
+                                            ORDER BY ds_icone DESC";
+                                    $res = mysqli_query($conexao, $sql);
+                                    while($lin=mysqli_fetch_row($res)){
+                                        $codigo = $lin[0];
+                                        $desc = $lin[1];
+
+                                        if ($ds_icone[$i] == $desc) { $selecionado = "selected"; } 
+                                        else { $selecionado = ""; }
+                
+                                        echo "<option $selecionado value='$desc'>$desc</option>";
+                                    }
+                                ?>
                             </select>
-                            
                             <i id="iconselcampanha<?php echo $i;?>" class="icon"></i>
                         </td>
                     </tr>

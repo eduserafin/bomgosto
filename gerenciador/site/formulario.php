@@ -23,52 +23,52 @@
         </div>
 
         <div class="col-md-6">
-            <label for="txtsecao1">SEÇÃO INICIAL:</label>    
+            <label for="txtsecao1">SEÇÃO 1:</label>    
             <textarea id="txtsecao1" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsubsecao1">SUBSEÇÃO INICIAL:</label>   
+            <label for="txtsubsecao1">SUBSEÇÃO 1:</label>   
             <textarea id="txtsubsecao1" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsecao2">SEÇÃO PRODUTOS:</label>    
+            <label for="txtsecao2">SEÇÃO 2:</label>    
             <textarea id="txtsecao2" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsubsecao2">SUBSEÇÃO PRODUTOS:</label>   
+            <label for="txtsubsecao2">SUBSEÇÃO 2:</label>   
             <textarea id="txtsubsecao2" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsecao3">SEÇÃO CAMPANHA:</label>    
+            <label for="txtsecao3">SEÇÃO 3:</label>    
             <textarea id="txtsecao3" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsubsecao3">SUBSEÇÃO CAMPANHA:</label>   
+            <label for="txtsubsecao3">SUBSEÇÃO 3:</label>   
             <textarea id="txtsubsecao3" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsecao4">SEÇÃO LIVRE:</label>    
+            <label for="txtsecao4">SEÇÃO 4:</label>    
             <textarea id="txtsecao4" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsubsecao4">SUBSEÇÃO LIVRE:</label>   
+            <label for="txtsubsecao4">SUBSEÇÃO 4:</label>   
             <textarea id="txtsubsecao4" rows="3" class="form-control"  maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsecao5">SEÇÃO CONTATO:</label>    
+            <label for="txtsecao5">SEÇÃO 5:</label>    
             <textarea id="txtsecao5" rows="3" class="form-control" maxlength="1000" placeholder="Descreva a apresentação da página."></textarea>
         </div>
 
         <div class="col-md-6">
-            <label for="txtsubsecao5">SUBSEÇÃO CONTATO:</label>   
+            <label for="txtsubsecao5">SUBSEÇÃO 5:</label>   
             <textarea id="txtsubsecao5" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o subtexto."></textarea>
         </div>
     </div>

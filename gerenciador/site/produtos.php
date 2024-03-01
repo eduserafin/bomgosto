@@ -34,6 +34,7 @@
             $nr_sequencial[$i] = $linha[0];
             $ds_produto[$i] = $linha[1];
             $ds_descricao[$i] = $linha[2];
+            $ds_icone[$i] = $linha[3];
             $i++;
         }
 
@@ -75,17 +76,31 @@
                     <tr>
                         <td width="10%"><?php echo $i;?></td>
                         <td width="30%"><input type="text" class="form-control" name="txtproduto<?php echo $i;?>" id="txtproduto<?php echo $i;?>" value="<?php echo $ds_produto[$i]; ?>"></td>
-                        <td width="20%">  
-                            <select id="seliconproduto<?php echo $i;?>" onchange="iconProdutos(<?php echo $i;?>)">
-                                <option value="">Selecione um ícone</option>
-                                <option value="ion-ios-home">Casa</option>
-                                <option value="ion-ios-mail">E-mail</option>
-                                <option value="ion-ios-star">Estrela</option>
+                        <td width="20%">                   
+                            <select class="form-control" id="seliconproduto<?php echo $i;?>" onchange="iconProdutos(<?php echo $i;?>)">
+                            <option value="0">Selecione uma opção</option>
+                                <?php
+                                    $sql = "SELECT nr_sequencial, ds_icone
+                                                FROM icones
+                                                WHERE st_status = 'A'
+                                            ORDER BY ds_icone DESC";
+                                    $res = mysqli_query($conexao, $sql);
+                                    while($lin=mysqli_fetch_row($res)){
+                                        $codigo = $lin[0];
+                                        $desc = $lin[1];
+
+                                        if ($ds_icone[$i] == $desc) { $selecionado = "selected"; } 
+                                        else { $selecionado = ""; }
+                
+                                        echo "<option $selecionado value='$desc'>$desc</option>";
+                                    }
+                                ?>
                             </select>
-                            
                             <i id="iconsel<?php echo $i;?>" class="icon"></i>
                         </td>
-                        <td width="40%"><textarea id="txtdescricaoproduto<?php echo $i;?>" rows="3" class="form-control" maxlength="500" placeholder="Descreva informações do produto."></textarea></td>
+                        <td width="40%">
+                            <textarea id="txtdescricaoproduto<?php echo $i;?>" rows="3" class="form-control" maxlength="500" placeholder="Descreva informações do produto."><?php echo $ds_descricao[$i]; ?></textarea>
+                        </td>
                     </tr>
                 <?php } ?>
 
