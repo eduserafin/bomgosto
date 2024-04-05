@@ -7,7 +7,7 @@
   require_once '../conexao.php';
 
   $SQL = "SELECT ds_nome, ds_secao1, ds_subsecao1, ds_secao2, ds_subsecao2, ds_secao3, ds_subsecao3,
-            ds_secao4, ds_subsecao4, ds_secao5, ds_subsecao5
+            ds_secao4, ds_subsecao4, ds_secao5, ds_subsecao5, nr_sequencial
             FROM configuracao_site
           WHERE st_status = 'A'
           ORDER BY nr_sequencial LIMIT 1";
@@ -24,6 +24,7 @@
     $ds_subsecao4 = $linha[8];
     $ds_secao5 = $linha[9];
     $ds_subsecao5 = $linha[10];
+    $codigo = $linha[11];
   }
  
 ?>
@@ -56,29 +57,54 @@
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+
+        <style>
+          /* Estilos personalizados */
+          .card {
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            background-color: #f8f9fa; /* Cor de fundo cinza */
+          }
+          .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background-color: #C0C0C0; /* Cor de fundo cinza escuro quando passar o mouse */
+          }
+          .icon {
+            font-size: 4rem;
+          }
+          .card-title {
+            color: #333;
+          }
+          .card-text {
+            color: #666;
+          }
+        </style>
+
   </head>
   <body>
     <!-- navbar-->
     <header class="header">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <!-- Navbar brand--><a href="index.html" class="navbar-brand font-weight-bold"><img src="img/logo.png" alt="..." class="img-fluid"></a>
+          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="img/logo.jpeg" alt="..." class="img-fluid"></a>
           <!-- Navbar toggler button-->
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mx-auto ml-auto">
                   <!-- Link-->
-                  <li class="nav-item"> <a href="schedule.html" class="nav-link">Produtos</a></li>
+                  <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Produtos</a></li>
                   <!-- Link-->
-                  <li class="nav-item"> <a href="text.html" class="nav-link">Sobre</a></li>
+                  <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
                   <!-- Link-->
-                  <li class="nav-item"> <a href="#" class="nav-link">Contato</a></li>
+                  <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>" class="nav-link">Contato</a></li>
               <li class="nav-item dropdown"><a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Abas</a>
                 <div class="dropdown-menu">
-                  <a href="index.html" class="dropdown-item">Home</a>
-                  <a href="schedule.html" class="dropdown-item">Produtos</a>
-                  <a href="text.html" class="dropdown-item">Sobre</a>
-                  <a href="text.html" class="dropdown-item">Contato</a>
+                  <a href="index.php" class="dropdown-item">Home</a>
+                  <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Produtos</a>
+                  <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Sobre</a>
+                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Contato</a>
                 </div>
               </li>
             </ul>
@@ -91,18 +117,19 @@
       <section class="hero shape-1">
         <div class="container">
           <div class="row align-items-center">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
               <h1 class="hero-heading"><?php echo $ds_secao1; ?></h1>
               <p class="lead mt-5 font-weight-light"><?php echo $ds_subsecao1; ?></p>
               <!-- Subscription form-->
               <form action="#" class="subscription-form mt-5">
                 <div class="form-group">
                   <br><br>
-                  <button type="submit" class="btn btn-primary">Quero Realizar Meus Sonhos!</button>
+                  <!--<button type="submit" class="btn btn-primary" >Quero Realizar Meus Sonhos!</button>-->
+                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">Quero Realizar Meus Sonhos!</a>
                 </div>
               </form> 
               <!-- Platforms-->
-              <div class="platforms d-none d-lg-block"><span class="platforms-title">Compatible with</span>
+              <div class="platforms d-none d-lg-block"><span class="platforms-title">Marcas Parceiras</span>
                 <ul class="platforms-list list-inline">
                   <li class="list-inline-item"><img src="img/netflix.svg" alt="" class="platform-image img-fluid"></li>
                   <li class="list-inline-item"><img src="img/apple.svg" alt="" class="platform-image img-fluid"></li>
@@ -114,9 +141,9 @@
             </div>
             <div class="col-lg-6 d-none d-lg-block">
               <div class="device-wrapper mx-auto">
-                <div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">
-                  <div class="screen"><img src="img/screen.jpg" alt="..." class="img-fluid"></div>
-                </div>
+                <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">
+                  <div class="screen"><img src="img/logo.jpeg" alt="..." class="img-fluid"></div>
+                </div>-->
               </div>
             </div>
           </div>
@@ -176,7 +203,7 @@
       <section class="app-showcase pb-big">
         <div class="container">
           <div class="row align-items-center">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
               <h2 class="mb-4"><?php echo $ds_secao3; ?></h2>
               <p class="lead"><?php echo $ds_subsecao3; ?></p>
               <div class="row mt-5">
@@ -185,33 +212,29 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
               <div id="v-pills-tabContent" class="tab-content showcase-content">
                 <div id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" class="tab-pane fade show active">
                   <div class="showcase-image-holder">
                     <div class="device-wrapper">
-                      <div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">
+                     <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
                         <div class="screen"><img src="img/showcase-screen-1.jpg" alt="..." class="img-fluid"></div>
-                      </div>
-                    </div><img src="img/showcase-img-1.jpg" alt="..." class="showcase-image d-none d-lg-block">
+                      <!-- </div>-->
+                    </div>
                   </div>
                 </div>
                 <div id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" class="tab-pane fade">
                   <div class="showcase-image-holder">
-                    <div class="device-wrapper">
-                      <div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">
-                        <div class="screen"><img src="img/showcase-screen-2.jpg" alt="..." class="img-fluid"></div>
-                      </div>
-                    </div><img src="img/showcase-img-2.jpg" alt="..." class="showcase-image d-none d-lg-block">
+                      <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
+                      <div class="screen"><img src="img/showcase-screen-2.jpg" alt="..." class="img-fluid"></div>
+                      <!-- </div>-->
                   </div>
                 </div>
                 <div id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" class="tab-pane fade">
                   <div class="showcase-image-holder">
-                    <div class="device-wrapper">
-                      <div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">
-                        <div class="screen"><img src="img/showcase-screen-3.jpg" alt="..." class="img-fluid"></div>
-                      </div>
-                    </div><img src="img/showcase-img-3.jpg" alt="..." class="showcase-image d-none d-lg-block">
+                      <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
+                      <div class="screen"><img src="img/showcase-screen-3.jpg" alt="..." class="img-fluid"></div>
+                      <!-- </div>-->
                   </div>
                 </div>
               </div>
@@ -220,13 +243,13 @@
         </div>
       </section>
       <!-- Testimonials Section-->
-      <section class="testimonials bg-black">
+      <!--<section class="testimonials bg-black">
         <div class="container">
           <div class="row">
             <div class="col-lg-6 section-padding">
               <div class="section-header pr-3"><span class="section-header-title text-white"></span>
                 <h2 class="h1 text-white"><?php echo $ds_secao4; ?></h2>
-                <p class="lead text-white mt-4 mb-4"><?php echo $ds_subsecao4; ?></p><!--<a href="#" class="btn btn-primary">Mais Depoimentos</a>-->
+                <p class="lead text-white mt-4 mb-4"><?php echo $ds_subsecao4; ?></p><<a href="#" class="btn btn-primary">Mais Depoimentos</a>
               </div>
             </div>
             <div class="col-lg-6 d-none d-lg-block">
@@ -234,23 +257,7 @@
                 <div class="col-lg-6">
                   <div class="swiper-container testimonials-slider-1">
                     <div class="swiper-wrapper">
-                      <!-- Feed slide-->
-                      <div class="swiper-slide"> 
-                        <!-- Feed block-->
-                        <div class="feed-block">
-                          <div class="feed-header">
-                            <div class="feed-user">
-                              <div class="feed-user-avatar"><img src="img/testimonial-avatar-4.svg" alt="user" class="feed-user-image img-fluid"></div>
-                              <div class="feed-user-name"><strong>Bruce Murphy</strong></div>
-                            </div>
-                            <div class="feed-icon"> <i class="icon ion-logo-twitter"></i></div>
-                          </div>
-                          <div class="feed-body">
-                            <p class="feed-text">I use ShowTrackr every day, and it’s awesome! I track all of my TV shows in it. :) </p>
-                          </div>
-                          <div class="feed-date">Jan 18, 2018</div>
-                        </div>
-                      </div>
+                     
                     </div>
                   </div>
                 </div>
@@ -258,7 +265,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
       <!-- Subscription Section-->
       <section class="subscription padding-big">
         <div class="container text-center">
@@ -268,15 +275,37 @@
                 <h2 class="h1"><?php echo $ds_secao5; ?></h2>
                 <p class="lead"><?php echo $ds_subsecao5; ?></p>
               </div>
+              <div class="container mt-5">
+                <div class="row mt-5">
+                  <div class="col-md-6">
+                    <div class="card text-center">
+                      <div class="card-body">
+                      <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
+                        <h5 class="card-title">Fale com a Zenatti Consórcios</h5>
+                        <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card text-center">
+                      <div class="card-body">
+                      <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
+                        <h5 class="card-title">Seja um Parceiro</h5>
+                        <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row">
-              <div class="col-lg-7 mx-auto">
+              <div class="col-lg-12 mx-auto">
                 <!-- Subscription form-->
                 <form action="#" class="subscription-form mt-5">
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" placeholder="your@email.com" class="form-control">
-                    <button type="submit" class="btn btn-primary">Start tracking</button>
+                    <input type="email" name="email" placeholder="seu@email.com" class="form-control">
+                    <button type="submit" class="btn btn-primary">Receber Novidades</button>
                   </div>
                 </form>
               </div>

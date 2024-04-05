@@ -45,6 +45,7 @@
         echo "<script language='javascript'>window.parent.document.getElementById('txtinstagran').value='" . $RS["ds_instagran"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtlinkedin').value='" . $RS["ds_linkedin"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtstatus').value='" . $RS["st_status"] . "';</script>";
+        echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/sobre.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','sobre')</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
       
       }
@@ -300,6 +301,61 @@
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Não é possível excluir a configuração, não tem outra configuração ativa. Verifique!'
+              });
+            </script>";
+
+    }
+
+  }
+
+  //==================================-CADASTRO SOBRE-===============================================
+
+  if ($Tipo == "S") {
+
+    $delete = "DELETE FROM sobre_site WHERE nr_seq_configuracao=" . $codigo;
+    $result = mysqli_query($conexao, $delete);
+
+    if ($result) {
+
+      $insert_sobre = "INSERT INTO sobre_site (nr_seq_configuracao, ds_titulo, ds_conteudo, ds_titulo1, ds_conteudo1, ds_titulo2, ds_conteudo2) 
+                      VALUES (" . $codigo . ", '" . $titulo . "',  '" . $conteudo . "', '" . $titulo1 . "', '" . $conteudo1 . "', '" . $titulo2 . "', '" . $conteudo2 . "')";
+      //echo $insert_sobre;
+      $rss_insert = mysqli_query($conexao, $insert_sobre);
+
+      if ($rss_insert) {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                  icon: 'success',
+                  title: 'Show...',
+                  text: 'Informações cadastrado com sucesso!'
+                }); 
+                window.parent.executafuncao('new');
+                window.parent.consultar(0);  
+              </script>";
+
+      } else {
+
+        // Erro ao gravar o registro
+        echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Problemas ao gravar!'
+                });
+              </script>";
+  
+      }
+
+    } else {
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao gravar!'
               });
             </script>";
 

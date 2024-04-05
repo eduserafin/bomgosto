@@ -23,6 +23,9 @@
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">CADASTRO</a></li>
+    <li><a id="tabsobre" href="#sobre" data-toggle="tab">SOBRE</a></li>
+    <li><a id="tabproduto" href="#produto" data-toggle="tab">PRODUTOS</a></li>
+    <li><a id="tabcontato" href="#contato" data-toggle="tab">CONTATO</a></li>
     <li><a id="tabanexos" href="#anexo" data-toggle="tab">UPLOAD</a></li>
     <li><a id="tablista" href="#lista" data-toggle="tab">LISTA</a></li>
 </ul> 
@@ -33,6 +36,21 @@
             <?php include "formulario.php"; ?>          
         </div>
     </div> 
+    <div class="tab-pane" id="sobre">
+        <div class="row-100">
+            <?php include "sobre.php"; ?>        
+        </div>
+    </div>
+    <div class="tab-pane" id="produto">
+        <div class="row-100">
+            <?php include "produto.php"; ?>        
+        </div>
+    </div>
+    <div class="tab-pane" id="contato">
+        <div class="row-100">
+            <?php include "contato.php"; ?>        
+        </div>
+    </div>
     <div class="tab-pane" id="anexo">
         <div class="row-100">
             <?php include "anexos.php"; ?>        

@@ -1,3 +1,27 @@
+<?php
+
+  foreach($_GET as $key => $value){
+    $$key = $value;
+  }
+
+  require_once '../conexao.php';
+
+  $SQL = "SELECT ds_titulo, ds_conteudo, ds_titulo1, ds_conteudo1, ds_titulo2, ds_conteudo2
+            FROM sobre_site
+          WHERE nr_seq_configuracao = $codigo";
+  //echo "<pre>$SQL</pre>";
+  $RSS = mysqli_query($conexao, $SQL);
+  while($linha = mysqli_fetch_row($RSS)){
+    $ds_titulo = $linha[0];
+    $ds_conteudo = $linha[1];
+    $ds_titulo1 = $linha[2];
+    $ds_conteudo1 = $linha[3];
+    $ds_titulo2 = $linha[4];
+    $ds_conteudo2 = $linha[5];
+  }
+
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
