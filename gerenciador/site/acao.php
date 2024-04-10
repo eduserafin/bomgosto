@@ -35,15 +35,6 @@
         echo "<script language='javascript'>window.parent.document.getElementById('txtsubsecao4').value='" . $RS["ds_subsecao4"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtsecao5').value='" . $RS["ds_secao5"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtsubsecao5').value='" . $RS["ds_subsecao5"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtquantidadeprodutos').value='" . $RS["nr_produtos"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtquantidadecampanhas').value='" . $RS["nr_campanhas"] . "';</script>";
-        echo "<script language='javascript'>window.parent.BuscaProdutos('" . $RS["nr_produtos"] . "', '" . $RS["nr_sequencial"] . "' );</script>";
-        echo "<script language='javascript'>window.parent.BuscaCampanhas('" . $RS["nr_campanhas"] . "', '" . $RS["nr_sequencial"] . "');</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txttitulo').value='" . $RS["ds_titulo"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtsobre').value='" . $RS["ds_descricao"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtfacebook').value='" . $RS["ds_facebook"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtinstagran').value='" . $RS["ds_instagran"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtlinkedin').value='" . $RS["ds_linkedin"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtstatus').value='" . $RS["st_status"] . "';</script>";
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/sobre.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','sobre')</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
@@ -56,65 +47,13 @@
 
   if ($Tipo == "I") {
 
-    if($qtdprodutos == 0 or $qtdprodutos == "") {$qtdprodutos = "NULL";}
-    if($qtdcampanhas == 0 or $qtdcampanhas == "") {$qtdcampanhas = "NULL";}
-
-    $insert = "INSERT INTO configuracao_site (ds_nome, ds_secao1, ds_secao2, ds_secao3, ds_secao4, ds_secao5, ds_subsecao1, ds_subsecao2, ds_subsecao3, ds_subsecao4, ds_subsecao5, nr_produtos, nr_campanhas, ds_titulo, ds_descricao, ds_facebook, ds_instagran, ds_linkedin, st_status, cd_usercadastro) 
-              VALUES ('" . $nome . "', '" . $secao1 . "',  '" . $secao2 . "', '" . $secao3 . "', '" . $secao4 . "', '" . $secao5 . "', '" . $subsecao1 . "', '" . $subsecao2 . "', '" . $subsecao3 . "', '" . $subsecao4 . "', '" . $subsecao5 . "', " . $qtdprodutos . ", " . $qtdcampanhas . ", '" . $titulo . "', '" . $sobre . "', '" . $facebook . "', '" . $instagran . "', '" . $linkedin . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
-    echo $insert;
+    $insert = "INSERT INTO configuracao_site (ds_nome, ds_secao1, ds_secao2, ds_secao3, ds_secao4, ds_secao5, ds_subsecao1, ds_subsecao2, ds_subsecao3, ds_subsecao4, ds_subsecao5, st_status, cd_usercadastro) 
+              VALUES ('" . $nome . "', '" . $secao1 . "',  '" . $secao2 . "', '" . $secao3 . "', '" . $secao4 . "', '" . $secao5 . "', '" . $subsecao1 . "', '" . $subsecao2 . "', '" . $subsecao3 . "', '" . $subsecao4 . "', '" . $subsecao5 . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
+    //echo $insert;
     $rss_insert = mysqli_query($conexao, $insert);
 
     if ($rss_insert) {
       // Registro gravado com sucesso
-      $configuracao = mysqli_insert_id($conexao);
-
-      $del = "DELETE FROM produtos_site WHERE nr_seq_configuracao = $configuracao";
-      mysqli_query($conexao, $del);
-  
-      $campo = array();
-      $dados = array();
-      $campo = explode("|", $produtos);
-  
-      for($i=0;$i<$qtdprodutos;$i++){
-
-          $dados = explode(";", $campo[$i]);
-          $produto = $dados[0];
-          $icone = $dados[1];
-          $descricao = $dados[2];
-  
-          if($qtdprodutos > 0){
-
-            $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, nr_ordem, ds_produto, ds_icone, ds_descricao) 
-                              VALUES (" . $configuracao . ", " . $i . ",  '" . $produto . "', '" . $icone . "', '" . $descricao . "')";
-            //echo $insert_produto;
-            $rss_insert_produto = mysqli_query($conexao, $insert_produto);
-
-          }
-      }
-
-      $del = "DELETE FROM campanhas_site WHERE nr_seq_configuracao = $configuracao";
-      mysqli_query($conexao, $del);
-  
-      $campo1 = array();
-      $dados1 = array();
-      $campo1 = explode("|", $campanhas);
-  
-      for($i=0;$i<$qtdcampanhas;$i++){
-
-        $dados1 = explode(";", $campo1[$i]);
-        $campanha = $dados1[0];
-        $icone = $dados1[1];
-
-        if($qtdcampanhas > 0){
-
-          $insert_campanha = "INSERT INTO campanhas_site (nr_seq_configuracao, nr_ordem, ds_campanha, ds_icone) 
-                            VALUES (" . $configuracao . ", " . $i . ",  '" . $campanha . "', '" . $icone . "')";
-          //echo $insert_campanha;
-          $rss_insert_campanha = mysqli_query($conexao, $insert_campanha);
-
-        }
-
-      }
 
       echo "<script language='JavaScript'>
               window.parent.Swal.fire({
@@ -130,7 +69,7 @@
     } else {
 
       // Erro ao gravar o registro
-      echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+      //echo "Erro ao gravar o registro: " . mysqli_error($conexao);
 
       echo "<script language='JavaScript'>
               window.parent.Swal.fire({
@@ -147,9 +86,6 @@
   //==================================-ALTERACAO DOS DADOS-===============================================
 
   if ($Tipo == "A") {
-
-      if($qtdprodutos == 0 or $qtdprodutos == "") {$qtdprodutos = "NULL";}
-      if($qtdcampanhas == 0 or $qtdcampanhas == "") {$qtdcampanhas = "NULL";}
     
       $update = "UPDATE configuracao_site
                     SET ds_nome = '" . $nome . "',
@@ -163,13 +99,6 @@
                         ds_subsecao3 = '" . $subsecao3 . "', 
                         ds_subsecao4 = '" . $subsecao4 . "', 
                         ds_subsecao5 = '" . $subsecao5 . "', 
-                        nr_produtos = " . $qtdprodutos . ", 
-                        nr_campanhas = " . $qtdcampanhas . ", 
-                        ds_titulo = '" . $titulo . "', 
-                        ds_descricao = '" . $sobre . "', 
-                        ds_facebook = '" . $facebook . "', 
-                        ds_instagran = '" . $instagran . "', 
-                        ds_linkedin = '" . $linkedin . "', 
                         st_status = '" . $status . "', 
                         cd_useralterado = " . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado = CURRENT_TIMESTAMP   
@@ -177,55 +106,6 @@
         mysqli_query($conexao, $update);
 
         if (mysqli_affected_rows($conexao) > 0) {
-
-          $del = "DELETE FROM produtos_site WHERE nr_seq_configuracao = $codigo";
-          mysqli_query($conexao, $del);
-      
-          $campo = array();
-          $dados = array();
-          $campo = explode("|", $produtos);
-      
-          for($i=0;$i<$qtdprodutos;$i++){
-    
-            $dados = explode(";", $campo[$i]);
-            $produto = $dados[0];
-            $icone = $dados[1];
-            $descricao = $dados[2];
-    
-            if($qtdprodutos > 0){
-
-              $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, nr_ordem, ds_produto, ds_icone, ds_descricao) 
-                                VALUES (" . $codigo . ", " . $i . ",  '" . $produto . "', '" . $icone . "', '" . $descricao . "')";
-              //echo $insert_produto;
-              $rss_insert_produto = mysqli_query($conexao, $insert_produto);
-
-            }
-
-          }
-    
-          $del = "DELETE FROM campanhas_site WHERE nr_seq_configuracao = $codigo";
-          mysqli_query($conexao, $del);
-      
-          $campo1 = array();
-          $dados1 = array();
-          $campo1 = explode("|", $campanhas);
-      
-          for($i=0;$i<$qtdcampanhas;$i++){
-    
-            $dados1 = explode(";", $campo1[$i]);
-            $campanha = $dados1[0];
-            $icone = $dados1[1];
-    
-            if($qtdcampanhas > 0){
-
-              $insert_campanha = "INSERT INTO campanhas_site (nr_seq_configuracao, nr_ordem, ds_campanha, ds_icone) 
-                                VALUES (" . $codigo . ", " . $i . ",  '" . $campanha . "', '" . $icone . "')";
-              //echo $insert_campanha;
-              $rss_insert_campanha = mysqli_query($conexao, $insert_campanha);
-
-            }
-
-          }
         
           echo "<script language='JavaScript'>
                   window.parent.Swal.fire({
@@ -363,4 +243,55 @@
 
   }
 
+  if ($Tipo == "produtos") {
+
+  $del = "DELETE FROM produtos_site WHERE nr_seq_configuracao = $configuracao";
+  mysqli_query($conexao, $del);
+
+  $campo = array();
+  $dados = array();
+  $campo = explode("|", $produtos);
+
+  for($i=0;$i<$qtdprodutos;$i++){
+
+      $dados = explode(";", $campo[$i]);
+      $produto = $dados[0];
+      $icone = $dados[1];
+      $descricao = $dados[2];
+
+      if($qtdprodutos > 0){
+
+        $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, nr_ordem, ds_produto, ds_icone, ds_descricao) 
+                          VALUES (" . $configuracao . ", " . $i . ",  '" . $produto . "', '" . $icone . "', '" . $descricao . "')";
+        //echo $insert_produto;
+        $rss_insert_produto = mysqli_query($conexao, $insert_produto);
+
+      }
+  }
+
+  $del = "DELETE FROM campanhas_site WHERE nr_seq_configuracao = $configuracao";
+  mysqli_query($conexao, $del);
+
+  $campo1 = array();
+  $dados1 = array();
+  $campo1 = explode("|", $campanhas);
+
+  for($i=0;$i<$qtdcampanhas;$i++){
+
+    $dados1 = explode(";", $campo1[$i]);
+    $campanha = $dados1[0];
+    $icone = $dados1[1];
+
+    if($qtdcampanhas > 0){
+
+      $insert_campanha = "INSERT INTO campanhas_site (nr_seq_configuracao, nr_ordem, ds_campanha, ds_icone) 
+                        VALUES (" . $configuracao . ", " . $i . ",  '" . $campanha . "', '" . $icone . "')";
+      //echo $insert_campanha;
+      $rss_insert_campanha = mysqli_query($conexao, $insert_campanha);
+
+    }
+
+  }
+
+}
 ?>

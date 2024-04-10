@@ -36,34 +36,34 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <label for="txttitulosobre">TÍTULO:</label>                    
             <input type="text" name="txttitulosobre" id="txttitulosobre" size="15" maxlength="100" class="form-control" placeholder="Título Principal" value="<?php echo $ds_titulo; ?>">
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-12">
             <label for="txtconteudosobre">CONTEÚDO:</label>    
-            <textarea id="txtconteudosobre" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo; ?></textarea>
+            <textarea id="txtconteudosobre" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo; ?></textarea>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-12">
             <label for="txttitulosobre1">TÍTULO 1:</label>                    
             <input type="text" name="txttitulosobre1" id="txttitulosobre1" size="15" maxlength="100" class="form-control" placeholder="Segundo título" value="<?php echo $ds_titulo1; ?>">
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-12">
             <label for="txtconteudosobre1">CONTEÚDO 1:</label>    
-            <textarea id="txtconteudosobre1" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo1; ?></textarea>
+            <textarea id="txtconteudosobre1" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo1; ?></textarea>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-12">
             <label for="txttitulosobre2">TÍTULO 2:</label>                    
             <input type="text" name="txttitulosobre2" id="txttitulosobre2" size="15" maxlength="100" class="form-control" placeholder="Terçeiro título" value="<?php echo $ds_titulo2; ?>">
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-12">
             <label for="txtconteudosobre2">CONTEÚDO 2:</label>    
-            <textarea id="txtconteudosobre2" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo2; ?></textarea>
+            <textarea id="txtconteudosobre2" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo2; ?></textarea>
         </div>
     </div>
 </body>

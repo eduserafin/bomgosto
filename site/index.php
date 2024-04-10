@@ -80,6 +80,24 @@
           .card-text {
             color: #666;
           }
+
+          /* Reduzindo o padding da seção de assinatura */
+          .subscription {
+              padding-top: 10px; /* Ajuste conforme necessário */
+              padding-bottom: 10px; /* Ajuste conforme necessário */
+          }
+
+          /* Reduzindo as margens superior e inferior da primeira seção */
+          .app-showcase {
+              margin-bottom: 10px; /* Ajuste conforme necessário */
+          }
+
+          /* Se necessário, também pode ajustar o padding interno da div container dentro da seção de assinatura */
+          .subscription .container {
+              padding-top: 10px; /* Ajuste conforme necessário */
+              padding-bottom: 10px; /* Ajuste conforme necessário */
+          }
+
         </style>
 
   </head>
@@ -111,21 +129,19 @@
           </div>
         </div>
       </nav>
-    </header>
+    </header> 
     <div class="page-holder">
-      <!-- Hero Section-->
+      <!-- SEÇÃO 1-->
       <section class="hero shape-1">
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-8">
-              <h1 class="hero-heading"><?php echo $ds_secao1; ?></h1>
+              <h2 class="hero-heading"><?php echo $ds_secao1; ?></h2>
               <p class="lead mt-5 font-weight-light"><?php echo $ds_subsecao1; ?></p>
               <!-- Subscription form-->
               <form action="#" class="subscription-form mt-5">
                 <div class="form-group">
-                  <br><br>
-                  <!--<button type="submit" class="btn btn-primary" >Quero Realizar Meus Sonhos!</button>-->
-                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">Quero Realizar Meus Sonhos!</a>
+                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">QUERO REALIZAR MEUS SONHOS</a>
                 </div>
               </form> 
               <!-- Platforms-->
@@ -149,63 +165,84 @@
           </div>
         </div>
       </section>
-      <!-- Features Section-->
+
+      <!-- SEÇÃO 2-->
+      <section class="app-showcase pb-big">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-last"> <!-- Mudança na ordem da coluna para dispositivos grandes -->
+              <img src="img/logo.jpeg" alt="..." style="max-width: 100%;"> <!-- Adição de style para limitar a largura máxima -->
+            </div>
+            <div class="col-lg-6">
+              <h2 class="mb-10 text-center"><?php echo $ds_secao2; ?></h2><br> <!-- Alinhamento do texto à direita -->
+              <p class="lead text-left"><?php echo $ds_subsecao2; ?></p> <!-- Alinhamento do texto à direita -->
+              <div class="form-group"><br>
+                <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONHEÇA NOSSA EMPRESA</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO 3-->
       <section class="features shape-2">         
         <div class="container">
           <div class="section-header text-center"><span class="section-header-title"></span>
-            <h2 class="h1"><?php echo $ds_secao2; ?></h2>
+            <h2 class="h2"><?php echo $ds_secao3; ?></h2>
             <div class="row">
               <div class="col-lg-8 mx-auto">
-                <p class="lead"><?php echo $ds_subsecao2; ?></p>
+                <p class="lead"><?php echo $ds_subsecao3; ?></p>
               </div>
             </div>
           </div>
-          <div class="row mt-5 text-center">
-            <div class="col-lg-4">
-              <div class="features-item mb-5 mb-lg-0">
-                <div class="gradient-icon gradient-1"><i class="icon ion-ios-play"></i></div>
-                <h3 class="h5">Automated tracking</h3>
-                <p>Track your favorite shows automatically without switching between apps.</p><a href="#" class="features-link">Learn more<i class="icon ion-ios-arrow-forward ml-2"></i></a>
+          <div class="container mt-2">
+            <div class="row mt-2">
+              <div class="col-md-4">
+                  <a href="contato.php" class="card-link">
+                      <div class="card text-center">
+                          <div class="card-body">
+                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-plane"></i></div>
+                              <h4 class="card-title">Fale com a Zenatti Consórcios</h4>
+                              <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
+                          </div>
+                      </div>
+                  </a> <!-- Tag de fechamento adicionada -->
+              </div>
+              <div class="col-md-4">
+                  <a href="contato.php" class="card-link">
+                      <div class="card text-center">
+                          <div class="card-body">
+                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-home"></i></div>
+                              <h4 class="card-title">Casa</h4>
+                              <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+              <div class="col-md-4">
+                  <a href="contato.php" class="card-link">
+                      <div class="card text-center">
+                          <div class="card-body">
+                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-car"></i></div>
+                              <h4 class="card-title">Carro</h4>
+                              <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
+                          </div>
+                      </div>
+                  </a>
               </div>
             </div>
-            <div class="col-lg-4">
-              <div class="features-item mb-5 mb-lg-0">
-                <div class="gradient-icon gradient-2"><i class="icon ion-ios-cog"></i></div>
-                <h3 class="h5">Machine learning</h3>
-                <p>Get recommendations like never before, which are truly customized for your taste.</p><a href="#" class="features-link">Learn more<i class="icon ion-ios-arrow-forward ml-2"></i></a>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div class="features-item mb-5 mb-lg-0">
-                <div class="gradient-icon gradient-3"><i class="icon ion-ios-notifications"></i></div>
-                <h3 class="h5">Smart notifications</h3>
-                <p>Receive smart notifications exactly at the right moments when you need them.</p><a href="#" class="features-link">Learn more<i class="icon ion-ios-arrow-forward ml-2"></i></a>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
-      <!-- TV Shows Section-->
-      <section class="tv-shows padding-big">
-        <div class="swiper-container tv-shows-slider">
-          <div class="swiper-wrapper">
-            <!-- <div class="swiper-slide"> <a href="#" class="tv-shows-link"><img src="img/tv-shows-1.jpg" alt="..." class="tv-shows-image img-fluid"></a></div>
-            <div class="swiper-slide"> <a href="#" class="tv-shows-link"><img src="img/tv-shows-2.jpg" alt="..." class="tv-shows-image img-fluid"></a></div>
-           <div class="swiper-slide"> <a href="#" class="tv-shows-link"><img src="img/tv-shows-3.jpg" alt="..." class="tv-shows-image img-fluid"></a></div>
-            <div class="swiper-slide"> <a href="#" class="tv-shows-link"><img src="img/tv-shows-4.jpg" alt="..." class="tv-shows-image img-fluid"></a></div>
-            <div class="swiper-slide"> <a href="#" class="tv-shows-link"><img src="img/tv-shows-5.jpg" alt="..." class="tv-shows-image img-fluid"></a></div>
-            <div class="swiper-slide"> <a href="#" class="tv-shows-link"><img src="img/tv-shows-6.jpg" alt="..." class="tv-shows-image img-fluid"></a></div>
-            <div class="swiper-slide"> <a href="#" class="tv-shows-link"><img src="img/tv-shows-7.jpg" alt="..." class="tv-shows-image img-fluid"></a></div> -->
-          </div>
-        </div>
-      </section>
-      <!-- App Showcase Section-->
+
+      <br><br><br><br>
+     
+      <!-- SEÇÃO 4-->
       <section class="app-showcase pb-big">
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-8">
-              <h2 class="mb-4"><?php echo $ds_secao3; ?></h2>
-              <p class="lead"><?php echo $ds_subsecao3; ?></p>
+              <h2 class="mb-4"><?php echo $ds_secao4; ?></h2>
+              <p class="lead"><?php echo $ds_subsecao4; ?></p>
               <div class="row mt-5">
                 <div class="col-lg-8">
                   <div id="v-pills-tab" role="tablist" aria-orientation="vertical" class="nav flex-column nav-pills showcase-nav"><a id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" class="nav-link active showcase-link"> <i class="icon ion-md-pie mr-4"></i>Customized Dashboard</a><a id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false" class="nav-link showcase-link"> <i class="icon ion-ios-moon mr-4"></i>Automatic Day &amp; Night Modes</a><a id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false" class="nav-link showcase-link"> <i class="icon ion-md-chatbubbles mr-4"></i>Integrated Chat Platform</a></div>
@@ -242,75 +279,55 @@
           </div>
         </div>
       </section>
-      <!-- Testimonials Section-->
-      <!--<section class="testimonials bg-black">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-6 section-padding">
-              <div class="section-header pr-3"><span class="section-header-title text-white"></span>
-                <h2 class="h1 text-white"><?php echo $ds_secao4; ?></h2>
-                <p class="lead text-white mt-4 mb-4"><?php echo $ds_subsecao4; ?></p><<a href="#" class="btn btn-primary">Mais Depoimentos</a>
-              </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block">
-              <div class="row feeds">
-                <div class="col-lg-6">
-                  <div class="swiper-container testimonials-slider-1">
-                    <div class="swiper-wrapper">
-                     
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> -->
-      <!-- Subscription Section-->
+     
+       <!-- SEÇÃO 5-->
       <section class="subscription padding-big">
         <div class="container text-center">
           <div class="section-header">
             <div class="row">
               <div class="col-lg-8 mx-auto"><span class="section-header-title"></span>
-                <h2 class="h1"><?php echo $ds_secao5; ?></h2>
+                <h2 class="h2"><?php echo $ds_secao5; ?></h2>
                 <p class="lead"><?php echo $ds_subsecao5; ?></p>
               </div>
-              <div class="container mt-5">
-                <div class="row mt-5">
+              <div class="container mt-2">
+                <div class="row mt-2">
                   <div class="col-md-6">
-                    <div class="card text-center">
-                      <div class="card-body">
-                      <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
-                        <h5 class="card-title">Fale com a Zenatti Consórcios</h5>
-                        <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
-                      </div>
-                    </div>
+                      <a href="contato.php" class="card-link">
+                          <div class="card text-center">
+                              <div class="card-body">
+                                  <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
+                                  <h4 class="card-title">Fale com a Zenatti Consórcios</h4>
+                                  <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
+                              </div>
+                          </div>
+                      </a> <!-- Tag de fechamento adicionada -->
                   </div>
                   <div class="col-md-6">
-                    <div class="card text-center">
-                      <div class="card-body">
-                      <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
-                        <h5 class="card-title">Seja um Parceiro</h5>
-                        <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
+                      <a href="contato.php" class="card-link">
+                          <div class="card text-center">
+                              <div class="card-body">
+                                  <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
+                                  <h4 class="card-title">Seja um Parceiro</h4>
+                                  <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-12 mx-auto">
+                    <!-- Subscription form-->
+                    <form action="#" class="subscription-form mt-5">
+                      <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="seu@email.com" class="form-control">
+                        <button type="submit" class="btn btn-primary">Receber Novidades</button>
                       </div>
-                    </div>
+                    </form>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-12 mx-auto">
-                <!-- Subscription form-->
-                <form action="#" class="subscription-form mt-5">
-                  <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" placeholder="seu@email.com" class="form-control">
-                    <button type="submit" class="btn btn-primary">Receber Novidades</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </div>

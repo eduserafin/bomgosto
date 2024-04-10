@@ -22,7 +22,7 @@
 
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
 <ul class="nav nav-tabs" id="myTab">
-    <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">CADASTRO</a></li>
+    <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">PÁGINA INICIAL</a></li>
     <li><a id="tabsobre" href="#sobre" data-toggle="tab">SOBRE</a></li>
     <li><a id="tabproduto" href="#produto" data-toggle="tab">PRODUTOS</a></li>
     <li><a id="tabcontato" href="#contato" data-toggle="tab">CONTATO</a></li>
