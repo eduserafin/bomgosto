@@ -6,18 +6,21 @@
 
   require_once '../conexao.php';
 
-  $SQL = "SELECT ds_titulo, ds_conteudo, ds_titulo1, ds_conteudo1, ds_titulo2, ds_conteudo2
-            FROM sobre_site
-          WHERE nr_seq_configuracao = $codigo";
-  //echo "<pre>$SQL</pre>";
-  $RSS = mysqli_query($conexao, $SQL);
-  while($linha = mysqli_fetch_row($RSS)){
-    $ds_titulo = $linha[0];
-    $ds_conteudo = $linha[1];
-    $ds_titulo1 = $linha[2];
-    $ds_conteudo1 = $linha[3];
-    $ds_titulo2 = $linha[4];
-    $ds_conteudo2 = $linha[5];
+  if($codigo != ""){
+
+    $SQL = "SELECT ds_titulo, ds_conteudo, nr_telefone, nr_whatsapp, ds_email
+                FROM contato_site
+            WHERE nr_seq_configuracao = $codigo";
+    //echo "<pre>$SQL</pre>";
+    $RSS = mysqli_query($conexao, $SQL);
+    while($linha = mysqli_fetch_row($RSS)){
+      $ds_titulo = $linha[0];
+      $ds_conteudo = $linha[1];
+      $nr_telefone = $linha[2];
+      $nr_whatsapp = $linha[3];
+      $ds_email = $linha[4];
+    }
+
   }
 
 ?>
@@ -69,32 +72,49 @@
               font-size: 18px;
               color: #777;
           }
-          .whatsapp-button {
-              text-align: center;
+
+          #whatsapp-icon {
+            font-size: 5em; /* Altere o valor conforme necessário para aumentar o ícone */
           }
-          .whatsapp-button a {
-              display: inline-block;
-              background-color: #25d366;
-              color: #fff;
-              padding: 10px 20px;
-              border-radius: 5px;
-              text-decoration: none;
+
+          /* Estilos para o footer */
+          .footer {
+            background-color: #6a5acd; /* Cor de fundo do footer */
+            color: #fff; /* Cor do texto dentro do footer */
+            padding: 20px 0; /* Espaçamento interno do footer */
           }
-          .whatsapp-button a:hover {
-              background-color: #128c7e;
+          
+          .social-link {
+            color: #fff; /* Cor dos ícones sociais */
+            text-decoration: none; /* Remover sublinhado dos links */
           }
+          
+          .social-link:hover {
+            color: #ccc; /* Cor dos ícones sociais ao passar o mouse */
+          }
+          
+          .copyrights-text {
+            margin-top: 10px; /* Espaçamento acima do texto de direitos autorais */
+          }
+
+          .btn-primary {
+            background-color: #6a5acd; /* Cor de fundo */
+          }
+
       </style>
   </head>
   <body>
+  <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
     <!-- navbar-->
     <header class="header">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="img/logo.png" alt="..." class="img-fluid"></a>
+          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="img/logo.jpeg" alt="..." class="img-fluid"></a>
           <!-- Navbar toggler button-->
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mx-auto ml-auto">
+                  <li class="nav-item"> <a href="index.php?codigo=<?php echo $codigo; ?>" class="nav-link">Home</a></li>
                   <!-- Link-->
                   <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Produtos</a></li>
                   <!-- Link-->
@@ -110,94 +130,91 @@
                 </div>
               </li>
             </ul>
-            <!--<ul class="navbar-nav">
-              <li class="nav-item"><a href="#" data-toggle="modal" data-target="#login" class="nav-link font-weight-bold mr-3">Login</a></li>
-              <li class="nav-item"><a href="#" class="navbar-btn btn btn-primary">Get Started</a></li>
-            </ul>-->
           </div>
         </div>
       </nav>
     </header>
-    <!-- Login Modal-->
-    <div id="login" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
-      <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header border-bottom-0">
-            <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
-          </div>
-          <div class="modal-body p-4 p-lg-5">
-            <form action="#" class="login-form text-left">
-              <div class="form-group mb-4">
-                <label>Email address</label>
-                <input type="email" name="email" placeholder="name@company.com" class="form-control">
+   
+    <div class="page-holder">   
+      <section class="contact-form">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="description">
+                <h2><?php echo $ds_titulo; ?></h2>
+                <p><?php echo $ds_conteudo; ?></p>
+                <button type="button" class="btn btn-primary" onclick="redirectToWhatsApp()">CHAMA NO WHATS!</button>
+                <a href="https://api.whatsapp.com/send?phone=<?php echo $nr_whatsapp; ?>" class="float" target="_blank" id="whatsapp-link">
+                  <i class="icon ion-logo-whatsapp" id="whatsapp-icon"></i>
+                </a>
               </div>
-              <div class="form-group mb-4">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Min 8 characters" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                  <input type="text" name="txtnome" id="txtnome" class="form-control" placeholder="Nome" required>
               </div>
               <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary">
+                  <input type="email" name="txtemail" id="txtemail" class="form-control" placeholder="E-mail" required>
               </div>
-            </form>
+              <div class="form-group">
+                  <input type="number" name="txttelefone" id="txttelefone" class="form-control" placeholder="Telefone" required>
+              </div>
+              <div class="form-group">
+                  <input type="number" name="txtwhatsapp" id="txtwhatsapp" class="form-control" placeholder="WhatsApp" required>
+              </div>
+              <div class="form-group">          
+                  <select id="txtcidade" class="form-control">
+                      <option value='0'>Selecione uma cidade</option>
+                      <?php
+                      $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
+                                FROM municipioibge
+                                WHERE ds_municipioibge NOT LIKE '%TRIAL%'
+                              ORDER BY ds_municipioibge, sg_estado;";
+                      $res = mysqli_query($conexao, $sql);
+                      while($lin=mysqli_fetch_row($res)){
+                          $cdg = $lin[0];
+                          $desc = $lin[1];
+
+                          echo "<option value='$cdg'>$desc</option>";
+                      }
+                      ?>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <textarea name="txtmemsagem" id="txtmemsagem" class="form-control" rows="5" placeholder="Mensagem" required></textarea>
+              </div>
+              <button type="button" class="btn btn-primary" onClick="javascript: SalvarLead();">ENVIAR MENSAGEM</button>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-    <div class="page-holder">   
-    <section class="contact-form">
-        <div class="container">
-            <div class="row justify-content-center">
-
-                <div class="col-md-6">
-                    <div class="description">
-                        <h2>FALE COM A ZENATTI CONSÓRCIOS</h2>
-                        <p>Preencha seus dados, em breve retornaremos sua mensagem. Obrigado por escolher a Zenatti Consórcios!</p>
-                        <!-- Botão do WhatsApp -->
-                        <a href="https://wa.me/SEUNUMERO?text=Olá,%20gostaria%20de%20entrar%20em%20contato%20sobre%20os%20consórcios" class="whatsapp-button">Fale Conosco no WhatsApp</a>
-                      </div>
-                </div>
-
-                <div class="col-md-6">
-                    <form action="process_contact.php" method="post">
-                        <div class="form-group">
-                            <input type="text" name="name" id="name" class="form-control" placeholder="Nome" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="number" name="telefone" id="telefone" class="form-control" placeholder="Telefone" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="number" name="whatsapp" id="whatsapp" class="form-control" placeholder="WhatsApp" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="cidade" id="cidade" class="form-control" placeholder="Cidade" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="uf" id="uf" class="form-control" placeholder="UF" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea name="message" id="message" class="form-control" rows="5" placeholder="Mensagem" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">ENVIAR MENSAGEM</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-    </div>
+    <br><br>
     <footer class="footer">
       <div class="container text-center">
         <!-- Copyrights-->
         <div class="copyrights">
           <!-- Social menu-->
           <ul class="social list-inline-item">
-            <li class="list-inline-item"><a href="#" target="_blank" class="social-link"><i class="icon ion-logo-twitter"></i></a></li>
-            <li class="list-inline-item"><a href="#" target="_blank" class="social-link"><i class="icon ion-logo-facebook"></i></a></li>
-            <li class="list-inline-item"><a href="#" target="_blank" class="social-link"><i class="icon ion-logo-youtube"></i></a></li>
+            <?php 
+              $SQL = "SELECT r.ds_link, rs.ds_icone
+                          FROM redes_site r
+                          INNER JOIN redes_sociais rs ON rs.nr_sequencial = r.nr_seq_rede
+                      WHERE nr_seq_configuracao = $codigo
+                      AND r.st_ativo = 'A'
+                      ORDER BY rs.ds_rede ASC";
+              //echo $SQL;
+              $RSS = mysqli_query($conexao, $SQL);
+              while ($linha = mysqli_fetch_row($RSS)) {
+                $ds_link = $linha[0];
+                $ds_icone = $linha[1];
+
+                ?>
+                <li class="list-inline-item"><a href="<?php echo $ds_link; ?>" target="_blank" class="social-link"><i class="<?php echo $ds_icone; ?>" style="font-size: 50px;"></i></a></li>
+            <?php } ?>
           </ul>
-          <p class="copyrights-text mb-0">Direitos autorais Csimulador 2024</p>
+          <p class="copyrights-text mb-0">Copyright © 2024 Csimulador. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
@@ -217,6 +234,51 @@
       e.src='//www.google-analytics.com/analytics.js';
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+    <script>
+
+      function redirectToWhatsApp() {
+        // Obtenha o link do atributo href da tag <a>
+        var whatsappLink = document.getElementById('whatsapp-link').getAttribute('href');
+        // Redirecione para o mesmo link que a tag <a>
+        window.location.href = whatsappLink;
+      }
+
+      function SalvarLead(){
+
+        var tipo = '<?php echo $tipo; ?>';
+        var nome = document.getElementById('txtnome').value;
+        var email = document.getElementById("txtemail").value;
+        var telefone = document.getElementById('txttelefone').value;
+        var whatsapp = document.getElementById("txtwhatsapp").value;
+        var cidade = document.getElementById('txtcidade').value;
+        var mensagem = document.getElementById("txtmemsagem").value;
+
+        if (nome == "") {
+          alert('Informe o seu Nome!');
+          document.getElementById('txtnome').focus();
+        } else if (mensagem == '') {
+          alert('Descreva sua mensagem!');
+          document.getElementById('txtmemsagem').focus();
+        } else if (cidade == 0) {
+          alert('Informe a sua Cidade!');
+          document.getElementById('txtcidade').focus();
+        } else if (email == '' && telefone == '' && whatsapp == '') {
+          alert('Preencha pelo menos um dos campos de contato (Email, Telefone ou WhatsApp)!');
+          if (email == '') {
+              document.getElementById("txtemail").focus();
+          } else if (telefone == '') {
+              document.getElementById('txttelefone').focus();
+          } else if (whatsapp == '') {
+              document.getElementById("txtwhatsapp").focus();
+          } 
+        } else {
+
+          window.open('acao.php?Tipo=SL&tipo=' + tipo + '&nome=' + nome + '&email=' + email + '&telefone=' + telefone + '&whatsapp=' + whatsapp + '&cidade=' + cidade + '&mensagem=' + mensagem, "acao");
+        
+        }
+      }
+
     </script>
   </body>
 </html>

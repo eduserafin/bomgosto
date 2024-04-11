@@ -24,49 +24,52 @@
             $ds_titulo2 = $linha[4];
             $ds_conteudo2 = $linha[5];
         }
-    }
+    
+        ?>
 
-?>
+        <body onLoad="document.getElementById('txttitulosobre').focus();">
+            <input type="hidden" name="cd_configuracao_sobre" id="cd_configuracao_sobre" value="<?php echo $codigo; ?>">
+            <div class="row">
+                <div class="col-md-2">
+                    <button type=button name="btsalvar" id="btsalvar" class="btn btn-success" onClick="javascript: SalvarSobre(<?php echo $codigo; ?>);"><span class="glyphicon glyphicon-ok"></span> SALVAR</button>
+                </div>
+                <div class="col-md-10"><br>
+                    <label>Preencha com informações da empresa, essas informações iram aparecer no site, na aba Sobre.</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="txttitulosobre">TÍTULO:</label>                    
+                    <input type="text" name="txttitulosobre" id="txttitulosobre" size="15" maxlength="100" class="form-control" placeholder="Título Principal" value="<?php echo $ds_titulo; ?>">
+                </div>
 
-<body onLoad="document.getElementById('txtnome').focus();">
-    <input type="hidden" name="cd_configuracao" id="cd_configuracao" value="<?php echo $codigo; ?>">
-    <div class="form-group col-md-12">
-        <div class="row">
-            <button type=button name="btsalvar" id="btsalvar" class="btn btn-success" onClick="javascript: SalvarSobre(<?php echo $codigo; ?>);"><span class="glyphicon glyphicon-ok"></span> SALVAR</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <label for="txttitulosobre">TÍTULO:</label>                    
-            <input type="text" name="txttitulosobre" id="txttitulosobre" size="15" maxlength="100" class="form-control" placeholder="Título Principal" value="<?php echo $ds_titulo; ?>">
-        </div>
+                <div class="col-md-12">
+                    <label for="txtconteudosobre">CONTEÚDO:</label>    
+                    <textarea id="txtconteudosobre" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo; ?></textarea>
+                </div>
 
-        <div class="col-md-12">
-            <label for="txtconteudosobre">CONTEÚDO:</label>    
-            <textarea id="txtconteudosobre" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo; ?></textarea>
-        </div>
+                <div class="col-md-12">
+                    <label for="txttitulosobre1">TÍTULO 1:</label>                    
+                    <input type="text" name="txttitulosobre1" id="txttitulosobre1" size="15" maxlength="100" class="form-control" placeholder="Segundo título" value="<?php echo $ds_titulo1; ?>">
+                </div>
 
-        <div class="col-md-12">
-            <label for="txttitulosobre1">TÍTULO 1:</label>                    
-            <input type="text" name="txttitulosobre1" id="txttitulosobre1" size="15" maxlength="100" class="form-control" placeholder="Segundo título" value="<?php echo $ds_titulo1; ?>">
-        </div>
+                <div class="col-md-12">
+                    <label for="txtconteudosobre1">CONTEÚDO 1:</label>    
+                    <textarea id="txtconteudosobre1" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo1; ?></textarea>
+                </div>
 
-        <div class="col-md-12">
-            <label for="txtconteudosobre1">CONTEÚDO 1:</label>    
-            <textarea id="txtconteudosobre1" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo1; ?></textarea>
-        </div>
+                <div class="col-md-12">
+                    <label for="txttitulosobre2">TÍTULO 2:</label>                    
+                    <input type="text" name="txttitulosobre2" id="txttitulosobre2" size="15" maxlength="100" class="form-control" placeholder="Terçeiro título" value="<?php echo $ds_titulo2; ?>">
+                </div>
 
-        <div class="col-md-12">
-            <label for="txttitulosobre2">TÍTULO 2:</label>                    
-            <input type="text" name="txttitulosobre2" id="txttitulosobre2" size="15" maxlength="100" class="form-control" placeholder="Terçeiro título" value="<?php echo $ds_titulo2; ?>">
-        </div>
-
-        <div class="col-md-12">
-            <label for="txtconteudosobre2">CONTEÚDO 2:</label>    
-            <textarea id="txtconteudosobre2" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo2; ?></textarea>
-        </div>
-    </div>
-</body>
+                <div class="col-md-12">
+                    <label for="txtconteudosobre2">CONTEÚDO 2:</label>    
+                    <textarea id="txtconteudosobre2" rows="10" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo2; ?></textarea>
+                </div>
+            </div>
+        </body>
+    <?php } ?>
 
 <script type="text/javascript">
 

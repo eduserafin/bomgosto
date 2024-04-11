@@ -26,6 +26,7 @@
     <li><a id="tabsobre" href="#sobre" data-toggle="tab">SOBRE</a></li>
     <li><a id="tabproduto" href="#produto" data-toggle="tab">PRODUTOS</a></li>
     <li><a id="tabcontato" href="#contato" data-toggle="tab">CONTATO</a></li>
+    <li><a id="tabredes" href="#redes" data-toggle="tab">REDES SOCIAIS</a></li>
     <li><a id="tabanexos" href="#anexo" data-toggle="tab">UPLOAD</a></li>
     <li><a id="tablista" href="#lista" data-toggle="tab">LISTA</a></li>
 </ul> 
@@ -49,6 +50,11 @@
     <div class="tab-pane" id="contato">
         <div class="row-100">
             <?php include "contato.php"; ?>        
+        </div>
+    </div>
+    <div class="tab-pane" id="redes">
+        <div class="row-100">
+            <?php include "redes.php"; ?>        
         </div>
     </div>
     <div class="tab-pane" id="anexo">

@@ -37,6 +37,8 @@
         echo "<script language='javascript'>window.parent.document.getElementById('txtsubsecao5').value='" . $RS["ds_subsecao5"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtstatus').value='" . $RS["st_status"] . "';</script>";
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/sobre.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','sobre')</script>";
+        echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/contato.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','contato')</script>";
+        echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/redes.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','redes')</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
       
       }
@@ -242,6 +244,141 @@
     }
 
   }
+
+  //==================================-CADASTRO CONTATO-===============================================
+
+  if ($Tipo == "C") {
+
+    $delete = "DELETE FROM contato_site WHERE nr_seq_configuracao=" . $codigo;
+    $result = mysqli_query($conexao, $delete);
+
+    if ($result) {
+
+      $insert_contato = "INSERT INTO contato_site (nr_seq_configuracao, ds_titulo, ds_conteudo, nr_telefone, nr_whatsapp, ds_email) 
+                      VALUES (" . $codigo . ", '" . $titulo . "',  '" . $conteudo . "', '" . $telefone . "', '" . $whatsapp . "', '" . $email . "')";
+      //echo $insert_contato;
+      $rss_insert = mysqli_query($conexao, $insert_contato);
+
+      if ($rss_insert) {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                  icon: 'success',
+                  title: 'Show...',
+                  text: 'Informações cadastrado com sucesso!'
+                }); 
+                window.parent.executafuncao('new');
+                window.parent.consultar(0);  
+              </script>";
+
+      } else {
+
+        // Erro ao gravar o registro
+        echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Problemas ao gravar!'
+                });
+              </script>";
+  
+      }
+
+    } else {
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao gravar!'
+              });
+            </script>";
+
+    }
+
+  }
+
+  //==================================-CADASTRO REDES SOCIAIS-===============================================
+
+  if ($Tipo == "R") {
+
+    $delete = "DELETE FROM redes_site WHERE nr_seq_rede = $rede AND nr_seq_configuracao=" . $codigo;
+    $result = mysqli_query($conexao, $delete);
+
+    $insert_rede = "INSERT INTO redes_site (nr_seq_configuracao, nr_seq_rede, ds_link, st_ativo) 
+                    VALUES (" . $codigo . ", " . $rede . ",  '" . $link . "', '" . $status . "')";
+    echo $insert_rede;
+    $rss_insert = mysqli_query($conexao, $insert_rede);
+
+    if ($rss_insert) {
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'success',
+                title: 'Show...',
+                text: 'Informações cadastrado com sucesso!'
+              }); 
+              window.parent.executafuncao('new');
+              window.parent.consultar(0);
+              window.parent.CarregarLoad('gerenciador/site/redes.php?consultar=sim&codigo=" . $codigo . "','redes')  
+            </script>";
+
+    } else {
+
+      // Erro ao gravar o registro
+      echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao gravar!'
+              });
+            </script>";
+
+    }
+
+  } 
+
+   //==================================- EXCLUIR CADASTRO REDES SOCIAIS-===============================================
+
+   if ($Tipo == "ER") {
+
+    $delete = "DELETE FROM redes_site WHERE nr_sequencial = " . $codigo . "";
+    $result = mysqli_query($conexao, $delete);
+
+    if ($result) {
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'success',
+                title: 'Show...',
+                text: 'Rede social excluida com sucesso!'
+              }); 
+              window.parent.executafuncao('new');
+              window.parent.consultar(0);
+              window.parent.CarregarLoad('gerenciador/site/redes.php?consultar=sim&codigo=" . $codigo . "','redes')  
+            </script>";
+
+    } else {
+
+      // Erro ao gravar o registro
+      echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao excluir!'
+              });
+            </script>";
+
+    }
+
+  } 
+
 
   if ($Tipo == "produtos") {
 

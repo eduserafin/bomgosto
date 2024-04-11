@@ -98,10 +98,31 @@
               padding-bottom: 10px; /* Ajuste conforme necessário */
           }
 
+          /* Estilos para o footer */
+          .footer {
+            background-color: #6a5acd; /* Cor de fundo do footer */
+            color: #fff; /* Cor do texto dentro do footer */
+            padding: 20px 0; /* Espaçamento interno do footer */
+          }
+          
+          .social-link {
+            color: #fff; /* Cor dos ícones sociais */
+            text-decoration: none; /* Remover sublinhado dos links */
+          }
+          
+          .social-link:hover {
+            color: #ccc; /* Cor dos ícones sociais ao passar o mouse */
+          }
+          
+          .copyrights-text {
+            margin-top: 10px; /* Espaçamento acima do texto de direitos autorais */
+          }
+
         </style>
 
   </head>
   <body>
+    <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
     <!-- navbar-->
     <header class="header">
       <nav class="navbar navbar-expand-lg">
@@ -111,6 +132,8 @@
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mx-auto ml-auto">
+                  <!-- Link-->
+                  <li class="nav-item"> <a href="index.php?codigo=<?php echo $codigo; ?>" class="nav-link">Home</a></li>
                   <!-- Link-->
                   <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Produtos</a></li>
                   <!-- Link-->
@@ -201,7 +224,7 @@
                   <a href="contato.php" class="card-link">
                       <div class="card text-center">
                           <div class="card-body">
-                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-plane"></i></div>
+                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
                               <h4 class="card-title">Fale com a Zenatti Consórcios</h4>
                               <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
                           </div>
@@ -292,7 +315,7 @@
               <div class="container mt-2">
                 <div class="row mt-2">
                   <div class="col-md-6">
-                      <a href="contato.php" class="card-link">
+                      <a href="contato.php?codigo=<?php echo $codigo; ?>" class="card-link">
                           <div class="card text-center">
                               <div class="card-body">
                                   <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
@@ -303,10 +326,10 @@
                       </a> <!-- Tag de fechamento adicionada -->
                   </div>
                   <div class="col-md-6">
-                      <a href="contato.php" class="card-link">
+                      <a href="contato.php?codigo=<?php echo $codigo; ?>" class="card-link">
                           <div class="card text-center">
                               <div class="card-body">
-                                  <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
+                                  <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
                                   <h4 class="card-title">Seja um Parceiro</h4>
                                   <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
                               </div>
@@ -321,8 +344,8 @@
                     <form action="#" class="subscription-form mt-5">
                       <div class="form-group">
                         <label>Email</label>
-                        <input type="email" name="email" placeholder="seu@email.com" class="form-control">
-                        <button type="submit" class="btn btn-primary">Receber Novidades</button>
+                        <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
+                        <button type="button" class="btn btn-primary" onClick="javascript: SalvarEmail();">Receber Novidades</button>
                       </div>
                     </form>
                   </div>
@@ -337,12 +360,24 @@
         <div class="copyrights">
           <!-- Social menu-->
           <ul class="social list-inline-item">
-            <li class="list-inline-item"><a href="#" target="_blank" class="social-link"><i class="icon ion-logo-twitter"></i></a></li>
-            <li class="list-inline-item"><a href="#" target="_blank" class="social-link"><i class="icon ion-logo-facebook"></i></a></li>
-            <li class="list-inline-item"><a href="#" target="_blank" class="social-link"><i class="icon ion-logo-youtube"></i></a></li>
+            <?php 
+              $SQL = "SELECT r.ds_link, rs.ds_icone
+                          FROM redes_site r
+                          INNER JOIN redes_sociais rs ON rs.nr_sequencial = r.nr_seq_rede
+                      WHERE nr_seq_configuracao = $codigo
+                      AND r.st_ativo = 'A'
+                      ORDER BY rs.ds_rede ASC";
+              //echo $SQL;
+              $RSS = mysqli_query($conexao, $SQL);
+              while ($linha = mysqli_fetch_row($RSS)) {
+                $ds_link = $linha[0];
+                $ds_icone = $linha[1];
+
+                ?>
+                <li class="list-inline-item"><a href="<?php echo $ds_link; ?>" target="_blank" class="social-link"><i class="<?php echo $ds_icone; ?>" style="font-size: 50px;"></i></a></li>
+            <?php } ?>
           </ul>
-          <p class="copyrights-text mb-0">Copyright &copy; 2018 All rights reserved — Designed by <a href="https://dribbble.com/danielkorpai" target="_blank" class="copyrights-link">Daniel Korpai</a></p>
-          <p class="copyrights-text mb-0">Coded by <a href="https://bootstrapious.com/landing-pages" target="_blank" class="copyrights-link">Bootstrapious</a></p>
+          <p class="copyrights-text mb-0">Copyright © 2024 Csimulador. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
@@ -363,5 +398,23 @@
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
+    <script>
+
+      function SalvarEmail(){
+
+        var email = document.getElementById("email").value;
+
+        if (email == "") {
+          alert('Informe o seu E-mail!');
+          document.getElementById('email').focus();
+        } else {
+
+          window.open('acao.php?Tipo=EMAIL&email=' + email, "acao");
+
+        }
+
+      }
+
+      </script>
   </body>
 </html>
