@@ -7,7 +7,7 @@
   require_once '../conexao.php';
 
   $SQL = "SELECT ds_nome, ds_secao1, ds_subsecao1, ds_secao2, ds_subsecao2, ds_secao3, ds_subsecao3,
-            ds_secao4, ds_subsecao4, ds_secao5, ds_subsecao5, nr_sequencial
+            ds_secao4, ds_subsecao4, ds_secao5, ds_subsecao5, nr_sequencial, cor_principal, cor_secundaria
             FROM configuracao_site
           WHERE st_status = 'A'
           ORDER BY nr_sequencial LIMIT 1";
@@ -25,7 +25,30 @@
     $ds_secao5 = $linha[9];
     $ds_subsecao5 = $linha[10];
     $codigo = $linha[11];
+    $cor_principal = $linha[12];
+    $cor_secundaria = $linha[13];
   }
+
+  $ds_arquivo1 = "";
+  $SQL1 = "SELECT ds_arquivo
+            FROM upload
+          WHERE nr_seq_configuracao = $codigo
+          AND nr_seq_categoria = 1";
+  $RSS1 = mysqli_query($conexao, $SQL1);
+  while($linha1 = mysqli_fetch_row($RSS1)){
+    $ds_arquivo1 = $linha1[0];
+  }
+
+  $ds_arquivo2 = "";
+  $SQL2 = "SELECT ds_arquivo
+            FROM upload
+          WHERE nr_seq_configuracao = $codigo
+          AND nr_seq_categoria = 2";
+  $RSS2 = mysqli_query($conexao, $SQL2);
+  while($linha2 = mysqli_fetch_row($RSS2)){
+    $ds_arquivo2 = $linha2[0];
+  }
+
  
 ?>
 
@@ -53,7 +76,7 @@
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="css/custom.css">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="../gerenciador/site/imagens/<?php echo $ds_arquivo1; ?>">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -69,11 +92,52 @@
           .card:hover {
             transform: translateY(-10px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            background-color: #C0C0C0; /* Cor de fundo cinza escuro quando passar o mouse */
+            background-color: <?php echo $cor_secundaria; ?>; /* Cor de fundo cinza escuro quando passar o mouse */
           }
+
+          .btn-with-icon {
+            position: relative; /* Para alinhar o ícone corretamente */
+          }
+
           .icon {
-            font-size: 4rem;
+            font-size: 3rem; /* Defina o tamanho desejado para o ícone maior */
           }
+
+          .small-icon {
+            font-size: 2rem; /* Defina o tamanho desejado para o ícone pequeno */
+          }
+
+          .btn-primary {
+            transition: background-color 0.3s ease; /* Adiciona um efeito de transição de cor */
+            background-color: <?php echo $cor_principal; ?>;
+            border-color: <?php echo $cor_principal; ?>; /* Adicionando a mesma cor para a borda */
+            height: 65px; /* Defina o tamanho desejado para a altura */
+          }
+
+          .btn-primary:hover {
+            background-color: <?php echo $cor_secundaria; ?>; /* Escurecendo um pouco ao passar o mouse */
+            border-color: <?php echo $cor_secundaria; ?>; /* Também escurecendo a borda ao passar o mouse */
+          }
+
+          .gradient-icon {
+            border-radius: 0.8rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            color: #fff;
+            background-color: <?php echo $cor_principal; ?> !important;
+            line-height: 3.5rem;
+            text-align: center;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+          }
+
+          .gradient-1 {
+            background: linear-gradient(150deg, <?php echo $cor_principal; ?>, <?php echo $cor_principal; ?>) !important;
+            -webkit-box-shadow: 0 2px 4px rgba(36, 8, 128, 0.2);
+            box-shadow: 0 2px 4px rgba(36, 8, 128, 0.2);
+          }
+
           .card-title {
             color: #333;
           }
@@ -100,7 +164,7 @@
 
           /* Estilos para o footer */
           .footer {
-            background-color: #6a5acd; /* Cor de fundo do footer */
+            background-color: <?php echo $cor_principal; ?>;/* Cor de fundo do footer */
             color: #fff; /* Cor do texto dentro do footer */
             padding: 20px 0; /* Espaçamento interno do footer */
           }
@@ -111,7 +175,7 @@
           }
           
           .social-link:hover {
-            color: #ccc; /* Cor dos ícones sociais ao passar o mouse */
+            color: <?php echo $cor_secundaria; ?> /* Cor dos ícones sociais ao passar o mouse */
           }
           
           .copyrights-text {
@@ -127,7 +191,7 @@
     <header class="header">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="img/logo.jpeg" alt="..." class="img-fluid"></a>
+          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="../gerenciador/site/imagens/<?php echo $ds_arquivo1; ?>" alt="..." class="img-fluid"></a>
           <!-- Navbar toggler button-->
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">
@@ -164,7 +228,7 @@
               <!-- Subscription form-->
               <form action="#" class="subscription-form mt-5">
                 <div class="form-group">
-                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">QUERO REALIZAR MEUS SONHOS</a>
+                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">SAIBA MAIS <i class="icon ion-ios-log-in small-icon"></i></a>
                 </div>
               </form> 
               <!-- Platforms-->
@@ -194,13 +258,13 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-6 order-lg-last"> <!-- Mudança na ordem da coluna para dispositivos grandes -->
-              <img src="img/logo.jpeg" alt="..." style="max-width: 100%;"> <!-- Adição de style para limitar a largura máxima -->
+              <img src="../gerenciador/site/imagens/<?php echo $ds_arquivo2; ?>" alt="..." style="max-width: 100%;"> <!-- Adição de style para limitar a largura máxima -->
             </div>
             <div class="col-lg-6">
               <h2 class="mb-10 text-center"><?php echo $ds_secao2; ?></h2><br> <!-- Alinhamento do texto à direita -->
               <p class="lead text-left"><?php echo $ds_subsecao2; ?></p> <!-- Alinhamento do texto à direita -->
               <div class="form-group"><br>
-                <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONHEÇA NOSSA EMPRESA</a>
+                <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONHEÇA NOSSA EMPRESA <i class="icon ion-ios-log-in small-icon"></i></a>
               </div>
             </div>
           </div>
@@ -221,39 +285,22 @@
           <div class="container mt-2">
             <div class="row mt-2">
               <div class="col-md-4">
-                  <a href="contato.php" class="card-link">
-                      <div class="card text-center">
-                          <div class="card-body">
-                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
-                              <h4 class="card-title">Fale com a Zenatti Consórcios</h4>
-                              <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
-                          </div>
-                      </div>
-                  </a> <!-- Tag de fechamento adicionada -->
+                <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="card-link">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
+                            <h4 class="card-title">Consórcios</h4>
+                            <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
+                            <p class="card-text">Clique para ver detalhes  <i class="icon ion-ios-arrow-round-forward small-icon"></i></p>
+                        </div>
+                    </div>
+                </a> <!-- Tag de fechamento adicionada -->
               </div>
-              <div class="col-md-4">
-                  <a href="contato.php" class="card-link">
-                      <div class="card text-center">
-                          <div class="card-body">
-                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-home"></i></div>
-                              <h4 class="card-title">Casa</h4>
-                              <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
-                          </div>
-                      </div>
-                  </a>
-              </div>
-              <div class="col-md-4">
-                  <a href="contato.php" class="card-link">
-                      <div class="card text-center">
-                          <div class="card-body">
-                              <div class="gradient-icon gradient-1"><i class="icon ion-ios-car"></i></div>
-                              <h4 class="card-title">Carro</h4>
-                              <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
-                          </div>
-                      </div>
-                  </a>
-              </div>
+              
             </div>
+        </div>
+        <div class="form-group text-center"><br>
+          <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">MAIS CONSÓRCIOS <i class="icon ion-ios-log-in small-icon"></i></a>
         </div>
       </section>
 
@@ -278,7 +325,7 @@
                   <div class="showcase-image-holder">
                     <div class="device-wrapper">
                      <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
-                        <div class="screen"><img src="img/showcase-screen-1.jpg" alt="..." class="img-fluid"></div>
+                        <div class="screen"><img src="img/imagem1.jpeg" alt="..." class="img-fluid"></div>
                       <!-- </div>-->
                     </div>
                   </div>
@@ -286,7 +333,7 @@
                 <div id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" class="tab-pane fade">
                   <div class="showcase-image-holder">
                       <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
-                      <div class="screen"><img src="img/showcase-screen-2.jpg" alt="..." class="img-fluid"></div>
+                      <div class="screen"><img src="img/imagem2.jpeg" alt="..." class="img-fluid"></div>
                       <!-- </div>-->
                   </div>
                 </div>
@@ -345,7 +392,9 @@
                       <div class="form-group">
                         <label>Email</label>
                         <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
-                        <button type="button" class="btn btn-primary" onClick="javascript: SalvarEmail();">Receber Novidades</button>
+                        <button type="button" class="btn btn-primary btn-with-icon" onClick="javascript: SalvarEmail();">
+                            RECEBER NOVIDADES
+                        </button>
                       </div>
                     </form>
                   </div>

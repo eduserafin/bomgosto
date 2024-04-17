@@ -2,6 +2,31 @@
     .linha-divisoria {
         border-top: 1px solid black; /* Define a cor e a espessura da linha */
     }
+
+    .color-option {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        border: 1px solid #000;
+        margin-right: 5px;
+    }
+
+    #selected-color1 {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        border: 1px solid #000;
+        margin-right: 5px;
+    }
+
+    #selected-color2 {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        border: 1px solid #000;
+        margin-right: 5px;
+    }
+
 </style>
 
 <body onLoad="document.getElementById('txtnome').focus();">
@@ -25,6 +50,41 @@
                 <option value='A'>ATIVO</option>
                 <option value='I'>INATIVO</option>
             </select>
+        </div>
+    </div>
+
+    <div class="row"><br>
+        <div class="col-md-4 form-inline">
+            <label for="txtcorprincipal">COR PRINCIPAL:</label>
+            <select id="txtcorprincipal" class="form-control" style="background:#E0FFFF;">
+                <option value="#ff0000">Vermelho</option>
+                <option value="#00ff00">Verde</option>
+                <option value="#0000ff">Azul</option>
+                <option value="#FF00FF">Magenta</option>
+                <option value="#FFA500">Laranja</option>
+                <option value="#FFFF00">Amarelo</option>
+                <option value="#800080">Roxo</option>
+                <option value="#00BFFF">Azul Fraco</option>
+                
+                <!-- Adicione mais opções de cores conforme necessário -->
+            </select>
+            <div class="col-md-1" id="selected-color1"></div>
+        </div>
+       
+        <div class="col-md-4 form-inline">
+            <label for="txtcorsecundaria">COR SECUNDARIA:</label>
+            <select id="txtcorsecundaria" class="form-control" style="background:#E0FFFF;">
+                <option value="#C0C0C0">Cinza</option>
+                <option value="#00FFFF">Ciano</option>
+                <option value="#EE82EE">Violeta</option>
+                <option value="#DCDCDC">Cinza Fraco</option>
+                <option value="#E6E6FA">Lavanda</option>
+                <option value="#FFE4E1">Rose</option>
+                <option value="#87CEEB">Azul Fraco</option>
+                <option value="#FFD700">Gold</option>
+                <!-- Adicione mais opções de cores conforme necessário -->
+            </select>
+            <div class="col-md-1" id="selected-color2"></div>
         </div>
     </div>
     <br>
@@ -105,6 +165,23 @@
 
 <script type="text/javascript">
 
+    // Função para atualizar as cores selecionadas
+    function atualizarCoresSelecionadas() {
+        const cor1 = document.getElementById('txtcorprincipal').value;
+        const cor2 = document.getElementById('txtcorsecundaria').value;
+        document.getElementById('selected-color1').style.backgroundColor = cor1;
+        document.getElementById('selected-color2').style.backgroundColor = cor2;
+    }
+
+    // Adicionar evento de mudança para atualizar as cores selecionadas quando a cor principal mudar
+    document.getElementById('txtcorprincipal').addEventListener('change', atualizarCoresSelecionadas);
+
+    // Adicionar evento de mudança para atualizar as cores selecionadas quando a cor secundária mudar
+    document.getElementById('txtcorsecundaria').addEventListener('change', atualizarCoresSelecionadas);
+
+    // Inicializar as cores selecionadas
+    atualizarCoresSelecionadas();
+
     function BuscaProdutos(quantidade, configuracao) {
 
         var url = 'gerenciador/site/produtos.php?consulta=sim&quantidade=' + quantidade + '&configuracao=' + configuracao;
@@ -140,6 +217,8 @@
             document.getElementById("txtsecao5").value = "";
             document.getElementById('txtsubsecao5').value = "";
             document.getElementById("txtstatus").value = "A";
+            document.getElementById("txtcorprincipal").value = "#ff0000";
+            document.getElementById("txtcorsecundaria").value = "#C0C0C0";
             document.getElementById('txtnome').focus();
 
         } else if (id=="save"){  
@@ -157,6 +236,12 @@
             var secao5 = document.getElementById("txtsecao5").value;
             var subsecao5 = document.getElementById('txtsubsecao5').value;
             var status = document.getElementById("txtstatus").value;
+            var corprincipal = document.getElementById("txtcorprincipal").value;
+            var corsecundaria = document.getElementById("txtcorsecundaria").value;
+
+            // Substituir '#' por outra letra, por exemplo, 'X'
+            corprincipal = corprincipal.replace('#', 'X');
+            corsecundaria = corsecundaria.replace('#', 'X');
         
             if (nome == "") {
 
@@ -175,7 +260,7 @@
                     Tipo = "A";
                 }
 
-                window.open('gerenciador/site/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&secao1=' + secao1 + '&subsecao1=' + subsecao1 + '&secao2=' + secao2 + '&subsecao2=' + subsecao2 + '&secao3=' + secao3 + '&subsecao3=' + subsecao3 + '&secao4=' + secao4 + '&subsecao4=' + subsecao4 + '&secao5=' + secao5 + '&subsecao5=' + subsecao5 + '&status=' + status, "acao");
+                window.open('gerenciador/site/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&secao1=' + secao1 + '&subsecao1=' + subsecao1 + '&secao2=' + secao2 + '&subsecao2=' + subsecao2 + '&secao3=' + secao3 + '&subsecao3=' + subsecao3 + '&secao4=' + secao4 + '&subsecao4=' + subsecao4 + '&secao5=' + secao5 + '&subsecao5=' + subsecao5 + '&status=' + status + '&corprincipal=' + corprincipal + '&corsecundaria=' + corsecundaria, "acao");
             }
 
         } else if (id == "delete") {

@@ -22,6 +22,27 @@
       $ds_conteudo2 = $linha[5];
     }
 
+    $SQL0 = "SELECT cor_principal, cor_secundaria
+                FROM configuracao_site
+            WHERE nr_sequencial = $codigo";
+    //echo "<pre>$SQL0</pre>";
+    $RSS0 = mysqli_query($conexao, $SQL0);
+    while($linha0 = mysqli_fetch_row($RSS0)){
+      $cor_principal = $linha0[0];
+      $cor_secundaria = $linha0[1];
+    }
+
+    $ds_arquivo1 = "";
+    $SQL1 = "SELECT ds_arquivo
+              FROM upload
+            WHERE nr_seq_configuracao = $codigo
+            AND nr_seq_categoria = 1";
+    $RSS1 = mysqli_query($conexao, $SQL1);
+    while($linha1 = mysqli_fetch_row($RSS1)){
+      $ds_arquivo1 = $linha1[0];
+    }
+
+
   }
 
 ?>
@@ -50,7 +71,7 @@
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="css/custom.css">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="../gerenciador/site/imagens/<?php echo $ds_arquivo1; ?>">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -63,7 +84,7 @@
 
         /* Estilos para o footer */
         .footer {
-          background-color: #6a5acd; /* Cor de fundo do footer */
+          background-color: <?php echo $cor_principal; ?>; /* Cor de fundo do footer */
           color: #fff; /* Cor do texto dentro do footer */
           padding: 20px 0; /* Espaçamento interno do footer */
         }
@@ -74,7 +95,7 @@
         }
         
         .social-link:hover {
-          color: #ccc; /* Cor dos ícones sociais ao passar o mouse */
+          color: <?php echo $cor_secundaria; ?>;; /* Cor dos ícones sociais ao passar o mouse */
         }
         
         .copyrights-text {
@@ -88,7 +109,7 @@
     <header class="header">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="img/logo.jpeg" alt="..." class="img-fluid"></a>
+          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="../gerenciador/site/imagens/<?php echo $ds_arquivo1; ?>" alt="..." class="img-fluid"></a>
           <!-- Navbar toggler button-->
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">

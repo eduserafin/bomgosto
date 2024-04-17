@@ -1,0 +1,79 @@
+
+/* Estilos personalizados */
+.card {
+  border: none;
+  border-radius: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  background-color: #f8f9fa; /* Cor de fundo cinza */
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  background-color: #C0C0C0; /* Cor de fundo cinza escuro quando passar o mouse */
+}
+
+.btn-with-icon {
+  position: relative; /* Para alinhar o ícone corretamente */
+}
+
+.icon {
+  font-size: 3rem; /* Defina o tamanho desejado para o ícone maior */
+}
+
+.small-icon {
+  font-size: 1rem; /* Defina o tamanho desejado para o ícone pequeno */
+}
+
+.btn-primary {
+  transition: background-color 0.3s ease; /* Adiciona um efeito de transição de cor */
+}
+
+.btn-primary:hover {
+  background-color: #FF4500; /* Cor de fundo ao passar o mouse */
+}
+
+.card-title {
+  color: #333;
+}
+.card-text {
+  color: #666;
+}
+
+/* Reduzindo o padding da seção de assinatura */
+.subscription {
+    padding-top: 10px; /* Ajuste conforme necessário */
+    padding-bottom: 10px; /* Ajuste conforme necessário */
+}
+
+/* Reduzindo as margens superior e inferior da primeira seção */
+.app-showcase {
+    margin-bottom: 10px; /* Ajuste conforme necessário */
+}
+
+/* Se necessário, também pode ajustar o padding interno da div container dentro da seção de assinatura */
+.subscription .container {
+    padding-top: 10px; /* Ajuste conforme necessário */
+    padding-bottom: 10px; /* Ajuste conforme necessário */
+}
+
+/* Estilos para o footer */
+.footer {
+  background-color: #6a5acd; /* Cor de fundo do footer */
+  color: #fff; /* Cor do texto dentro do footer */
+  padding: 20px 0; /* Espaçamento interno do footer */
+}
+
+.social-link {
+  color: #fff; /* Cor dos ícones sociais */
+  text-decoration: none; /* Remover sublinhado dos links */
+}
+
+.social-link:hover {
+  color: #ccc; /* Cor dos ícones sociais ao passar o mouse */
+}
+
+.copyrights-text {
+  margin-top: 10px; /* Espaçamento acima do texto de direitos autorais */
+}
+

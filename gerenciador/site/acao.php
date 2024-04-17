@@ -36,9 +36,15 @@
         echo "<script language='javascript'>window.parent.document.getElementById('txtsecao5').value='" . $RS["ds_secao5"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtsubsecao5').value='" . $RS["ds_subsecao5"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtstatus').value='" . $RS["st_status"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtcorprincipal').value='" . $RS["cor_principal"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtcorsecundaria').value='" . $RS["cor_secundaria"] . "';</script>";
+        echo "<script language='javascript'>window.parent.atualizarCoresSelecionadas();</script>";
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/sobre.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','sobre')</script>";
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/contato.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','contato')</script>";
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/redes.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','redes')</script>";
+        echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/upload.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','upload')</script>";
+        echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/campanhas.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','campanha')</script>";
+        echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/produtos.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','produto')</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
       
       }
@@ -49,8 +55,12 @@
 
   if ($Tipo == "I") {
 
-    $insert = "INSERT INTO configuracao_site (ds_nome, ds_secao1, ds_secao2, ds_secao3, ds_secao4, ds_secao5, ds_subsecao1, ds_subsecao2, ds_subsecao3, ds_subsecao4, ds_subsecao5, st_status, cd_usercadastro) 
-              VALUES ('" . $nome . "', '" . $secao1 . "',  '" . $secao2 . "', '" . $secao3 . "', '" . $secao4 . "', '" . $secao5 . "', '" . $subsecao1 . "', '" . $subsecao2 . "', '" . $subsecao3 . "', '" . $subsecao4 . "', '" . $subsecao5 . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
+    // Substituir a letra 'X' de volta pelo caractere '#'
+    $corprincipal = str_replace('X', '#', $corprincipal);
+    $corsecundaria = str_replace('X', '#', $corsecundaria);
+
+    $insert = "INSERT INTO configuracao_site (ds_nome, ds_secao1, ds_secao2, ds_secao3, ds_secao4, ds_secao5, ds_subsecao1, ds_subsecao2, ds_subsecao3, ds_subsecao4, ds_subsecao5, st_status, cor_principal, cor_secundaria, cd_usercadastro) 
+              VALUES ('" . $nome . "', '" . $secao1 . "',  '" . $secao2 . "', '" . $secao3 . "', '" . $secao4 . "', '" . $secao5 . "', '" . $subsecao1 . "', '" . $subsecao2 . "', '" . $subsecao3 . "', '" . $subsecao4 . "', '" . $subsecao5 . "', '" . $status . "', '" . $corprincipal . "', '" . $corsecundaria . "', " . $_SESSION["CD_USUARIO"] . ")";
     //echo $insert;
     $rss_insert = mysqli_query($conexao, $insert);
 
@@ -88,6 +98,10 @@
   //==================================-ALTERACAO DOS DADOS-===============================================
 
   if ($Tipo == "A") {
+
+    // Substituir a letra 'X' de volta pelo caractere '#'
+    $corprincipal = str_replace('X', '#', $corprincipal);
+    $corsecundaria = str_replace('X', '#', $corsecundaria);
     
       $update = "UPDATE configuracao_site
                     SET ds_nome = '" . $nome . "',
@@ -102,6 +116,8 @@
                         ds_subsecao4 = '" . $subsecao4 . "', 
                         ds_subsecao5 = '" . $subsecao5 . "', 
                         st_status = '" . $status . "', 
+                        cor_principal = '" . $corprincipal . "', 
+                        cor_secundaria = '" . $corsecundaria . "', 
                         cd_useralterado = " . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado = CURRENT_TIMESTAMP   
                   WHERE nr_sequencial=" . $codigo;
@@ -309,7 +325,7 @@
 
     $insert_rede = "INSERT INTO redes_site (nr_seq_configuracao, nr_seq_rede, ds_link, st_ativo) 
                     VALUES (" . $codigo . ", " . $rede . ",  '" . $link . "', '" . $status . "')";
-    echo $insert_rede;
+    //echo $insert_rede;
     $rss_insert = mysqli_query($conexao, $insert_rede);
 
     if ($rss_insert) {
@@ -359,7 +375,7 @@
               }); 
               window.parent.executafuncao('new');
               window.parent.consultar(0);
-              window.parent.CarregarLoad('gerenciador/site/redes.php?consultar=sim&codigo=" . $codigo . "','redes')  
+              window.parent.CarregarLoad('gerenciador/site/redes.php?consultar=sim&codigo=" . $configuracao . "','redes')  
             </script>";
 
     } else {
@@ -379,56 +395,214 @@
 
   } 
 
+  //==================================- CADASTRAR CAMPANHAS-===============================================
 
-  if ($Tipo == "produtos") {
+  if ($Tipo == "CA") {
 
-  $del = "DELETE FROM produtos_site WHERE nr_seq_configuracao = $configuracao";
-  mysqli_query($conexao, $del);
+    $insert_campanha = "INSERT INTO campanhas_site (nr_seq_configuracao, ds_campanha, ds_icone, ds_imagem, st_ativo, ds_detalhamento) 
+                    VALUES (" . $codigo . ", UPPER('" . $nome . "'), '" . $icone . "', '" . $imagem . "', '" . $status . "', '" . $detalhamento . "')";
+    //echo $insert_campanha;
+    $rss_insert = mysqli_query($conexao, $insert_campanha);
 
-  $campo = array();
-  $dados = array();
-  $campo = explode("|", $produtos);
+    if ($rss_insert) {
 
-  for($i=0;$i<$qtdprodutos;$i++){
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'success',
+                title: 'Show...',
+                text: 'Campanha cadastrada com sucesso!'
+              }); 
+              window.parent.executafuncao('new');
+              window.parent.consultar(0);
+              window.parent.CarregarLoad('gerenciador/site/campanhas.php?consultar=sim&codigo=" . $codigo . "','campanha')  
+            </script>";
 
-      $dados = explode(";", $campo[$i]);
-      $produto = $dados[0];
-      $icone = $dados[1];
-      $descricao = $dados[2];
+    } else {
 
-      if($qtdprodutos > 0){
+      // Erro ao gravar o registro
+      echo "Erro ao gravar o registro: " . mysqli_error($conexao);
 
-        $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, nr_ordem, ds_produto, ds_icone, ds_descricao) 
-                          VALUES (" . $configuracao . ", " . $i . ",  '" . $produto . "', '" . $icone . "', '" . $descricao . "')";
-        //echo $insert_produto;
-        $rss_insert_produto = mysqli_query($conexao, $insert_produto);
-
-      }
-  }
-
-  $del = "DELETE FROM campanhas_site WHERE nr_seq_configuracao = $configuracao";
-  mysqli_query($conexao, $del);
-
-  $campo1 = array();
-  $dados1 = array();
-  $campo1 = explode("|", $campanhas);
-
-  for($i=0;$i<$qtdcampanhas;$i++){
-
-    $dados1 = explode(";", $campo1[$i]);
-    $campanha = $dados1[0];
-    $icone = $dados1[1];
-
-    if($qtdcampanhas > 0){
-
-      $insert_campanha = "INSERT INTO campanhas_site (nr_seq_configuracao, nr_ordem, ds_campanha, ds_icone) 
-                        VALUES (" . $configuracao . ", " . $i . ",  '" . $campanha . "', '" . $icone . "')";
-      //echo $insert_campanha;
-      $rss_insert_campanha = mysqli_query($conexao, $insert_campanha);
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao gravar!'
+              });
+            </script>";
 
     }
+
+}
+
+//==================================- EXCLUIR CAMPANHAS-===============================================
+
+if ($Tipo == "ECA") {
+
+  $delete = "DELETE FROM campanhas_site WHERE nr_sequencial = " . $codigo . "";
+  $result = mysqli_query($conexao, $delete);
+
+  if ($result) {
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'success',
+              title: 'Show...',
+              text: 'Campanha excluida com sucesso!'
+            }); 
+            window.parent.executafuncao('new');
+            window.parent.consultar(0);
+            window.parent.CarregarLoad('gerenciador/site/campanhas.php?consultar=sim&codigo=" . $configuracao . "','campanha')  
+          </script>";
+
+  } else {
+
+    // Erro ao gravar o registro
+    echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Problemas ao excluir!'
+            });
+          </script>";
+
+  }
+
+} 
+
+//==================================- CADASTRAR PRODUTOS-===============================================
+
+if ($Tipo == "P") {
+
+  $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, ds_produto, ds_icone, ds_imagem, st_ativo, ds_detalhamento) 
+                  VALUES (" . $codigo . ", UPPER('" . $nome . "'), '" . $icone . "', '" . $imagem . "', '" . $status . "', '" . $detalhamento . "')";
+  //echo $insert_produto;
+  $rss_insert = mysqli_query($conexao, $insert_produto);
+
+  if ($rss_insert) {
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'success',
+              title: 'Show...',
+              text: 'Produto cadastrado com sucesso!'
+            }); 
+            window.parent.executafuncao('new');
+            window.parent.consultar(0);
+            window.parent.CarregarLoad('gerenciador/site/produtos.php?consultar=sim&codigo=" . $codigo . "','produto')  
+          </script>";
+
+  } else {
+
+    // Erro ao gravar o registro
+    echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Problemas ao gravar!'
+            });
+          </script>";
 
   }
 
 }
+
+//==================================- EXCLUIR PRODUTOS-===============================================
+
+if ($Tipo == "EP") {
+
+  $delete = "DELETE FROM produtos_site WHERE nr_sequencial = " . $codigo . "";
+  $result = mysqli_query($conexao, $delete);
+
+  if ($result) {
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'success',
+              title: 'Show...',
+              text: 'Produto excluido com sucesso!'
+            }); 
+            window.parent.executafuncao('new');
+            window.parent.consultar(0);
+            window.parent.CarregarLoad('gerenciador/site/produtos.php?consultar=sim&codigo=" . $configuracao . "','produto')  
+          </script>";
+
+  } else {
+
+    // Erro ao gravar o registro
+    echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Problemas ao excluir!'
+            });
+          </script>";
+
+  }
+
+} 
+
+//==================================- EXCLUIR IMAGENS-===============================================
+
+if($Tipo == "ExcluirImagem"){
+  
+  $select = "SELECT ds_arquivo FROM upload WHERE nr_sequencial = $cdarquivo";
+  $res = mysqli_query($conexao, $select);
+  while($lin=mysqli_fetch_row($res)){ $ds_arquivo = $lin[0]; }
+
+  $delete = "DELETE FROM upload WHERE nr_sequencial = $cdarquivo";
+  mysqli_query($conexao, $delete); //echo $delete;
+
+  unlink("imagens/" . $ds_arquivo);
+
+  echo "<script language='JavaScript'>
+      alert('Imagem excluida com sucesso!');
+      window.parent.CarregarLoad('gerenciador/site/upload.php?consultar=sim&codigo=".$codigo."', 'upload');
+  </script>";
+
+}
+
+//==================================- CADASTRAR IMAGENS-===============================================
+
+if($Tipo == "AdicionarImagem"){
+
+
+  $imagem = 'NULL';
+
+  //Verifica se $_FILES está setado, isto é, foi enviado um arquivo
+  if($_FILES){
+      //Inclui o helper que faz upload
+      include '../../inc/upload_helper.php';
+
+      //Chama a função do helper que faz upload, passando o arquivo como primeiro parâmetro, e a pasta destino como segundo, gravando o retorno da função na variável
+      $resultadoUpload = fileUpload($_FILES['imagem'], 'imagens/');
+
+      //Verifica se houve erro ao fazer upload
+      if($resultadoUpload['error'] == true){
+          header("Content-Type: application/json"); //Seta o retorno para tipo JSON, para ser mais fácil tratar no javascript
+          header("HTTP/1.0 400 Bad Request");  //Seta o retorno como código 400, erro
+          echo json_encode($resultadoUpload); //Imprime o resultado
+          exit(); //Para a execução
+      }
+
+      //Se não parou a execução, dá sequencia
+
+      $ds_arquivo = $resultadoUpload['filename']; //Pega o nome do arquivo enviado
+
+      $imagem = "'$ds_arquivo'"; //Seta a string 
+  }
+
+  $insert_imagem = "INSERT INTO upload (nr_seq_categoria, nr_seq_configuracao, ds_descricao, nr_seq_usuario, ds_arquivo)
+          VALUES ($categoria, $codigo, '$descricao', ".$_SESSION["CD_USUARIO"].",  $imagem)";
+  //echo $insert_imagem;
+  $res_imagem = mysqli_query($conexao, $insert_imagem);
+
+}
+
+
 ?>

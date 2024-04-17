@@ -38,7 +38,7 @@
           <th style="vertical-align:middle;">CONFIGURAÇÃO</th>
           <th style="vertical-align:middle;">NOME DA PÁGINA</th>
           <th style="vertical-align:middle;">STATUS</th>
-          <th colspan=2 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
+          <th colspan=3 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
         </tr>
 
         <?php
@@ -63,8 +63,10 @@
               <td><?php echo $nr_sequencial; ?></td>
               <td><?php echo $ds_nome; ?></td>
               <td><?php echo $status; ?></td>
+              <td width="3%" align="center"><button class="btn btn-success" onclick="abrirLink()" title="ABRIR SITE" alt="ABRIR SITE"><span class="glyphicon glyphicon-share"></span></button></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
+              
             </tr>
 
             <?php
@@ -116,6 +118,13 @@
 
       }
 
+    }
+
+    // Função para abrir o link em uma nova aba
+    function abrirLink() {
+      // Substitua "SEU_LINK_AQUI" pelo link desejado
+      var link = "http://localhost/csimulador/site/index.php?";
+      window.open(link, "_blank");
     }
 
 </script>

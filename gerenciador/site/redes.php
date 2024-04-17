@@ -9,19 +9,16 @@
         require_once $ant.'conexao.php';
     }
 
-    if($codigo != ""){
+    if($codigo != ""){ ?>
 
-        ?>
-
-        <body onLoad="document.getElementById('txttitulocontato').focus();">
+        <style>
+            .linha-divisoria {
+                border-top: 1px solid black; /* Define a cor e a espessura da linha */
+            }
+        </style>
+        <body onLoad="document.getElementById('txtredes').focus();">
             <input type="hidden" name="cd_configuracao_contato" id="cd_configuracao_contato" value="<?php echo $codigo; ?>">
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-10"><br>
-                    <label>Cadastre as redes sociais que sua empresa possui.</label>
-                </div>
-            </div>
-            <div class="row-100"><br>         
+            <div class="row"><br>         
                 <div class="col-md-3">  
                     <label>REDE SOCIAL:</label>        
                     <select id="txtredes" class="form-control">
@@ -43,7 +40,7 @@
                 </div>
                 <div class="col-md-5">
                     <label for="txtredeslink">LINK:</label>                    
-                    <input type="text" name="txtredeslink" id="txtredeslink" size="15" maxlength="200" class="form-control" placeholder="Link da rede social" value="<?php echo $ds_titulo; ?>">
+                    <input type="text" name="txtredeslink" id="txtredeslink" size="15" maxlength="200" class="form-control" placeholder="Link da rede social">
                 </div>
                 <div class="col-md-2">
                     <label for="txtstatusredes">STATUS:</label>                    
@@ -55,9 +52,11 @@
                 <div class="col-md-1"><br>
                     <button type=button name="btsalvar" id="btsalvar" class="btn btn-success" onClick="javascript: SalvarRede(<?php echo $codigo; ?>);"><span class="glyphicon glyphicon-ok"></span> SALVAR</button>
                 </div>
-           
-                <div class="col-md-12"><br><br><br></div>
+            </div>
 
+            <hr class="linha-divisoria"> <!-- Linha divisória -->
+
+            <div class="row-100">
                 <table width="100%" class="table table-bordered table-striped">
                     <tr>
                         <th style="vertical-align:middle;">REDE SOCIAL</th>
@@ -139,7 +138,8 @@
 
     function ExcluirRede(id){
 
-        window.open('gerenciador/site/acao.php?Tipo=ER&codigo=' + id, "acao");
+        var codigo = document.getElementById('cd_configuracao_contato').value;
+        window.open('gerenciador/site/acao.php?Tipo=ER&codigo=' + id + '&configuracao=' + codigo, "acao");
     }
 
 </script>
