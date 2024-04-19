@@ -160,7 +160,7 @@
             <ul class="navbar-nav mx-auto ml-auto">
                   <li class="nav-item"> <a href="index.php?codigo=<?php echo $codigo; ?>" class="nav-link">Home</a></li>
                   <!-- Link-->
-                  <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Produtos</a></li>
+                  <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Consórcios</a></li>
                   <!-- Link-->
                   <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
                   <!-- Link-->
@@ -168,7 +168,7 @@
               <li class="nav-item dropdown"><a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Abas</a>
                 <div class="dropdown-menu">
                   <a href="index.php" class="dropdown-item">Home</a>
-                  <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Produtos</a>
+                  <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Consórcios</a>
                   <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Sobre</a>
                   <a href="contato.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Contato</a>
                 </div>

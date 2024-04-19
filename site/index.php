@@ -199,7 +199,7 @@
                   <!-- Link-->
                   <li class="nav-item"> <a href="index.php?codigo=<?php echo $codigo; ?>" class="nav-link">Home</a></li>
                   <!-- Link-->
-                  <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Produtos</a></li>
+                  <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Consórcios</a></li>
                   <!-- Link-->
                   <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
                   <!-- Link-->
@@ -207,7 +207,7 @@
               <li class="nav-item dropdown"><a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Abas</a>
                 <div class="dropdown-menu">
                   <a href="index.php" class="dropdown-item">Home</a>
-                  <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Produtos</a>
+                  <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Consórcios</a>
                   <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Sobre</a>
                   <a href="contato.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Contato</a>
                 </div>
@@ -271,84 +271,164 @@
         </div>
       </section>
 
-      <!-- SEÇÃO 3-->
-      <section class="features shape-2">         
-        <div class="container">
-          <div class="section-header text-center"><span class="section-header-title"></span>
-            <h2 class="h2"><?php echo $ds_secao3; ?></h2>
-            <div class="row">
-              <div class="col-lg-8 mx-auto">
-                <p class="lead"><?php echo $ds_subsecao3; ?></p>
+      <?php 
+      $v_existe_produto = "";
+      $SQL5 = "SELECT COUNT(nr_sequencial)
+                  FROM produtos_site
+                WHERE nr_seq_configuracao = $codigo
+                AND st_ativo = 'A'";
+      $RSS5 = mysqli_query($conexao, $SQL5);
+      while($linha5 = mysqli_fetch_row($RSS5)){
+        $v_existe_produto = $linha5[0];
+      }
+      
+      if($v_existe_produto != ""){ ?>
+        <!-- SEÇÃO 3-->
+        <section class="features shape-2">         
+          <div class="container">
+            <div class="section-header text-center"><span class="section-header-title"></span>
+              <h2 class="h2"><?php echo $ds_secao3; ?></h2>
+              <div class="row">
+                <div class="col-lg-8 mx-auto">
+                  <p class="lead"><?php echo $ds_subsecao3; ?></p>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="container mt-2">
-            <div class="row mt-2">
-              <div class="col-md-4">
-                <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="card-link">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
-                            <h4 class="card-title">Consórcios</h4>
-                            <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
-                            <p class="card-text">Clique para ver detalhes  <i class="icon ion-ios-arrow-round-forward small-icon"></i></p>
-                        </div>
+            <div class="container mt-2">
+              <div class="row mt-2">
+                <?php
+                  $SQL6 = "SELECT nr_sequencial, ds_produto, ds_icone, nr_seq_categoria
+                            FROM produtos_site
+                          WHERE nr_seq_configuracao = $codigo
+                          AND st_ativo = 'A'
+                          ORDER BY nr_sequencial ASC LIMIT 3";
+                  $RSS6 = mysqli_query($conexao, $SQL6);
+                  while($linha6 = mysqli_fetch_row($RSS6)){
+                    $nr_seq_produto = $linha6[0];
+                    $ds_produto = $linha6[1];
+                    $ds_icone_produto = $linha6[2];
+                    $categoria = $linha6[3];
+
+                    ?>
+
+                    <div class="col-md-4">
+                      <a href="produtos.php?codigo=<?php echo $codigo; ?>&categoria=<?php echo $categoria; ?>" class="card-link">
+                          <div class="card text-center">
+                              <div class="card-body">
+                                  <div class="gradient-icon gradient-1"><i class="icon <?php echo $ds_icone_produto; ?>"></i></div>
+                                  <h4 class="card-title"><?php echo $ds_produto; ?></h4>
+                                  <p class="card-text">Clique para ver detalhes  <i class="icon ion-ios-arrow-round-forward small-icon"></i></p>
+                              </div>
+                          </div>
+                      </a>
                     </div>
-                </a> <!-- Tag de fechamento adicionada -->
+                  <?php } ?>
               </div>
-              
-            </div>
-        </div>
-        <div class="form-group text-center"><br>
-          <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">MAIS CONSÓRCIOS <i class="icon ion-ios-log-in small-icon"></i></a>
-        </div>
-      </section>
+          </div>
+          <div class="form-group text-center"><br>
+            <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONSÓRCIOS <i class="icon ion-ios-log-in small-icon"></i></a>
+          </div>
+        </section>
+      <?php } ?>
 
       <br><br><br><br>
      
-      <!-- SEÇÃO 4-->
-      <section class="app-showcase pb-big">
-        <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-8">
-              <h2 class="mb-4"><?php echo $ds_secao4; ?></h2>
-              <p class="lead"><?php echo $ds_subsecao4; ?></p>
-              <div class="row mt-5">
-                <div class="col-lg-8">
-                  <div id="v-pills-tab" role="tablist" aria-orientation="vertical" class="nav flex-column nav-pills showcase-nav"><a id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" class="nav-link active showcase-link"> <i class="icon ion-md-pie mr-4"></i>Customized Dashboard</a><a id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false" class="nav-link showcase-link"> <i class="icon ion-ios-moon mr-4"></i>Automatic Day &amp; Night Modes</a><a id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false" class="nav-link showcase-link"> <i class="icon ion-md-chatbubbles mr-4"></i>Integrated Chat Platform</a></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div id="v-pills-tabContent" class="tab-content showcase-content">
-                <div id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" class="tab-pane fade show active">
-                  <div class="showcase-image-holder">
-                    <div class="device-wrapper">
-                     <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
-                        <div class="screen"><img src="img/imagem1.jpeg" alt="..." class="img-fluid"></div>
-                      <!-- </div>-->
+      <?php 
+      $v_existe_campanha = "";
+      $SQL3 = "SELECT COUNT(nr_sequencial)
+                FROM campanhas_site
+              WHERE nr_seq_configuracao = $codigo
+              AND st_ativo = 'A'";
+      $RSS3 = mysqli_query($conexao, $SQL3);
+      while($linha3 = mysqli_fetch_row($RSS3)){
+        $v_existe_campanha = $linha3[0];
+      }
+    
+      if($v_existe_campanha != ""){ ?>
+       <!-- SEÇÃO 4-->
+        <section class="app-showcase pb-big">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-lg-8">
+                <h2 class="mb-4"><?php echo $ds_secao4; ?></h2>
+                <p class="lead"><?php echo $ds_subsecao4; ?></p>
+                <div class="row mt-5">
+                  <div class="col-lg-8">
+                    <div id="v-pills-tab" role="tablist" aria-orientation="vertical" class="nav flex-column nav-pills showcase-nav">
+                      <?php
+                        $SQL4 = "SELECT nr_sequencial, ds_campanha, ds_icone, ds_imagem, ds_detalhamento
+                                  FROM campanhas_site
+                                  WHERE nr_seq_configuracao = $codigo
+                                  AND st_ativo = 'A'";
+                        $RSS4 = mysqli_query($conexao, $SQL4);
+                        $i = 0;
+                        while($linha4 = mysqli_fetch_assoc($RSS4)){
+                          $nr_seq_campanha = $linha4['nr_sequencial'];
+                          $ds_campanha = $linha4['ds_campanha'];
+                          $ds_icone_campanha = $linha4['ds_icone'];
+                          $ds_imagem_campanha = $linha4['ds_imagem'];
+                          $ds_detalhamento_campanha = $linha4['ds_detalhamento'];
+                          
+                          ?>
+  
+                          <a id="card<?php echo $i; ?>" data-toggle="pill" href="#div<?php echo $i; ?>" role="tab" aria-controls="div<?php echo $i; ?>" aria-selected="true" class="nav-link <?php echo ($i == 0 ? 'active' : ''); ?> showcase-link">
+                              <div class="gradient-icon gradient-1">
+                                  <i class="icon <?php echo $ds_icone_campanha; ?>" style="color: white;"></i>
+                              </div>
+                              <?php echo $ds_campanha; ?>
+                          </a>
+
+                          <?php
+                          $i++;
+                        }
+                      ?>
                     </div>
                   </div>
                 </div>
-                <div id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" class="tab-pane fade">
-                  <div class="showcase-image-holder">
-                      <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
-                      <div class="screen"><img src="img/imagem2.jpeg" alt="..." class="img-fluid"></div>
-                      <!-- </div>-->
-                  </div>
-                </div>
-                <div id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" class="tab-pane fade">
-                  <div class="showcase-image-holder">
-                      <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">-->
-                      <div class="screen"><img src="img/showcase-screen-3.jpg" alt="..." class="img-fluid"></div>
-                      <!-- </div>-->
-                  </div>
+              </div>
+              <div class="col-lg-4">
+                <div id="v-pills-tabContent" class="tab-content showcase-content">
+                  <?php
+                    // Reinicie o índice do array de resultados
+                    mysqli_data_seek($RSS4, 0);
+                    $i = 0;
+                    while($linha4 = mysqli_fetch_assoc($RSS4)){
+                      // Adicione as imagens dinamicamente com base nos dados do banco de dados
+                      echo '<div id="div'.$i.'" role="tabpanel" aria-labelledby="card'.$i.'" class="tab-pane fade '.($i == 0 ? 'show active' : '').'">
+                              <div class="showcase-image-holder">
+                                <div class="device-wrapper">
+                                  <div class="screen"><img src="../gerenciador/site/imagens/'.$linha4['ds_imagem'].'" alt="..." class="img-fluid"></div>
+                                  <a href="#" class="btn btn-primary btn-detalhes btn-block" data-toggle="modal" data-target="#modalDetalhes" data-campanha="'.$linha4['ds_detalhamento'].'">Detalhes</a>
+                                </div>
+                              </div>
+                            </div>';
+                      $i++;
+                    }
+                  ?>
                 </div>
               </div>
             </div>
           </div>
+        </section>
+
+        <!-- modal para detalhes das campanhas -->
+        <div class="modal fade" id="modalDetalhes" tabindex="-1" role="dialog" aria-labelledby="modalDetalhesLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetalhesLabel">Detalhes da Campanha</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="detalhesCampanha"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </section>
+
+      <?php } ?>
      
        <!-- SEÇÃO 5-->
       <section class="subscription padding-big">
@@ -449,6 +529,18 @@
     </script>
     <script>
 
+      $(document).ready(function(){
+          // Quando um botão de detalhes é clicado
+          $('.btn-detalhes').click(function(){
+              // Obtém o ID da campanha associada ao botão clicado
+              var campanhaID = $(this).data('campanha');
+
+              // Aqui você pode fazer uma solicitação AJAX para obter os detalhes da campanha com base no ID
+              // Por enquanto, vamos apenas exibir o ID da campanha no modal
+              $('#detalhesCampanha').text(campanhaID);
+          });
+      });
+
       function SalvarEmail(){
 
         var email = document.getElementById("email").value;
@@ -465,5 +557,6 @@
       }
 
       </script>
+      
   </body>
 </html>

@@ -82,14 +82,33 @@
                             </select>
                             <i id="iconselecionadoproduto" class="icon"></i>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6">  
+                            <label>CATEGORIA:</label>        
+                            <select id="txtcategoriaproduto" class="form-control">
+                                <option value='0'>Selecione uma categoria</option>
+                                <?php
+                                $sql = "SELECT nr_sequencial, ds_categoria
+                                            FROM categoria_produtos
+                                        WHERE st_ativo = 'A'
+                                        ORDER BY ds_categoria;";
+                                $res = mysqli_query($conexao, $sql);
+                                while($lin=mysqli_fetch_row($res)){
+                                    $cdg = $lin[0];
+                                    $desc = $lin[1];
+
+                                    echo "<option value='$cdg'>$desc</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
                             <label for="txtstatusproduto">STATUS:</label>                    
                             <select id="txtstatusproduto" class="form-control">
                                 <option value='A'>ATIVO</option>
                                 <option value='I'>INATIVO</option>
                             </select>
                         </div>
-                        <div class="col-md-3"><br>
+                        <div class="col-md-2"><br>
                             <button type=button name="btsalvar" id="btsalvar" class="btn btn-success" onClick="javascript: SalvarProduto(<?php echo $codigo; ?>);"><span class="glyphicon glyphicon-ok"></span> SALVAR</button>
                         </div>
                     </div>
@@ -191,6 +210,7 @@
         var icone = document.getElementById("txticoneproduto").value;
         var status = document.getElementById('txtstatusproduto').value;
         var detalhamento = document.getElementById('txtdetalhamentoproduto').value;
+        var categoria = document.getElementById('txtcategoriaproduto').value;
 
         if (nome == "") {
 
@@ -219,9 +239,18 @@
             });
             document.getElementById('txticoneproduto').focus();
 
+        } else if (categoria == 0) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Selecione uma categoria!'
+            });
+            document.getElementById('txtcategoriaproduto').focus();
+
         } else {
 
-            window.open('gerenciador/site/acao.php?Tipo=P&codigo=' + id + '&nome=' + nome + '&imagem=' + imagem + '&icone=' + icone + '&status=' + status + '&detalhamento=' + detalhamento, "acao");
+            window.open('gerenciador/site/acao.php?Tipo=P&codigo=' + id + '&nome=' + nome + '&imagem=' + imagem + '&icone=' + icone + '&status=' + status + '&detalhamento=' + detalhamento + '&categoria=' + categoria, "acao");
     
         }
 

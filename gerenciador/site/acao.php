@@ -475,8 +475,8 @@ if ($Tipo == "ECA") {
 
 if ($Tipo == "P") {
 
-  $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, ds_produto, ds_icone, ds_imagem, st_ativo, ds_detalhamento) 
-                  VALUES (" . $codigo . ", UPPER('" . $nome . "'), '" . $icone . "', '" . $imagem . "', '" . $status . "', '" . $detalhamento . "')";
+  $insert_produto = "INSERT INTO produtos_site (nr_seq_configuracao, ds_produto, ds_icone, ds_imagem, st_ativo, ds_detalhamento, nr_seq_categoria) 
+                  VALUES (" . $codigo . ", UPPER('" . $nome . "'), '" . $icone . "', '" . $imagem . "', '" . $status . "', '" . $detalhamento . "', " . $categoria . ")";
   //echo $insert_produto;
   $rss_insert = mysqli_query($conexao, $insert_produto);
 
