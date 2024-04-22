@@ -26,6 +26,16 @@
     $ds_arquivo1 = $linha1[0];
   }
 
+  $v_marcas = 0;
+  $SQLM = "SELECT COUNT(*)
+            FROM upload
+          WHERE nr_seq_configuracao = $codigo
+          AND nr_seq_categoria = 3";
+  $RSSM = mysqli_query($conexao, $SQLM);
+  while($linham = mysqli_fetch_row($RSSM)){
+    $v_marcas = $linham[0];
+  }
+
 ?>
 
 <!DOCTYPE html>
@@ -94,19 +104,13 @@
                   <!-- Link-->
                   <li class="nav-item"> <a href="index.php?codigo=<?php echo $codigo; ?>" class="nav-link">Home</a></li>
                   <!-- Link-->
-                  <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Consórcios</a></li>
+                  <?php if($v_produto > 0){ ?>
+                    <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Consórcios</a></li>
+                  <?php } ?>
                   <!-- Link-->
                   <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
                   <!-- Link-->
                   <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>" class="nav-link">Contato</a></li>
-              <li class="nav-item dropdown"><a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Abas</a>
-                <div class="dropdown-menu">
-                  <a href="index.php" class="dropdown-item">Home</a>
-                  <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Consórcios</a>
-                  <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Sobre</a>
-                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Contato</a>
-                </div>
-              </li>
             </ul>
           </div>
         </div>
@@ -130,15 +134,17 @@
             </div>
           </div>
           <!-- Platforms-->
-          <div class="platforms mt-4 d-none d-lg-block"><span class="platforms-title">Compatible with</span>
-            <ul class="platforms-list list-inline">
-              <li class="list-inline-item"><img src="img/netflix.svg" alt="" class="platform-image img-fluid"></li>
-              <li class="list-inline-item"><img src="img/apple.svg" alt="" class="platform-image img-fluid"></li>
-              <li class="list-inline-item"><img src="img/android.svg" alt="" class="platform-image img-fluid"></li>
-              <li class="list-inline-item"><img src="img/windows.svg" alt="" class="platform-image img-fluid"></li>
-              <li class="list-inline-item"><img src="img/synology.svg" alt="" class="platform-image img-fluid"></li>
-            </ul>
-          </div>
+          <?php if($v_marcas > 0) { ?>
+            <div class="platforms mt-4 d-none d-lg-block"><span class="platforms-title">Compatible with</span>
+              <ul class="platforms-list list-inline">
+                <li class="list-inline-item"><img src="img/netflix.svg" alt="" class="platform-image img-fluid"></li>
+                <li class="list-inline-item"><img src="img/apple.svg" alt="" class="platform-image img-fluid"></li>
+                <li class="list-inline-item"><img src="img/android.svg" alt="" class="platform-image img-fluid"></li>
+                <li class="list-inline-item"><img src="img/windows.svg" alt="" class="platform-image img-fluid"></li>
+                <li class="list-inline-item"><img src="img/synology.svg" alt="" class="platform-image img-fluid"></li>
+              </ul>
+            </div>
+          <?php } ?>
         </div>
       </section>
       <!-- Schedule Section-->

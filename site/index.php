@@ -39,6 +39,12 @@
     $ds_arquivo1 = $linha1[0];
   }
 
+  if($ds_arquivo1 == ""){
+    $caminho1 = "img/Csimulador.png";
+  } else {
+    $caminho1 = "../gerenciador/site/imagens/$ds_arquivo1";
+  }
+
   $ds_arquivo2 = "";
   $SQL2 = "SELECT ds_arquivo
             FROM upload
@@ -47,6 +53,32 @@
   $RSS2 = mysqli_query($conexao, $SQL2);
   while($linha2 = mysqli_fetch_row($RSS2)){
     $ds_arquivo2 = $linha2[0];
+  }
+
+  if($ds_arquivo2 == ""){
+    $caminho2 = "img/Csimulador.png";
+  } else {
+    $caminho2 = "../gerenciador/site/imagens/$ds_arquivo2";
+  }
+
+  $v_produto = 0;
+  $SQLP = "SELECT COUNT(nr_sequencial)
+              FROM produtos_site
+            WHERE nr_seq_configuracao = $codigo
+            AND st_ativo = 'A'";
+  $RSSP = mysqli_query($conexao, $SQLP);
+  while($linhap = mysqli_fetch_row($RSSP)){
+    $v_produto = $linhap[0];
+  }
+
+  $v_marcas = 0;
+  $SQLM = "SELECT COUNT(*)
+            FROM upload
+          WHERE nr_seq_configuracao = $codigo
+          AND nr_seq_categoria = 3";
+  $RSSM = mysqli_query($conexao, $SQLM);
+  while($linham = mysqli_fetch_row($RSSM)){
+    $v_marcas = $linham[0];
   }
 
  
@@ -76,7 +108,7 @@
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="css/custom.css">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="../gerenciador/site/imagens/<?php echo $ds_arquivo1; ?>">
+    <link rel="shortcut icon" href="<?php echo $caminho1; ?>">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -191,27 +223,21 @@
     <header class="header">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="../gerenciador/site/imagens/<?php echo $ds_arquivo1; ?>" alt="..." class="img-fluid"></a>
+          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="<?php echo $caminho1; ?>" alt="..." class="img-fluid"></a>
           <!-- Navbar toggler button-->
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mx-auto ml-auto">
-                  <!-- Link-->
-                  <li class="nav-item"> <a href="index.php?codigo=<?php echo $codigo; ?>" class="nav-link">Home</a></li>
-                  <!-- Link-->
-                  <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Consórcios</a></li>
-                  <!-- Link-->
-                  <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
-                  <!-- Link-->
-                  <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>" class="nav-link">Contato</a></li>
-              <li class="nav-item dropdown"><a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Abas</a>
-                <div class="dropdown-menu">
-                  <a href="index.php" class="dropdown-item">Home</a>
-                  <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Consórcios</a>
-                  <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Sobre</a>
-                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="dropdown-item">Contato</a>
-                </div>
-              </li>
+              <!-- Link-->
+              <li class="nav-item"> <a href="index.php?codigo=<?php echo $codigo; ?>" class="nav-link">Home</a></li>
+              <!-- Link-->
+              <?php if($v_produto > 0){ ?>
+                <li class="nav-item"> <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="nav-link">Consórcios</a></li>
+              <?php } ?>
+                <!-- Link-->
+              <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
+              <!-- Link-->
+              <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>" class="nav-link">Contato</a></li>
             </ul>
           </div>
         </div>
@@ -232,15 +258,17 @@
                 </div>
               </form> 
               <!-- Platforms-->
-              <div class="platforms d-none d-lg-block"><span class="platforms-title">Marcas Parceiras</span>
-                <ul class="platforms-list list-inline">
-                  <li class="list-inline-item"><img src="img/netflix.svg" alt="" class="platform-image img-fluid"></li>
-                  <li class="list-inline-item"><img src="img/apple.svg" alt="" class="platform-image img-fluid"></li>
-                  <li class="list-inline-item"><img src="img/android.svg" alt="" class="platform-image img-fluid"></li>
-                  <li class="list-inline-item"><img src="img/windows.svg" alt="" class="platform-image img-fluid"></li>
-                  <li class="list-inline-item"><img src="img/synology.svg" alt="" class="platform-image img-fluid"></li>
-                </ul>
-              </div>
+              <?php if($v_marcas > 0) { ?>
+                <div class="platforms d-none d-lg-block"><span class="platforms-title">Marcas Parceiras</span>
+                  <ul class="platforms-list list-inline">
+                    <li class="list-inline-item"><img src="img/netflix.svg" alt="" class="platform-image img-fluid"></li>
+                    <li class="list-inline-item"><img src="img/apple.svg" alt="" class="platform-image img-fluid"></li>
+                    <li class="list-inline-item"><img src="img/android.svg" alt="" class="platform-image img-fluid"></li>
+                    <li class="list-inline-item"><img src="img/windows.svg" alt="" class="platform-image img-fluid"></li>
+                    <li class="list-inline-item"><img src="img/synology.svg" alt="" class="platform-image img-fluid"></li>
+                  </ul>
+                </div>
+              <?php } ?>
             </div>
             <div class="col-lg-6 d-none d-lg-block">
               <div class="device-wrapper mx-auto">
@@ -258,7 +286,7 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-6 order-lg-last"> <!-- Mudança na ordem da coluna para dispositivos grandes -->
-              <img src="../gerenciador/site/imagens/<?php echo $ds_arquivo2; ?>" alt="..." style="max-width: 100%;"> <!-- Adição de style para limitar a largura máxima -->
+              <img src="<?php echo $caminho2; ?>" alt="..." style="max-width: 100%;"> <!-- Adição de style para limitar a largura máxima -->
             </div>
             <div class="col-lg-6">
               <h2 class="mb-10 text-center"><?php echo $ds_secao2; ?></h2><br> <!-- Alinhamento do texto à direita -->
@@ -272,7 +300,7 @@
       </section>
 
       <?php 
-      $v_existe_produto = "";
+      $v_existe_produto = 0;
       $SQL5 = "SELECT COUNT(nr_sequencial)
                   FROM produtos_site
                 WHERE nr_seq_configuracao = $codigo
@@ -282,7 +310,7 @@
         $v_existe_produto = $linha5[0];
       }
       
-      if($v_existe_produto != ""){ ?>
+      if($v_existe_produto != 0){ ?>
         <!-- SEÇÃO 3-->
         <section class="features shape-2">         
           <div class="container">
@@ -330,11 +358,9 @@
           </div>
         </section>
       <?php } ?>
-
-      <br><br><br><br>
      
       <?php 
-      $v_existe_campanha = "";
+      $v_existe_campanha = 0;
       $SQL3 = "SELECT COUNT(nr_sequencial)
                 FROM campanhas_site
               WHERE nr_seq_configuracao = $codigo
@@ -344,7 +370,7 @@
         $v_existe_campanha = $linha3[0];
       }
     
-      if($v_existe_campanha != ""){ ?>
+      if($v_existe_campanha != 0){ ?>
        <!-- SEÇÃO 4-->
         <section class="app-showcase pb-big">
           <div class="container">
@@ -446,7 +472,7 @@
                           <div class="card text-center">
                               <div class="card-body">
                                   <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
-                                  <h4 class="card-title">Fale com a Zenatti Consórcios</h4>
+                                  <h4 class="card-title">Entre em Contato</h4>
                                   <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
                               </div>
                           </div>
