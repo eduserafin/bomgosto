@@ -11,6 +11,16 @@
 
     if($codigo != ""){
 
+        $SQL0 = "SELECT ds_titulo_produto, ds_conteudo_produto
+                    FROM configuracao_site
+                WHERE nr_sequencial = $codigo";
+            //echo "<pre>$SQL0</pre>";
+            $RSS0 = mysqli_query($conexao, $SQL0);
+            while($linha0 = mysqli_fetch_row($RSS0)){
+                $ds_titulo = $linha0[0];
+                $ds_conteudo = $linha0[1];
+            }
+
         ?>
 
         <!DOCTYPE html>
@@ -35,6 +45,24 @@
 
             <body onLoad="document.getElementById('txtnomeproduto').focus();">
                 <input type="hidden" name="cd_configuracao_produto" id="cd_configuracao_produto" value="<?php echo $codigo; ?>">
+                <div class="row"><br>   
+                    <div class="col-md-10">
+                        <label for="txttituloproduto">TÍTULO:</label>                    
+                        <input type="text" name="txttituloproduto" id="txttituloproduto" size="15" maxlength="100" class="form-control" placeholder="Título Principal" value="<?php echo $ds_titulo; ?>">
+                    </div>
+
+                    <div class="col-md-10">
+                        <label for="txtconteudoproduto">CONTEÚDO:</label>    
+                        <textarea id="txtconteudoproduto" rows="3" class="form-control" maxlength="1000" placeholder="Descreva o conteúdo."><?php echo $ds_conteudo; ?></textarea>
+                    </div>
+
+                    <div class="col-md-2"><br>
+                        <button type=button name="btsalvarconteudo" id="btsalvarconteudo" class="btn btn-success" onClick="javascript: SalvarConteudo(<?php echo $codigo; ?>);"><span class="glyphicon glyphicon-ok"></span> SALVAR</button>
+                    </div>
+                </div>
+
+                <hr class="linha-divisoria"> <!-- Linha divisória -->
+
                 <div class="row"><br>   
                     <div class="col-md-6">
                         <div class="col-md-12">
@@ -254,6 +282,12 @@
     
         }
 
+    }
+
+    function SalvarConteudo(id){
+        var titulo = document.getElementById('txttituloproduto').value;
+        var conteudo = document.getElementById("txtconteudoproduto").value;
+        window.open('gerenciador/site/acao.php?Tipo=PC&codigo=' + id + '&titulo=' + titulo + '&conteudo=' + conteudo, "acao");
     }
 
     function ExcluirProduto(id){

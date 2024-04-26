@@ -6,34 +6,50 @@
 
   require_once '../conexao.php';
 
-  $SQL0 = "SELECT cor_principal, cor_secundaria
-            FROM configuracao_site
-          WHERE nr_sequencial = $codigo";
-  //echo "<pre>$SQL0</pre>";
-  $RSS0 = mysqli_query($conexao, $SQL0);
-  while($linha0 = mysqli_fetch_row($RSS0)){
-    $cor_principal = $linha0[0];
-    $cor_secundaria = $linha0[1];
-  }
+  if($codigo != ""){
 
-  $ds_arquivo1 = "";
-  $SQL1 = "SELECT ds_arquivo
-            FROM upload
-          WHERE nr_seq_configuracao = $codigo
-          AND nr_seq_categoria = 1";
-  $RSS1 = mysqli_query($conexao, $SQL1);
-  while($linha1 = mysqli_fetch_row($RSS1)){
-    $ds_arquivo1 = $linha1[0];
-  }
+    $SQL0 = "SELECT cor_principal, cor_secundaria, ds_titulo_produto, ds_conteudo_produto
+              FROM configuracao_site
+            WHERE nr_sequencial = $codigo";
+    //echo "<pre>$SQL0</pre>";
+    $RSS0 = mysqli_query($conexao, $SQL0);
+    while($linha0 = mysqli_fetch_row($RSS0)){
+      $cor_principal = $linha0[0];
+      $cor_secundaria = $linha0[1];
+      $ds_titulo = $linha0[2];
+      $ds_conteudo = $linha0[3];
+    }
 
-  $v_marcas = 0;
-  $SQLM = "SELECT COUNT(*)
-            FROM upload
-          WHERE nr_seq_configuracao = $codigo
-          AND nr_seq_categoria = 3";
-  $RSSM = mysqli_query($conexao, $SQLM);
-  while($linham = mysqli_fetch_row($RSSM)){
-    $v_marcas = $linham[0];
+    $ds_arquivo1 = "";
+    $SQL1 = "SELECT ds_arquivo
+              FROM upload
+            WHERE nr_seq_configuracao = $codigo
+            AND nr_seq_categoria = 1";
+    $RSS1 = mysqli_query($conexao, $SQL1);
+    while($linha1 = mysqli_fetch_row($RSS1)){
+      $ds_arquivo1 = $linha1[0];
+    }
+
+    $v_marcas = 0;
+    $SQLM = "SELECT COUNT(*)
+              FROM upload
+            WHERE nr_seq_configuracao = $codigo
+            AND nr_seq_categoria = 3";
+    $RSSM = mysqli_query($conexao, $SQLM);
+    while($linham = mysqli_fetch_row($RSSM)){
+      $v_marcas = $linham[0];
+    }
+
+    $v_produto = 0;
+    $SQLP = "SELECT COUNT(nr_sequencial)
+                FROM produtos_site
+              WHERE nr_seq_configuracao = $codigo
+              AND st_ativo = 'A'";
+    $RSSP = mysqli_query($conexao, $SQLP);
+    while($linhap = mysqli_fetch_row($RSSP)){
+      $v_produto = $linhap[0];
+    }
+
   }
 
 ?>
@@ -88,6 +104,38 @@
             margin-top: 10px; /* Espaçamento acima do texto de direitos autorais */
           }
 
+          .btn-primary {
+            transition: background-color 0.3s ease; /* Adiciona um efeito de transição de cor */
+            background-color: <?php echo $cor_principal; ?>;
+            border-color: <?php echo $cor_principal; ?>; /* Adicionando a mesma cor para a borda */
+            height: 45px; /* Defina o tamanho desejado para a altura */
+          }
+
+          .btn-primary:hover {
+            background-color: <?php echo $cor_secundaria; ?>; /* Escurecendo um pouco ao passar o mouse */
+            border-color: <?php echo $cor_secundaria; ?>; /* Também escurecendo a borda ao passar o mouse */
+          }
+
+          a {
+            color: <?php echo $cor_principal; ?>;
+            text-decoration: none;
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            outline: none;
+          }
+
+          a:hover {
+            color: <?php echo $cor_secundaria; ?>;
+            text-decoration: none;
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            outline: none;
+          }
+
+          .icon {
+            font-size: 1rem; /* Defina o tamanho desejado para o ícone maior */
+          }
+
         </style>
 
   </head>
@@ -110,7 +158,7 @@
                   <!-- Link-->
                   <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
                   <!-- Link-->
-                  <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>" class="nav-link">Contato</a></li>
+                  <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=C" class="nav-link">Contato</a></li>
             </ul>
           </div>
         </div>
@@ -127,10 +175,10 @@
               <li aria-current="page" class="breadcrumb-item active">Consórcios</li>
             </ol>
           </nav>
-          <h1>CONSÓRCIOS</h1>
+          <h1><?php echo $ds_titulo; ?></h1>
           <div class="row">
             <div class="col-lg-8">
-              <p class="lead font-weight-light">This is the lead paragraph of the article. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+              <p class="lead font-weight-light"><?php echo $ds_conteudo; ?></p>
             </div>
           </div>
           <!-- Platforms-->
@@ -155,13 +203,35 @@
               <div id="nav-tab" role="tablist" class="nav nav-tabs schedule-nav nav-fill">
                 <!-- PHP loop to generate category tabs -->
                 <?php 
-                  $SQLC = "SELECT nr_sequencial, ds_categoria FROM categoria_produtos WHERE nr_seq_configuracao = $codigo AND st_ativo = 'A'";
+
+                  // Verifica se a variável $categoria está vazia
+                  if (empty($categoria)) {
+                    // Se estiver vazia, define $primeiraCategoriaAtiva como true para ativar a primeira categoria
+                    $primeiraCategoriaAtiva = true;
+                  }
+
+                  $SQLC = "SELECT nr_sequencial, ds_categoria 
+                              FROM categoria_produtos 
+                            WHERE nr_seq_configuracao = $codigo 
+                            AND st_ativo = 'A'";
+                  //echo "<pre>$SQLC</pre>";
                   $RSSC = mysqli_query($conexao, $SQLC);
                   while($linhac = mysqli_fetch_row($RSSC)){
                     $nr_categoria = $linhac[0];
                     $ds_categoria = $linhac[1];
-                ?>
-                  <a data-categoria="<?php echo $nr_categoria; ?>" data-toggle="tab" href="#nav-<?php echo strtolower($ds_categoria); ?>" role="tab" aria-controls="nav-<?php echo strtolower($ds_categoria); ?>" aria-selected="false" class="nav-item nav-link schedule-nav-link"><?php echo $ds_categoria; ?></a>
+                    $classeAtiva = ''; // Inicializa a classe como vazia
+
+                    // Se a variável $categoria estiver vazia e for a primeira categoria, define a classe como 'active'
+                    if (empty($categoria) && $primeiraCategoriaAtiva) {
+                        $classeAtiva = 'active';
+                        $primeiraCategoriaAtiva = false; // Define como false após a primeira iteração
+                    } elseif ($categoria == $nr_categoria) {
+                        $classeAtiva = 'active';
+                    }
+                    ?>
+
+                    <a data-categoria="<?php echo $nr_categoria; ?>" data-toggle="tab" href="#nav-<?php echo strtolower($ds_categoria); ?>" role="tab" aria-controls="nav-<?php echo strtolower($ds_categoria); ?>" aria-selected="false" class="nav-item nav-link schedule-nav-link <?php echo $classeAtiva; ?>"><?php echo $ds_categoria; ?></a>
+
                 <?php } ?>
               </div>
             </nav>
@@ -172,32 +242,40 @@
                 while($linhac = mysqli_fetch_row($RSSC)){
                   $nr_categoria = $linhac[0];
                   $ds_categoria = $linhac[1];
-              ?>
-                <div id="nav-<?php echo strtolower($ds_categoria); ?>" role="tabpanel" class="tab-pane fade">
-                  <!-- Schedule items for each category -->
-                  <?php 
-                    $SQLP = "SELECT p.nr_sequencial, p.ds_produto, p.ds_imagem, p.ds_detalhamento, c.ds_categoria FROM produtos_site p INNER JOIN categoria_produtos c ON c.nr_sequencial = p.nr_seq_categoria WHERE p.nr_seq_configuracao = $codigo AND p.nr_seq_categoria = $nr_categoria AND p.st_ativo = 'A'";
-                    $RSSP = mysqli_query($conexao, $SQLP);
-                    while($linhap = mysqli_fetch_row($RSSP)){
-                      $nr_produto = $linhap[0];
-                      $ds_produto = $linhap[1];
-                      $ds_imagem = $linhap[2];
-                      $ds_detalhamento = $linhap[3];
-                      $ds_categoria = $linhap[4];
+                  $classeAtiva = ($primeiraCategoriaAtiva) ? 'show active' : ''; // Define a classe 'show active' para a primeira categoria
+                
                   ?>
-                    <div class="schedule-table-item">
-                      <div class="row align-items-center">
-                        <div class="col-lg-3"><a href="#" class="schedule-item-image"><img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" alt="..." class="img-fluid"></a></div>
-                        <div class="col-lg-9">
-                          <span class="schedule-item-genre gradient-1"><?php echo $ds_categoria; ?></span>
-                          <h3 class="schedule-item-name"><?php echo $ds_produto; ?></h3>
-                          <p class="schedule-item-description"><?php echo $ds_detalhamento; ?></p>
+
+                    <div id="nav-<?php echo strtolower($ds_categoria); ?>" role="tabpanel" class="tab-pane fade <?php echo $classeAtiva; ?>">
+
+                    <?php 
+
+                      $SQLP = "SELECT p.nr_sequencial, p.ds_produto, p.ds_imagem, p.ds_detalhamento, c.ds_categoria FROM produtos_site p INNER JOIN categoria_produtos c ON c.nr_sequencial = p.nr_seq_categoria WHERE p.nr_seq_configuracao = $codigo AND p.nr_seq_categoria = $nr_categoria AND p.st_ativo = 'A'";
+                      $RSSP = mysqli_query($conexao, $SQLP);
+                      while($linhap = mysqli_fetch_row($RSSP)){
+                        $nr_produto = $linhap[0];
+                        $ds_produto = $linhap[1];
+                        $ds_imagem = $linhap[2];
+                        $ds_detalhamento = $linhap[3];
+                        $ds_categoria = $linhap[4];
+
+                        ?>
+
+                        <div class="schedule-table-item">
+                          <div class="row align-items-center">
+                            <div class="col-lg-3"><a href="#" class="schedule-item-image"><img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" alt="..." class="img-fluid"></a></div>
+                            <div class="col-lg-9">
+                              <a href="contato.php?codigo=<?php echo $codigo; ?>&produto=<?php echo $nr_produto; ?>&tipo=P" class="btn btn-primary">ENTRE EM CONTATO <i class="icon ion-md-arrow-round-forward"></i></a>
+                              <h3 class="schedule-item-name"><?php echo $ds_produto; ?></h3>
+                              <p class="schedule-item-description"><?php echo $ds_detalhamento; ?></p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  <?php } ?>
-                </div>
-              <?php } ?>
+                    <?php } ?>
+                  </div>
+                  <?php 
+                  $primeiraCategoriaAtiva = false;  // Define para false após a primeira iteração
+                } ?>
             </div>
           </div>
         </div>
@@ -247,24 +325,21 @@
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
+    
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        // Seleciona todos os elementos de navegação de categoria
-        var categoryTabs = document.querySelectorAll('.schedule-nav-link');
-
-        // Adiciona um ouvinte de evento de clique a cada guia de categoria
-        categoryTabs.forEach(function(tab) {
-          tab.addEventListener('click', function() {
-            var categoriaSelecionada = this.getAttribute('data-categoria');
-            // Oculta todos os produtos
-            document.querySelectorAll('.tab-pane').forEach(function(tabContent) {
-              tabContent.classList.remove('show', 'active');
-            });
-            // Exibe os produtos da categoria selecionada
-            document.getElementById('nav-' + categoriaSelecionada).classList.add('show', 'active');
+      $(document).ready(function() {
+          // Adiciona um ouvinte de evento para a mudança de aba
+          $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+              // Remove a classe 'show' de todas as abas
+              $('.tab-pane').removeClass('show');
+              // Adiciona a classe 'show' à aba que está prestes a ser exibida
+              $($(e.target).attr('href')).addClass('show');
           });
-        });
+          
+          // Seleciona a primeira aba e a exibe
+          $('a[data-toggle="tab"]').first().tab('show');
       });
+
     </script>
   </body>
 </html>

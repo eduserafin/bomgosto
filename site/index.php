@@ -132,11 +132,11 @@
           }
 
           .icon {
-            font-size: 3rem; /* Defina o tamanho desejado para o ícone maior */
+            font-size: 2rem; /* Defina o tamanho desejado para o ícone maior */
           }
 
           .small-icon {
-            font-size: 2rem; /* Defina o tamanho desejado para o ícone pequeno */
+            font-size: 1rem; /* Defina o tamanho desejado para o ícone pequeno */
           }
 
           .btn-primary {
@@ -237,7 +237,7 @@
                 <!-- Link-->
               <li class="nav-item"> <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="nav-link">Sobre</a></li>
               <!-- Link-->
-              <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>" class="nav-link">Contato</a></li>
+              <li class="nav-item"> <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=C" class="nav-link">Contato</a></li>
             </ul>
           </div>
         </div>
@@ -254,7 +254,7 @@
               <!-- Subscription form-->
               <form action="#" class="subscription-form mt-5">
                 <div class="form-group">
-                  <a href="contato.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">SAIBA MAIS <i class="icon ion-ios-log-in small-icon"></i></a>
+                  <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=S" class="btn btn-primary">SAIBA MAIS <i class="icon ion-md-arrow-round-forward"></i></a>
                 </div>
               </form> 
               <!-- Platforms-->
@@ -292,7 +292,7 @@
               <h2 class="mb-10 text-center"><?php echo $ds_secao2; ?></h2><br> <!-- Alinhamento do texto à direita -->
               <p class="lead text-left"><?php echo $ds_subsecao2; ?></p> <!-- Alinhamento do texto à direita -->
               <div class="form-group"><br>
-                <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONHEÇA NOSSA EMPRESA <i class="icon ion-ios-log-in small-icon"></i></a>
+                <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONHEÇA NOSSA EMPRESA <i class="icon ion-md-arrow-round-forward"></i></a>
               </div>
             </div>
           </div>
@@ -354,7 +354,7 @@
               </div>
           </div>
           <div class="form-group text-center"><br>
-            <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONSÓRCIOS <i class="icon ion-ios-log-in small-icon"></i></a>
+            <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONSÓRCIOS <i class="icon ion-md-arrow-round-forward"></i></a>
           </div>
         </section>
       <?php } ?>
@@ -424,7 +424,7 @@
                               <div class="showcase-image-holder">
                                 <div class="device-wrapper">
                                   <div class="screen"><img src="../gerenciador/site/imagens/'.$linha4['ds_imagem'].'" alt="..." class="img-fluid"></div>
-                                  <a href="#" class="btn btn-primary btn-detalhes btn-block" data-toggle="modal" data-target="#modalDetalhes" data-campanha="'.$linha4['ds_detalhamento'].'">Detalhes</a>
+                                  <a href="#" class="btn btn-primary btn-detalhes btn-block" data-toggle="modal" data-target="#modalDetalhes" data-campanha="'.$linha4['ds_detalhamento'].'">VER DETALHES</a>
                                 </div>
                               </div>
                             </div>';
@@ -468,7 +468,7 @@
               <div class="container mt-2">
                 <div class="row mt-2">
                   <div class="col-md-6">
-                      <a href="contato.php?codigo=<?php echo $codigo; ?>" class="card-link">
+                      <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=C" class="card-link">
                           <div class="card text-center">
                               <div class="card-body">
                                   <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
@@ -479,7 +479,7 @@
                       </a> <!-- Tag de fechamento adicionada -->
                   </div>
                   <div class="col-md-6">
-                      <a href="contato.php?codigo=<?php echo $codigo; ?>" class="card-link">
+                      <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=P" class="card-link">
                           <div class="card text-center">
                               <div class="card-body">
                                   <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
@@ -499,7 +499,7 @@
                         <label>Email</label>
                         <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
                         <button type="button" class="btn btn-primary btn-with-icon" onClick="javascript: SalvarEmail();">
-                            RECEBER NOVIDADES
+                            RECEBER NOVIDADES <i class="icon ion-md-checkmark"></i>
                         </button>
                       </div>
                     </form>

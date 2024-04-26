@@ -21,8 +21,6 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
@@ -73,19 +71,7 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
             </div>
         </div>
     </div>
-    <script src="./I9 Sistemas _ Login_files/jquery-2.2.3.min.js.download"></script>
-    <script src="./I9 Sistemas _ Login_files/bootstrap.min.js.download"></script>
-    <script src="./I9 Sistemas _ Login_files/icheck.min.js.download"></script>
-    <script>
-        $(function() {
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%' // optional
-            });
-        });
-    </script>
-    <style>
+     <style>
         body {
             overflow: hidden;
         }

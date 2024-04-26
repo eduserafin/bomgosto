@@ -16,10 +16,10 @@
 
   if ($Tipo == "SL") {
 
-    $tipo = 'T';
+    if($produto == ""){ $produto = "NULL"; }
 
-    $insert = "INSERT INTO lead_site (tp_tipo, ds_nome, ds_email, nr_telefone, nr_whatsapp, nr_seq_cidade, ds_mensagem) 
-              VALUES ('" . $tipo . "', '" . $nome . "',  '" . $email . "', '" . $telefone . "', '" . $whatsapp . "', " . $cidade . ", '" . $mensagem . "')";
+    $insert = "INSERT INTO lead_site (tp_tipo, ds_nome, ds_email, nr_telefone, nr_whatsapp, nr_seq_cidade, ds_mensagem, nr_seq_produto) 
+              VALUES ('" . $tipo . "', '" . $nome . "',  '" . $email . "', '" . $telefone . "', '" . $whatsapp . "', " . $cidade . ", '" . $mensagem . "', " . $produto . ")";
     //echo $insert;
     $rss_insert = mysqli_query($conexao, $insert);
 
@@ -28,19 +28,17 @@
 
       echo "<script language='JavaScript'>
               alert('Informações gravadas com sucesso, em breve retornaremos o contato!');
+              window.parent.recarregarPagina();  
             </script>";
 
 
     } else {
 
-      // Erro ao gravar o registro
-      //echo "Erro ao gravar o registro: " . mysqli_error($conexao);
-
       echo "<script language='JavaScript'>
         alert('Problemas ao gravar informações, tente novamente!');
       </script>";
 
-      }
+    }
     
   }
 

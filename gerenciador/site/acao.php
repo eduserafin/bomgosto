@@ -45,6 +45,7 @@
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/upload.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','upload')</script>";
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/campanhas.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','campanha')</script>";
         echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/produtos.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','produto')</script>";
+        echo "<script language='javascript'>window.parent.CarregarLoad('gerenciador/site/categorias.php?consultar=sim&codigo=" . $RS["nr_sequencial"] . "','categoria')</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
       
       }
@@ -510,6 +511,44 @@ if ($Tipo == "P") {
 
 }
 
+//==================================- CADASTRAR CONTEUDO PRODUTO-===============================================
+
+if ($Tipo == "PC") {
+
+  $update = "UPDATE configuracao_site
+              SET ds_titulo_produto = '" . $titulo . "',
+                  ds_conteudo_produto = '" . $conteudo . "',
+                  cd_useralterado = " . $_SESSION["CD_USUARIO"] . ", 
+                  dt_alterado = CURRENT_TIMESTAMP   
+            WHERE nr_sequencial=" . $codigo;
+  mysqli_query($conexao, $update);
+
+  if (mysqli_affected_rows($conexao) > 0) {
+        
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'success',
+              title: 'Show...',
+              text: 'Configuração salva com sucesso!'
+            }); 
+            window.parent.executafuncao('new');
+            window.parent.consultar(0);  
+          </script>";
+
+  } else {
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Problemas ao salvar. Verifique!'
+            });
+          </script>";
+
+  }
+
+}
+
 //==================================- EXCLUIR PRODUTOS-===============================================
 
 if ($Tipo == "EP") {
@@ -528,6 +567,82 @@ if ($Tipo == "EP") {
             window.parent.executafuncao('new');
             window.parent.consultar(0);
             window.parent.CarregarLoad('gerenciador/site/produtos.php?consultar=sim&codigo=" . $configuracao . "','produto')  
+          </script>";
+
+  } else {
+
+    // Erro ao gravar o registro
+    echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Problemas ao excluir!'
+            });
+          </script>";
+
+  }
+
+} 
+
+//==================================- CADASTRAR CATEGORIAS DE PRODUTOS-===============================================
+
+if ($Tipo == "CAT") {
+
+  $insert_categoria = "INSERT INTO categoria_produtos (nr_seq_configuracao, ds_categoria, st_ativo) 
+                  VALUES (" . $codigo . ", UPPER('" . $categoria . "'), '" . $status . "')";
+  //echo $insert_produto;
+  $rss_insert = mysqli_query($conexao, $insert_categoria);
+
+  if ($rss_insert) {
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'success',
+              title: 'Show...',
+              text: 'Categoria cadastrada com sucesso!'
+            }); 
+            window.parent.executafuncao('new');
+            window.parent.consultar(0);
+            window.parent.CarregarLoad('gerenciador/site/categorias.php?consultar=sim&codigo=" . $codigo . "','categoria')  
+          </script>";
+
+  } else {
+
+    // Erro ao gravar o registro
+    echo "Erro ao gravar o registro: " . mysqli_error($conexao);
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Problemas ao gravar!'
+            });
+          </script>";
+
+  }
+
+}
+
+//==================================- EXCLUIR CATEGORIAS-===============================================
+
+if ($Tipo == "ECAT") {
+
+  $delete = "DELETE FROM categoria_produtos WHERE nr_sequencial = " . $codigo . "";
+  $result = mysqli_query($conexao, $delete);
+
+  if ($result) {
+
+    echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+              icon: 'success',
+              title: 'Show...',
+              text: 'Categoria excluido com sucesso!'
+            }); 
+            window.parent.executafuncao('new');
+            window.parent.consultar(0);
+            window.parent.CarregarLoad('gerenciador/site/categorias.php?consultar=sim&codigo=" . $configuracao . "','categoria')  
           </script>";
 
   } else {

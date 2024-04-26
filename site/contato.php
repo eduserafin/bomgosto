@@ -57,7 +57,6 @@
       $v_produto = $linhap[0];
     }
 
-
   }
 
 ?>
@@ -161,6 +160,10 @@
             transition: all 0.2s ease-in-out;
             outline: none;
           }
+          
+          .icon {
+            font-size: 2rem; /* Defina o tamanho desejado para o ícone maior */
+          }
 
       </style>
   </head>
@@ -239,7 +242,7 @@
               <div class="form-group">
                   <textarea name="txtmemsagem" id="txtmemsagem" class="form-control" rows="5" placeholder="Mensagem" required></textarea>
               </div>
-              <button type="button" class="btn btn-primary" onClick="javascript: SalvarLead();">ENVIAR MENSAGEM <i class="icon ion-ios-log-in small-icon"></i></button>
+              <button type="button" class="btn btn-primary" onClick="javascript: SalvarLead();">ENVIAR MENSAGEM <i class="icon ion-md-checkmark"></i></button>
             </div>
           </div>
         </div>
@@ -302,6 +305,7 @@
       function SalvarLead(){
 
         var tipo = '<?php echo $tipo; ?>';
+        var produto = '<?php echo $produto; ?>';
         var nome = document.getElementById('txtnome').value;
         var email = document.getElementById("txtemail").value;
         var telefone = document.getElementById('txttelefone').value;
@@ -329,9 +333,13 @@
           } 
         } else {
 
-          window.open('acao.php?Tipo=SL&tipo=' + tipo + '&nome=' + nome + '&email=' + email + '&telefone=' + telefone + '&whatsapp=' + whatsapp + '&cidade=' + cidade + '&mensagem=' + mensagem, "acao");
+          window.open('acao.php?Tipo=SL&tipo=' + tipo + '&nome=' + nome + '&email=' + email + '&telefone=' + telefone + '&whatsapp=' + whatsapp + '&cidade=' + cidade + '&mensagem=' + mensagem + '&produto=' + produto, "acao");
         
         }
+      }
+
+      function recarregarPagina() {
+        location.reload();
       }
 
     </script>

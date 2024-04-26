@@ -24,9 +24,10 @@
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">PÁGINA INICIAL</a></li>
     <li><a id="tabsobre" href="#sobre" data-toggle="tab">SOBRE</a></li>
+    <li><a id="tabcontato" href="#contato" data-toggle="tab">CONTATO</a></li>
+    <li><a id="tabcategoria" href="#categoria" data-toggle="tab">CATEGORIA</a></li>
     <li><a id="tabproduto" href="#produto" data-toggle="tab">PRODUTOS</a></li>
     <li><a id="tabcampanha" href="#campanha" data-toggle="tab">CAMPANHAS</a></li>
-    <li><a id="tabcontato" href="#contato" data-toggle="tab">CONTATO</a></li>
     <li><a id="tabredes" href="#redes" data-toggle="tab">REDES SOCIAIS</a></li>
     <li><a id="tabupload" href="#upload" data-toggle="tab">UPLOAD</a></li>
     <li><a id="tablista" href="#lista" data-toggle="tab">LISTA</a></li>
@@ -61,6 +62,11 @@
     <div class="tab-pane" id="redes">
         <div class="row-100">
             <?php include "redes.php"; ?>        
+        </div>
+    </div>
+    <div class="tab-pane" id="categoria">
+        <div class="row-100">
+            <?php include "categorias.php"; ?>        
         </div>
     </div>
     <div class="tab-pane" id="upload">
