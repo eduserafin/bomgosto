@@ -17,10 +17,12 @@
   if ($Tipo == "SL") {
 
     if($produto == ""){ $produto = "NULL"; }
+    if($valor == ""){ $valor = "NULL"; }
+    else {$valor = str_replace([",", "."], "", $valor);}
 
-    $insert = "INSERT INTO lead_site (tp_tipo, ds_nome, ds_email, nr_telefone, nr_whatsapp, nr_seq_cidade, ds_mensagem, nr_seq_produto) 
-              VALUES ('" . $tipo . "', '" . $nome . "',  '" . $email . "', '" . $telefone . "', '" . $whatsapp . "', " . $cidade . ", '" . $mensagem . "', " . $produto . ")";
-    //echo $insert;
+    $insert = "INSERT INTO lead_site (tp_tipo, ds_nome, ds_email, nr_telefone, nr_whatsapp, nr_seq_cidade, ds_mensagem, nr_seq_produto, vl_valor, st_situacao) 
+              VALUES ('" . $tipo . "', '" . $nome . "',  '" . $email . "', '" . $telefone . "', '" . $whatsapp . "', " . $cidade . ", '" . $mensagem . "', " . $produto . ", " . $valor . ", 'P')";
+    echo $insert;
     $rss_insert = mysqli_query($conexao, $insert);
 
     if ($rss_insert) {
@@ -63,7 +65,6 @@
       $rss_insert = mysqli_query($conexao, $insert);
 
       if ($rss_insert) {
-        // Registro gravado com sucesso
 
         echo "<script language='JavaScript'>
                 alert('E-mail cadastrado com sucesso!');
@@ -71,9 +72,6 @@
 
 
       } else {
-
-        // Erro ao gravar o registro
-        //echo "Erro ao gravar o registro: " . mysqli_error($conexao);
 
         echo "<script language='JavaScript'>
           alert('Problemas ao gravar, tente novamente!');

@@ -65,6 +65,7 @@
                 <option value="#FFFF00">Amarelo</option>
                 <option value="#800080">Roxo</option>
                 <option value="#00BFFF">Azul Fraco</option>
+                <option value="#4C2800">Marrom</option>
                 
                 <!-- Adicione mais opções de cores conforme necessário -->
             </select>
@@ -82,6 +83,7 @@
                 <option value="#FFE4E1">Rose</option>
                 <option value="#87CEEB">Azul Fraco</option>
                 <option value="#FFD700">Gold</option>
+                <option value="#8B4513">Marrom Fraco</option>
                 <!-- Adicione mais opções de cores conforme necessário -->
             </select>
             <div class="col-md-1" id="selected-color2"></div>

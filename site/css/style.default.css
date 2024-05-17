@@ -73,7 +73,7 @@ section {
   display: block;
   height: 50rem;
   width: 50rem;
-  background: url(../img/shape-1.svg) no-repeat;
+  /*background: url(../img/shape-1.svg) no-repeat;*/
   background-size: 100%;
   position: absolute;
   top: -9rem;
@@ -101,7 +101,7 @@ section {
   display: block;
   height: 16rem;
   width: 16rem;
-  background: url(../img/shape-2.svg) no-repeat;
+  /*background: url(../img/shape-2.svg) no-repeat;*/
   background-size: 100%;
   position: absolute;
   top: -5rem;
@@ -589,7 +589,7 @@ section {
   line-height: 1.7rem;
   margin-bottom: 0.7rem;
   font-weight: 300;
-  max-width: 30rem;
+  max-width: 100rem;
 }
 
 .schedule-item-time {

@@ -136,6 +136,17 @@
             font-size: 1rem; /* Defina o tamanho desejado para o ícone maior */
           }
 
+          .detalhamento {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            line-height: 1.6;
+            margin: 10px 0;
+            text-align: justify;
+          }
+
         </style>
 
   </head>
@@ -199,83 +210,40 @@
       <section class="schedule shape-2">
         <div class="container">
           <div class="schedule-table">
-            <nav>
-              <div id="nav-tab" role="tablist" class="nav nav-tabs schedule-nav nav-fill">
-                <!-- PHP loop to generate category tabs -->
-                <?php 
-
-                  // Verifica se a variável $categoria está vazia
-                  if (empty($categoria)) {
-                    // Se estiver vazia, define $primeiraCategoriaAtiva como true para ativar a primeira categoria
-                    $primeiraCategoriaAtiva = true;
-                  }
-
-                  $SQLC = "SELECT nr_sequencial, ds_categoria 
-                              FROM categoria_produtos 
-                            WHERE nr_seq_configuracao = $codigo 
-                            AND st_ativo = 'A'";
-                  //echo "<pre>$SQLC</pre>";
-                  $RSSC = mysqli_query($conexao, $SQLC);
-                  while($linhac = mysqli_fetch_row($RSSC)){
-                    $nr_categoria = $linhac[0];
-                    $ds_categoria = $linhac[1];
-                    $classeAtiva = ''; // Inicializa a classe como vazia
-
-                    // Se a variável $categoria estiver vazia e for a primeira categoria, define a classe como 'active'
-                    if (empty($categoria) && $primeiraCategoriaAtiva) {
-                        $classeAtiva = 'active';
-                        $primeiraCategoriaAtiva = false; // Define como false após a primeira iteração
-                    } elseif ($categoria == $nr_categoria) {
-                        $classeAtiva = 'active';
-                    }
-                    ?>
-
-                    <a data-categoria="<?php echo $nr_categoria; ?>" data-toggle="tab" href="#nav-<?php echo strtolower($ds_categoria); ?>" role="tab" aria-controls="nav-<?php echo strtolower($ds_categoria); ?>" aria-selected="false" class="nav-item nav-link schedule-nav-link <?php echo $classeAtiva; ?>"><?php echo $ds_categoria; ?></a>
-
-                <?php } ?>
-              </div>
-            </nav>
             <div id="nav-tabContent" class="tab-content">
-              <!-- PHP loop to generate product tabs for each category -->
               <?php 
-                $RSSC = mysqli_query($conexao, $SQLC);
-                while($linhac = mysqli_fetch_row($RSSC)){
-                  $nr_categoria = $linhac[0];
-                  $ds_categoria = $linhac[1];
-                  $classeAtiva = ($primeiraCategoriaAtiva) ? 'show active' : ''; // Define a classe 'show active' para a primeira categoria
-                
+
+              if($produto != ""){
+                $v_filtro = "AND p.nr_sequencial = $produto";
+              }
+
+                $SQLP = "SELECT p.nr_sequencial, p.ds_produto, p.ds_imagem, p.ds_detalhamento, c.ds_categoria 
+                          FROM produtos_site p 
+                          INNER JOIN categoria_produtos c ON c.nr_sequencial = p.nr_seq_categoria 
+                          WHERE p.nr_seq_configuracao = $codigo 
+                          AND p.st_ativo = 'A'
+                          " . $v_filtro . "";
+                $RSSP = mysqli_query($conexao, $SQLP);
+                while($linhap = mysqli_fetch_row($RSSP)){
+                  $nr_produto = $linhap[0];
+                  $ds_produto = $linhap[1];
+                  $ds_imagem = $linhap[2];
+                  $ds_detalhamento = $linhap[3];
+                  $ds_categoria = $linhap[4];
+
                   ?>
 
-                    <div id="nav-<?php echo strtolower($ds_categoria); ?>" role="tabpanel" class="tab-pane fade <?php echo $classeAtiva; ?>">
-
-                    <?php 
-
-                      $SQLP = "SELECT p.nr_sequencial, p.ds_produto, p.ds_imagem, p.ds_detalhamento, c.ds_categoria FROM produtos_site p INNER JOIN categoria_produtos c ON c.nr_sequencial = p.nr_seq_categoria WHERE p.nr_seq_configuracao = $codigo AND p.nr_seq_categoria = $nr_categoria AND p.st_ativo = 'A'";
-                      $RSSP = mysqli_query($conexao, $SQLP);
-                      while($linhap = mysqli_fetch_row($RSSP)){
-                        $nr_produto = $linhap[0];
-                        $ds_produto = $linhap[1];
-                        $ds_imagem = $linhap[2];
-                        $ds_detalhamento = $linhap[3];
-                        $ds_categoria = $linhap[4];
-
-                        ?>
-
-                        <div class="schedule-table-item">
-                          <div class="row align-items-center">
-                            <div class="col-lg-3"><a href="#" class="schedule-item-image"><img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" alt="..." class="img-fluid"></a></div>
-                            <div class="col-lg-9">
-                              <a href="contato.php?codigo=<?php echo $codigo; ?>&produto=<?php echo $nr_produto; ?>&tipo=P" class="btn btn-primary">ENTRE EM CONTATO <i class="icon ion-md-arrow-round-forward"></i></a>
-                              <h3 class="schedule-item-name"><?php echo $ds_produto; ?></h3>
-                              <p class="schedule-item-description"><?php echo $ds_detalhamento; ?></p>
-                            </div>
-                          </div>
+                    <div class="schedule-table-item">
+                      <div class="row align-items-center">
+                        <div class="col-lg-3"><a href="#" class="schedule-item-image"><img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" alt="..." class="img-fluid"></a></div>
+                        <div class="col-lg-9">
+                          <h3 class="schedule-item-name"><?php echo $ds_produto; ?> <a href="contato.php?codigo=<?php echo $codigo; ?>&produto=<?php echo $nr_produto; ?>&tipo=P" class="btn btn-primary">Simule agora <i class="icon ion-md-arrow-round-forward"></i></a></h3>
+                          <p class="detalhamento"><?php echo $ds_detalhamento; ?></p>
                         </div>
-                    <?php } ?>
-                  </div>
-                  <?php 
-                  $primeiraCategoriaAtiva = false;  // Define para false após a primeira iteração
-                } ?>
+                      </div>
+                    </div>
+                <?php } ?>
+              </div>
             </div>
           </div>
         </div>
@@ -326,20 +294,5 @@
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
     
-    <script>
-      $(document).ready(function() {
-          // Adiciona um ouvinte de evento para a mudança de aba
-          $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-              // Remove a classe 'show' de todas as abas
-              $('.tab-pane').removeClass('show');
-              // Adiciona a classe 'show' à aba que está prestes a ser exibida
-              $($(e.target).attr('href')).addClass('show');
-          });
-          
-          // Seleciona a primeira aba e a exibe
-          $('a[data-toggle="tab"]').first().tab('show');
-      });
-
-    </script>
   </body>
 </html>

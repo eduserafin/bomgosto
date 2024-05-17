@@ -32,14 +32,30 @@
       $cor_secundaria = $linha0[1];
     }
 
-    $ds_arquivo1 = "";
+    $ds_arquivo = "";
     $SQL1 = "SELECT ds_arquivo
               FROM upload
             WHERE nr_seq_configuracao = $codigo
-            AND nr_seq_categoria = 1";
+            AND nr_seq_categoria = 6";
     $RSS1 = mysqli_query($conexao, $SQL1);
     while($linha1 = mysqli_fetch_row($RSS1)){
-      $ds_arquivo1 = $linha1[0];
+      $ds_arquivo = $linha1[0];
+    }
+
+    if($ds_arquivo == ""){
+      $caminho = "img/Csimulador.png";
+    } else {
+      $caminho = "../gerenciador/site/imagens/$ds_arquivo";
+    }
+
+    $ds_arquivo1 = "";
+    $SQL2 = "SELECT ds_arquivo
+              FROM upload
+            WHERE nr_seq_configuracao = $codigo
+            AND nr_seq_categoria = 1";
+    $RSS2 = mysqli_query($conexao, $SQL2);
+    while($linha2 = mysqli_fetch_row($RSS2)){
+      $ds_arquivo1 = $linha2[0];
     }
 
     if($ds_arquivo1 == ""){
@@ -114,6 +130,44 @@
           margin-top: 10px; /* Espaçamento acima do texto de direitos autorais */
         }
 
+        .gradient-icon {
+          border-radius: 0.8rem;
+          width: 3.5rem;
+          height: 3.5rem;
+          color: #fff;
+          background-color: <?php echo $cor_principal; ?> !important;
+          line-height: 3.5rem;
+          text-align: center;
+          display: inline-block;
+          margin-bottom: 1rem;
+          font-size: 1.4rem;
+        }
+
+        .gradient-1 {
+          background: linear-gradient(150deg, <?php echo $cor_principal; ?>, <?php echo $cor_principal; ?>) !important;
+          -webkit-box-shadow: 0 2px 4px rgba(36, 8, 128, 0.2);
+          box-shadow: 0 2px 4px rgba(36, 8, 128, 0.2);
+        }
+
+        .card-title {
+          color: #333;
+        }
+        .card-text {
+          color: #666;
+        }
+
+        .card {
+          border: none;
+          border-radius: 15px;
+          transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+          background-color: #f8f9fa; /* Cor de fundo cinza */
+        }
+        .card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+          background-color: <?php echo $cor_secundaria; ?>; /* Cor de fundo cinza escuro quando passar o mouse */
+        }
+
     </style>
   </head>
   <body>
@@ -151,29 +205,73 @@
               <li aria-current="page" class="breadcrumb-item active">Sobre</li>
             </ol>
           </nav>
-          <h1><?php echo $ds_titulo; ?></h1>
-          <div class="row">
-            <div class="col-lg-8">
-              <p class="lead font-weight-light"><?php echo $ds_conteudo; ?></p>
-              <p><img src="img/logo.jpeg" alt="..." class="img-fluid"></p>
+
+          <div class="container">
+            <h2><?php echo $ds_titulo; ?></h2>
+            <div class="row">
+              <div class="col-lg-12">
+                <p class="lead font-weight-light"><?php echo $ds_conteudo; ?></p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <section class="shape-2 pb-big">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-8">
-              <h2 class="mb-3"><?php echo $ds_titulo1; ?></h2>
-              <blockquote class="blockquote mb-5"><?php echo $ds_conteudo1; ?></blockquote>
-              <h3 class="mb-5"><?php echo $ds_titulo2; ?></h3>
-              <p class="mb-5"><?php echo $ds_conteudo2; ?></p>
-              <p><img src="img/logo.jpeg" alt="..." class="img-fluid"></p>
+
+          <div class="container mt-5">
+            <h2><?php echo $ds_titulo1; ?></h2>
+            <div class="row">
+              <div class="col-lg-12">
+                <p class="lead font-weight-light"><?php echo $ds_conteudo1; ?></p>
+              </div>
             </div>
           </div>
+
+          <div class="container mt-5">
+            <h2><?php echo $ds_titulo2; ?></h2>
+            <div class="row">
+              <div class="col-lg-12">
+                <p class="lead font-weight-light"><?php echo $ds_conteudo2; ?></p>
+              </div>
+            </div>
+          </div>
+          
+          <?php if($ds_arquivo != ""){ ?>
+            <div class="container">
+              <div class="row justify-content-center">
+                  <div class="col-lg-4 text-center">
+                      <img src="<?php echo $caminho; ?>" class="img-fluid" style="width: 100%; height: auto;">
+                  </div>
+              </div>
+            </div>
+          <?php } ?>
         </div>
+
+        <div class="container mt-5">
+          <div class="row mt-2">
+            <div class="col-md-6">
+                <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=C" class="card-link">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
+                            <h4 class="card-title">Entre em Contato</h4>
+                            <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
+                        </div>
+                    </div>
+                </a> <!-- Tag de fechamento adicionada -->
+            </div>
+            <div class="col-md-6">
+                <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=P" class="card-link">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
+                            <h4 class="card-title">Seja um Parceiro</h4>
+                            <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+          </div>
       </section>
     </div>
+
    <footer class="footer">
       <div class="container text-center">
         <!-- Copyrights-->

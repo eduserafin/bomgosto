@@ -304,10 +304,96 @@
 
                     <?php
 
-                        if ($form == "") {
+                        if ($form == "") { 
+                            
+                            $leads_novas = 0;
+                            $SQL = "SELECT COUNT(*) FROM lead_site
+                                    WHERE st_situacao = 'P'";
+                            $RSS = mysqli_query($conexao, $SQL);
+                            while($linha = mysqli_fetch_row($RSS)){
+                                $leads_novas = $linha[0];
+                            }
 
-                            //adicionar conteudo aqui
+                            $leads_contato = 0;
+                            $SQL = "SELECT COUNT(*) FROM lead_site
+                                    WHERE st_situacao = 'C'";
+                            $RSS = mysqli_query($conexao, $SQL);
+                            while($linha = mysqli_fetch_row($RSS)){
+                                $leads_contato = $linha[0];
+                            }
+
+                            $leads_fria = 0;
+                            $SQL = "SELECT COUNT(*) FROM lead_site
+                                    WHERE st_situacao = 'F'";
+                            $RSS = mysqli_query($conexao, $SQL);
+                            while($linha = mysqli_fetch_row($RSS)){
+                                $leads_fria = $linha[0];
+                            }
+
+                            $leads_quente = 0;
+                            $SQL = "SELECT COUNT(*) FROM lead_site
+                                    WHERE st_situacao = 'F'";
+                            $RSS = mysqli_query($conexao, $SQL);
+                            while($linha = mysqli_fetch_row($RSS)){
+                                $leads_quente = $linha[0];
+                            }
+
+                            ?>
+
+                            <div class="col-lg-6 col-xs-6">
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h1><?php echo number_format($leads_novas, 0, ",", "."); ?></h1>
+                                        <p>NOVAS LEADS</p>
+                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-group"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-xs-6">
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h1><?php echo number_format($leads_contato, 0, ",", "."); ?></h1>
+                                        <p>ENTRAR EM CONTATO COM O CLIENTE</p>
+                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-phone"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-xs-6">
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h1><?php echo number_format($leads_fria, 0, ",", "."); ?></h1>
+                                        <p>LEADS PARADAS</p>
+                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-lock"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-xs-6">
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h1><?php echo number_format($leads_quente, 0, ",", "."); ?></h1>
+                                        <p>LEADS EM ANDAMENTO</p>
+                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-unlock"></i>
+                                    </div>
+                                </div>
+                            </div>
     
+    
+                            <?php
                         } else {
 
                             $_SESSION["id_menu"] = $_GET['id_menu'];

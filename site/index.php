@@ -61,6 +61,22 @@
     $caminho2 = "../gerenciador/site/imagens/$ds_arquivo2";
   }
 
+  $ds_arquivo3 = "";
+  $SQL3 = "SELECT ds_arquivo
+            FROM upload
+          WHERE nr_seq_configuracao = $codigo
+          AND nr_seq_categoria = 4";
+  $RSS3 = mysqli_query($conexao, $SQL3);
+  while($linha3 = mysqli_fetch_row($RSS3)){
+    $ds_arquivo3 = $linha3[0];
+  }
+
+  if($ds_arquivo3 == ""){
+    $caminho3 = "img/Csimulador.png";
+  } else {
+    $caminho3 = "../gerenciador/site/imagens/$ds_arquivo3";
+  }
+
   $v_produto = 0;
   $SQLP = "SELECT COUNT(nr_sequencial)
               FROM produtos_site
@@ -151,6 +167,20 @@
             border-color: <?php echo $cor_secundaria; ?>; /* Também escurecendo a borda ao passar o mouse */
           }
 
+          .btn-primary-proximo {
+            transition: background-color 0.3s ease; /* Adiciona um efeito de transição de cor */
+            background-color: <?php echo $cor_secundaria; ?>;
+            border-color: <?php echo $cor_secundaria; ?>; /* Adicionando a mesma cor para a borda */
+            height: 50px; /* Defina o tamanho desejado para a altura */
+            color: #FFFFFF;
+          }
+
+          .btn-primary-proximo:hover {
+            background-color: <?php echo $cor_principal; ?>; /* Escurecendo um pouco ao passar o mouse */
+            border-color: <?php echo $cor_principal; ?>; /* Também escurecendo a borda ao passar o mouse */
+            color: #FFFFFF;
+          }
+
           .gradient-icon {
             border-radius: 0.8rem;
             width: 3.5rem;
@@ -214,6 +244,23 @@
             margin-top: 10px; /* Espaçamento acima do texto de direitos autorais */
           }
 
+          .titulo{
+            color: <?php echo $cor_principal; ?>
+          }
+
+          .titulo1{
+            color: #FFFFFF;
+          }
+
+          .p-branco{
+            color: #FFFFFF;
+          }
+
+          .container {
+            max-width: 1200px; /* Ajuste o valor conforme necessário para definir a largura máxima */
+            margin: 0 auto; /* Centraliza o container na tela */
+          }
+
         </style>
 
   </head>
@@ -223,8 +270,7 @@
     <header class="header">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-          <!-- Navbar brand--><a href="index.php" class="navbar-brand font-weight-bold"><img src="<?php echo $caminho1; ?>" alt="..." class="img-fluid"></a>
-          <!-- Navbar toggler button-->
+        <a href="index.php" class="navbar-brand font-weight-bold"><img src="<?php echo $caminho1; ?>" style="width: 100px; height: auto;"></a>
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mx-auto ml-auto">
@@ -249,15 +295,9 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-8">
-              <h2 class="hero-heading"><?php echo $ds_secao1; ?></h2>
-              <p class="lead mt-5 font-weight-light"><?php echo $ds_subsecao1; ?></p>
-              <!-- Subscription form-->
-              <form action="#" class="subscription-form mt-5">
-                <div class="form-group">
-                  <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=S" class="btn btn-primary">SAIBA MAIS <i class="icon ion-md-arrow-round-forward"></i></a>
-                </div>
-              </form> 
-              <!-- Platforms-->
+              <h2 class="hero-heading titulo"><?php echo $ds_secao1; ?></h2>
+              <p class="lead mt-2 font-weight-light"><?php echo $ds_subsecao1; ?></p>
+              <div class="screen"><img src="<?php echo $caminho3; ?>" alt="..." class="img-fluid"></div>
               <?php if($v_marcas > 0) { ?>
                 <div class="platforms d-none d-lg-block"><span class="platforms-title">Marcas Parceiras</span>
                   <ul class="platforms-list list-inline">
@@ -270,13 +310,73 @@
                 </div>
               <?php } ?>
             </div>
-            <div class="col-lg-6 d-none d-lg-block">
-              <div class="device-wrapper mx-auto">
-                <!--<div data-device="iPhone7" data-orientation="portrait" data-color="black" class="device">
-                  <div class="screen"><img src="img/logo.jpeg" alt="..." class="img-fluid"></div>
-                </div>-->
+            <div class="col-md-4" style="background-color: <?php echo $cor_principal; ?>;">
+              <div id="simulador">
+                <h2 class="hero-heading titulo1 mt-5" style="text-align: center;">Simule seu consórcio</h2>
+                <div class="col-md-12 mt-5">
+                  <p class="p-branco" style="text-align: center; font-size: 25px;">Selecione uma categoria</p>
+                  <?php
+                    $SQLP = "SELECT nr_sequencial, ds_imagem
+                              FROM produtos_site 
+                              WHERE nr_seq_configuracao = $codigo 
+                              AND st_ativo = 'A'";
+                    $RSSP = mysqli_query($conexao, $SQLP);
+                    while($linhap = mysqli_fetch_row($RSSP)){
+                      $nr_produto = $linhap[0];
+                      $ds_imagem = $linhap[1];
+                      ?>
+                        
+                      <img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" class="img-fluid produto-imagem" data-produto="<?php echo $nr_produto; ?>" style="width: 70px; height: auto;">
+                      <?php 
+                    }
+                  ?>
+                </div>
+
+                <div class="col-md-12 mt-5">
+                  <p class="p-branco" style="text-align: center; font-size: 25px;">Informe o valor do consórcio</p>
+                  <input type="text" name="txtvalorindex" id="txtvalorindex" style="text-align: center; font-size: 30px;" class="form-control" onkeypress="return formatar_moeda(this,'.',',',event);" placeholder="0,00" required>
+                </div>
+
+                <div class="col-md-12 mt-5" style="text-align: center;">
+                  <button type="button" class="btn btn-primary-proximo" style="text-align: center; font-size: 20px;" onClick="javascript: mostrarFormulario();">Próximo</button>
+                </div>
               </div>
-            </div>
+
+              <div id="formulario" style="display: none;">
+                <p class="p-branco mt-3" style="text-align: center; font-size: 25px;">Preencha os campos abaixo para ver sua simulação!</p>
+              
+                <div class="form-group mt-5">
+                    <input type="text" name="txtnomeindex" id="txtnomeindex" class="form-control" placeholder="Nome" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="txtemailindex" id="txtemailindex" class="form-control" placeholder="E-mail" required>
+                </div>
+                <div class="form-group">
+                    <input type="number" name="txttelefoneindex" id="txttelefoneindex" class="form-control" placeholder="Telefone" required>
+                </div>
+                <div class="form-group">          
+                    <select id="txtcidadeindex" class="form-control">
+                        <option value='0'>Selecione uma cidade</option>
+                        <?php
+                        $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
+                                  FROM municipioibge
+                                  WHERE ds_municipioibge NOT LIKE '%TRIAL%'
+                                ORDER BY ds_municipioibge, sg_estado;";
+                        $res = mysqli_query($conexao, $sql);
+                        while($lin=mysqli_fetch_row($res)){
+                            $cdg = $lin[0];
+                            $desc = $lin[1];
+
+                            echo "<option value='$cdg'>$desc</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-12 mt-5" style="text-align: center;">
+                  <button type="button" class="btn btn-primary-proximo" style="text-align: center; font-size: 20px;" onClick="javascript: enviarSimulacao();">Ver Resultado</button>
+                </div>
+              </div>
+              <br><br>
           </div>
         </div>
       </section>
@@ -289,7 +389,7 @@
               <img src="<?php echo $caminho2; ?>" alt="..." style="max-width: 100%;"> <!-- Adição de style para limitar a largura máxima -->
             </div>
             <div class="col-lg-6">
-              <h2 class="mb-10 text-center"><?php echo $ds_secao2; ?></h2><br> <!-- Alinhamento do texto à direita -->
+              <h2 class="mb-10 text-center titulo"><?php echo $ds_secao2; ?></h2><br> <!-- Alinhamento do texto à direita -->
               <p class="lead text-left"><?php echo $ds_subsecao2; ?></p> <!-- Alinhamento do texto à direita -->
               <div class="form-group"><br>
                 <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONHEÇA NOSSA EMPRESA <i class="icon ion-md-arrow-round-forward"></i></a>
@@ -315,47 +415,38 @@
         <section class="features shape-2">         
           <div class="container">
             <div class="section-header text-center"><span class="section-header-title"></span>
-              <h2 class="h2"><?php echo $ds_secao3; ?></h2>
+              <h2 class="h2 titulo"><?php echo $ds_secao3; ?></h2>
               <div class="row">
                 <div class="col-lg-8 mx-auto">
                   <p class="lead"><?php echo $ds_subsecao3; ?></p>
                 </div>
               </div>
             </div>
-            <div class="container mt-2">
-              <div class="row mt-2">
+            <div class="container mt-5">
+              <div class="row">
                 <?php
-                  $SQL6 = "SELECT nr_sequencial, ds_produto, ds_icone, nr_seq_categoria
-                            FROM produtos_site
-                          WHERE nr_seq_configuracao = $codigo
-                          AND st_ativo = 'A'
-                          ORDER BY nr_sequencial ASC LIMIT 3";
-                  $RSS6 = mysqli_query($conexao, $SQL6);
-                  while($linha6 = mysqli_fetch_row($RSS6)){
-                    $nr_seq_produto = $linha6[0];
-                    $ds_produto = $linha6[1];
-                    $ds_icone_produto = $linha6[2];
-                    $categoria = $linha6[3];
+                $SQLP = "SELECT p.nr_sequencial, p.ds_produto, p.ds_imagem, p.ds_detalhamento, c.ds_categoria 
+                            FROM produtos_site p 
+                            INNER JOIN categoria_produtos c ON c.nr_sequencial = p.nr_seq_categoria 
+                            WHERE p.nr_seq_configuracao = $codigo 
+                            AND p.st_ativo = 'A'";
+                  $RSSP = mysqli_query($conexao, $SQLP);
+                  while($linhap = mysqli_fetch_row($RSSP)){
+                    $nr_produto = $linhap[0];
+                    $ds_produto = $linhap[1];
+                    $ds_imagem = $linhap[2];
+                    $ds_detalhamento = $linhap[3];
+                    $ds_categoria = $linhap[4];
 
                     ?>
-
-                    <div class="col-md-4">
-                      <a href="produtos.php?codigo=<?php echo $codigo; ?>&categoria=<?php echo $categoria; ?>" class="card-link">
-                          <div class="card text-center">
-                              <div class="card-body">
-                                  <div class="gradient-icon gradient-1"><i class="icon <?php echo $ds_icone_produto; ?>"></i></div>
-                                  <h4 class="card-title"><?php echo $ds_produto; ?></h4>
-                                  <p class="card-text">Clique para ver detalhes  <i class="icon ion-ios-arrow-round-forward small-icon"></i></p>
-                              </div>
-                          </div>
-                      </a>
+                    <div class="col-md-3">
+                      <div class="row align-items-center">
+                        <div class="col-lg-12"><a href="produtos.php?codigo=<?php echo $codigo; ?>&produto=<?php echo $nr_produto; ?>" class="schedule-item-image"><img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" class="img-fluid"></a></div>
+                      </div>
                     </div>
                   <?php } ?>
-              </div>
-          </div>
-          <div class="form-group text-center"><br>
-            <a href="produtos.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONSÓRCIOS <i class="icon ion-md-arrow-round-forward"></i></a>
-          </div>
+                </div>
+            </div>
         </section>
       <?php } ?>
      
@@ -372,11 +463,11 @@
     
       if($v_existe_campanha != 0){ ?>
        <!-- SEÇÃO 4-->
-        <section class="app-showcase pb-big">
+        <section class="app-showcase pb-big mt-5">
           <div class="container">
             <div class="row align-items-center">
               <div class="col-lg-8">
-                <h2 class="mb-4"><?php echo $ds_secao4; ?></h2>
+                <h2 class="mb-4 titulo"><?php echo $ds_secao4; ?></h2>
                 <p class="lead"><?php echo $ds_subsecao4; ?></p>
                 <div class="row mt-5">
                   <div class="col-lg-8">
@@ -461,51 +552,19 @@
         <div class="container text-center">
           <div class="section-header">
             <div class="row">
-              <div class="col-lg-8 mx-auto"><span class="section-header-title"></span>
-                <h2 class="h2"><?php echo $ds_secao5; ?></h2>
-                <p class="lead"><?php echo $ds_subsecao5; ?></p>
+              <div class="col-lg-10 mx-auto">
+                <form action="#" class="subscription-form">
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
+                    <button type="button" class="btn btn-primary btn-with-icon" onClick="javascript: SalvarEmail();">
+                        RECEBER NOVIDADES <i class="icon ion-md-checkmark"></i>
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div class="container mt-2">
-                <div class="row mt-2">
-                  <div class="col-md-6">
-                      <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=C" class="card-link">
-                          <div class="card text-center">
-                              <div class="card-body">
-                                  <div class="gradient-icon gradient-1"><i class="icon ion-ios-call"></i></div>
-                                  <h4 class="card-title">Entre em Contato</h4>
-                                  <p class="card-text">Entre em contato conosco para obter suporte ou tirar dúvidas.</p>
-                              </div>
-                          </div>
-                      </a> <!-- Tag de fechamento adicionada -->
-                  </div>
-                  <div class="col-md-6">
-                      <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=P" class="card-link">
-                          <div class="card text-center">
-                              <div class="card-body">
-                                  <div class="gradient-icon gradient-1"><i class="icon ion-ios-person"></i></div>
-                                  <h4 class="card-title">Seja um Parceiro</h4>
-                                  <p class="card-text">Deseja se tornar um parceiro? Entre em contato.</p>
-                              </div>
-                          </div>
-                      </a>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-lg-12 mx-auto">
-                    <!-- Subscription form-->
-                    <form action="#" class="subscription-form mt-5">
-                      <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
-                        <button type="button" class="btn btn-primary btn-with-icon" onClick="javascript: SalvarEmail();">
-                            RECEBER NOVIDADES <i class="icon ion-md-checkmark"></i>
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -543,8 +602,7 @@
     <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
     <script src="vendor/swiper/js/swiper.min.js"></script>
     <script src="js/front.js"></script>
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
-    <!---->
+
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
       function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -553,8 +611,8 @@
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
-    <script>
 
+    <script>
       $(document).ready(function(){
           // Quando um botão de detalhes é clicado
           $('.btn-detalhes').click(function(){
@@ -564,6 +622,28 @@
               // Aqui você pode fazer uma solicitação AJAX para obter os detalhes da campanha com base no ID
               // Por enquanto, vamos apenas exibir o ID da campanha no modal
               $('#detalhesCampanha').text(campanhaID);
+          });
+      });
+
+      var produtoSelecionado = null;
+
+      // Função para alternar a seleção da imagem
+      document.querySelectorAll('.produto-imagem').forEach(function(img) {
+          img.addEventListener('click', function() {
+              var produto = this.getAttribute('data-produto');
+              if (produto === produtoSelecionado) {
+                  // Se o produto clicado já estiver selecionado, desmarque-o
+                  produtoSelecionado = null;
+                  this.style.border = 'none';
+              } else {
+                  // Desmarque a imagem anteriormente selecionada, se houver
+                  if (produtoSelecionado !== null) {
+                      document.querySelector('.produto-imagem[data-produto="' + produtoSelecionado + '"]').style.border = 'none';
+                  }
+                  // Selecione o novo produto clicado
+                  produtoSelecionado = produto;
+                  this.style.border = '2px solid white';
+              }
           });
       });
 
@@ -580,6 +660,118 @@
 
         }
 
+      }
+
+      function formatar_moeda(campo, separador_milhar, separador_decimal, tecla) {
+        var sep = 0;
+        var key = '';
+        var i = j = 0;
+        var len = len2 = 0;
+        var strCheck = '0123456789';
+        var aux = aux2 = '';
+        var whichCode = (window.Event) ? tecla.which : tecla.keyCode;
+
+        if (whichCode == 13) return true; // Tecla Enter
+        if (whichCode == 8) return true; // Tecla Delete
+        key = String.fromCharCode(whichCode); // Pegando o valor digitado
+        if (strCheck.indexOf(key) == -1) return false; // Valor inválido (não inteiro)
+        len = campo.value.length;
+        for (i = 0; i < len; i++)
+            if ((campo.value.charAt(i) != '0') && (campo.value.charAt(i) != separador_decimal)) break;
+        aux = '';
+        for (; i < len; i++)
+            if (strCheck.indexOf(campo.value.charAt(i)) != -1) aux += campo.value.charAt(i);
+        aux += key;
+        len = aux.length;
+        if (len == 0) campo.value = '';
+        if (len == 1) campo.value = '0' + separador_decimal + '0' + aux;
+        if (len == 2) campo.value = '0' + separador_decimal + aux;
+
+        if (len > 2) {
+            aux2 = '';
+
+            for (j = 0, i = len - 3; i >= 0; i--) {
+                if (j == 3) {
+                    aux2 += separador_milhar;
+                    j = 0;
+                }
+                aux2 += aux.charAt(i);
+                j++;
+            }
+
+            campo.value = '';
+            len2 = aux2.length;
+            for (i = len2 - 1; i >= 0; i--)
+                campo.value += aux2.charAt(i);
+            campo.value += separador_decimal + aux.substr(len - 2, len);
+        }
+
+        return false;
+      }
+
+      function mostrarFormulario() {
+
+        var valor = document.getElementById("txtvalorindex").value;
+        if (produtoSelecionado !== null) {
+            var produto = produtoSelecionado;
+        } else {
+          alert('Selecione uma categoria para simular o consórcio!');
+        }
+
+        if (valor == "") {
+          alert('Informe o valor para simular seu consórcio!');
+          document.getElementById('txtvalorindex').focus();
+        } else {
+          // Oculta o conteúdo atual
+          var simulador = document.getElementById('simulador');
+          if (simulador) {
+              simulador.style.display = 'none';
+          }
+          // Mostra o formulário
+          var formulario = document.getElementById('formulario');
+          if (formulario) {
+              formulario.style.display = 'block';
+          }
+        }
+      }
+
+      function enviarSimulacao(){
+
+        var tipo = 'S';
+        var valor = document.getElementById("txtvalorindex").value;
+        if (produtoSelecionado !== null) {
+            var produto = produtoSelecionado;
+        } else {
+          alert('Categoria não selecionada!');
+        }
+        var nome = document.getElementById('txtnomeindex').value;
+        var email = document.getElementById("txtemailindex").value;
+        var telefone = document.getElementById('txttelefoneindex').value;
+        var cidade = document.getElementById('txtcidadeindex').value;
+     
+
+        if (nome == "") {
+          alert('Informe o seu Nome!');
+          document.getElementById('txtnomeindex').focus();
+        } else if (cidade == 0) {
+          alert('Informe a sua Cidade!');
+          document.getElementById('txtcidadeindex').focus();
+        } else if (email == '' && telefone == '') {
+          alert('Preencha pelo menos um dos campos de contato (Email ou Telefone)!');
+          if (email == '') {
+              document.getElementById("txtemailindex").focus();
+          } else if (telefone == '') {
+              document.getElementById('txttelefoneindex').focus();
+          }
+        } else {
+
+          window.open('acao.php?Tipo=SL&tipo=' + tipo + '&nome=' + nome + '&email=' + email + '&telefone=' + telefone + '&cidade=' + cidade + '&valor=' + valor + '&produto=' + produto, "acao");
+
+        }
+      }
+
+      function recarregarPagina() {
+        location.reload();
       }
 
       </script>
