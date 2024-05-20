@@ -168,6 +168,10 @@
           background-color: <?php echo $cor_secundaria; ?>; /* Cor de fundo cinza escuro quando passar o mouse */
         }
 
+        .titulo{
+          color: <?php echo $cor_principal; ?>
+        }
+
     </style>
   </head>
   <body>
@@ -207,7 +211,7 @@
           </nav>
 
           <div class="container">
-            <h2><?php echo $ds_titulo; ?></h2>
+            <h2 class="hero-heading titulo"><?php echo $ds_titulo; ?></>
             <div class="row">
               <div class="col-lg-12">
                 <p class="lead font-weight-light"><?php echo $ds_conteudo; ?></p>
@@ -216,7 +220,7 @@
           </div>
 
           <div class="container mt-5">
-            <h2><?php echo $ds_titulo1; ?></h2>
+            <h2 class="hero-heading titulo"><?php echo $ds_titulo1; ?></>
             <div class="row">
               <div class="col-lg-12">
                 <p class="lead font-weight-light"><?php echo $ds_conteudo1; ?></p>
@@ -225,7 +229,7 @@
           </div>
 
           <div class="container mt-5">
-            <h2><?php echo $ds_titulo2; ?></h2>
+            <h2 class="hero-heading titulo"><?php echo $ds_titulo2; ?></>
             <div class="row">
               <div class="col-lg-12">
                 <p class="lead font-weight-light"><?php echo $ds_conteudo2; ?></p>
@@ -244,8 +248,8 @@
           <?php } ?>
         </div>
 
-        <div class="container mt-5">
-          <div class="row mt-2">
+        <div class="container">
+          <div class="row">
             <div class="col-md-6">
                 <a href="contato.php?codigo=<?php echo $codigo; ?>&tipo=C" class="card-link">
                     <div class="card text-center">

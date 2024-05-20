@@ -28,11 +28,30 @@
     if ($rss_insert) {
       // Registro gravado com sucesso
 
-      echo "<script language='JavaScript'>
-              alert('Informações gravadas com sucesso, em breve retornaremos o contato!');
-              window.parent.recarregarPagina();  
+      if($modal == 'S' or $tipo == 'S'){
+        
+        echo "<script language='JavaScript'>
+                alert('Informações gravadas com sucesso! Sua proposta esta sendo gerada e embreve retornaremos seu contato.');   
             </script>";
 
+        if($modal == 'S'){
+          echo "<script language='JavaScript'>
+                  window.parent.fecharModalSimulador(); 
+                </script>";
+        } else {
+          echo "<script language='JavaScript'>
+                  window.parent.recarregarPagina();    
+              </script>";
+        }
+
+      } else {
+
+        echo "<script language='JavaScript'>
+                alert('Informações gravadas com sucesso, em breve retornaremos o contato!');
+                window.parent.recarregarPagina();  
+              </script>";
+
+      }
 
     } else {
 

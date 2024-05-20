@@ -145,6 +145,20 @@
             border-color: <?php echo $cor_secundaria; ?>; /* Também escurecendo a borda ao passar o mouse */
           }
 
+          .btn-primary-enviar {
+            transition: background-color 0.3s ease; /* Adiciona um efeito de transição de cor */
+            background-color: <?php echo $cor_secundaria; ?>;
+            border-color: <?php echo $cor_secundaria; ?>; /* Adicionando a mesma cor para a borda */
+            height: 50px; /* Defina o tamanho desejado para a altura */
+            color: #FFFFFF;
+          }
+
+          .btn-primary-enviar:hover {
+            background-color: <?php echo $cor_principal; ?>; /* Escurecendo um pouco ao passar o mouse */
+            border-color: <?php echo $cor_principal; ?>; /* Também escurecendo a borda ao passar o mouse */
+            color: #FFFFFF;
+          }
+
           a {
             color: <?php echo $cor_principal; ?>;
             text-decoration: none;
@@ -162,8 +176,13 @@
           }
           
           .icon {
-            font-size: 2rem; /* Defina o tamanho desejado para o ícone maior */
+            font-size: 1rem; /* Defina o tamanho desejado para o ícone maior */
           }
+
+          .titulo{
+            color: <?php echo $cor_principal; ?>
+          }
+
 
       </style>
   </head>
@@ -199,17 +218,17 @@
           <div class="row justify-content-center">
             <div class="col-md-6">
               <div class="description">
-                <h2><?php echo $ds_titulo; ?></h2>
+                <h2 class="hero-heading titulo"><?php echo $ds_titulo; ?></h2>
                 <p><?php echo $ds_conteudo; ?></p>
-                <button type="button" class="btn btn-primary" onclick="redirectToWhatsApp()">CHAMA NO WHATS!</button>
+                <button type="button" class="btn btn-primary" onclick="redirectToWhatsApp()">Chama no Whats!</button>
                 <a href="https://api.whatsapp.com/send?phone=<?php echo $nr_whatsapp; ?>" class="float" target="_blank" id="whatsapp-link">
                   <i class="icon ion-logo-whatsapp" id="whatsapp-icon"></i>
                 </a>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group">
+            <div class="col-md-4" style="background-color: <?php echo $cor_principal; ?>;">
+              <div class="form-group mt-5">
                   <input type="text" name="txtnome" id="txtnome" class="form-control" placeholder="Nome" required>
               </div>
               <div class="form-group">
@@ -242,7 +261,10 @@
               <div class="form-group">
                   <textarea name="txtmemsagem" id="txtmemsagem" class="form-control" rows="5" placeholder="Mensagem" required></textarea>
               </div>
-              <button type="button" class="btn btn-primary" onClick="javascript: SalvarLead();">ENVIAR MENSAGEM <i class="icon ion-md-checkmark"></i></button>
+              <div class="col-md-12 mt-2" style="text-align: center;">
+                <button type="button" class="btn btn-primary-enviar" onClick="javascript: SalvarLead();">Enviar Mensagem </button>
+              </div>
+              <br>
             </div>
           </div>
         </div>

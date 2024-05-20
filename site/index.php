@@ -159,7 +159,7 @@
             transition: background-color 0.3s ease; /* Adiciona um efeito de transição de cor */
             background-color: <?php echo $cor_principal; ?>;
             border-color: <?php echo $cor_principal; ?>; /* Adicionando a mesma cor para a borda */
-            height: 65px; /* Defina o tamanho desejado para a altura */
+            height: 50px; /* Defina o tamanho desejado para a altura */
           }
 
           .btn-primary:hover {
@@ -392,7 +392,7 @@
               <h2 class="mb-10 text-center titulo"><?php echo $ds_secao2; ?></h2><br> <!-- Alinhamento do texto à direita -->
               <p class="lead text-left"><?php echo $ds_subsecao2; ?></p> <!-- Alinhamento do texto à direita -->
               <div class="form-group"><br>
-                <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">CONHEÇA NOSSA EMPRESA <i class="icon ion-md-arrow-round-forward"></i></a>
+                <a href="sobre.php?codigo=<?php echo $codigo; ?>" class="btn btn-primary">Conheça Nossa Empresa</a>
               </div>
             </div>
           </div>
@@ -515,7 +515,7 @@
                               <div class="showcase-image-holder">
                                 <div class="device-wrapper">
                                   <div class="screen"><img src="../gerenciador/site/imagens/'.$linha4['ds_imagem'].'" alt="..." class="img-fluid"></div>
-                                  <a href="#" class="btn btn-primary btn-detalhes btn-block" data-toggle="modal" data-target="#modalDetalhes" data-campanha="'.$linha4['ds_detalhamento'].'">VER DETALHES</a>
+                                  <a href="#" class="btn btn-primary btn-detalhes btn-block" data-toggle="modal" data-target="#modalDetalhes" data-campanha="'.$linha4['ds_detalhamento'].'">Ver Detalhes</a>
                                 </div>
                               </div>
                             </div>';
@@ -555,10 +555,9 @@
               <div class="col-lg-10 mx-auto">
                 <form action="#" class="subscription-form">
                   <div class="form-group">
-                    <label>Email</label>
                     <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
                     <button type="button" class="btn btn-primary btn-with-icon" onClick="javascript: SalvarEmail();">
-                        RECEBER NOVIDADES <i class="icon ion-md-checkmark"></i>
+                        Receber Novidades
                     </button>
                   </div>
                 </form>

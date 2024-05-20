@@ -104,16 +104,18 @@
             margin-top: 10px; /* Espaçamento acima do texto de direitos autorais */
           }
 
-          .btn-primary {
+          .btn-primary-simulador {
             transition: background-color 0.3s ease; /* Adiciona um efeito de transição de cor */
             background-color: <?php echo $cor_principal; ?>;
             border-color: <?php echo $cor_principal; ?>; /* Adicionando a mesma cor para a borda */
             height: 45px; /* Defina o tamanho desejado para a altura */
+            color: #FFFFFF;
           }
 
-          .btn-primary:hover {
+          .btn-primary-simulador:hover {
             background-color: <?php echo $cor_secundaria; ?>; /* Escurecendo um pouco ao passar o mouse */
             border-color: <?php echo $cor_secundaria; ?>; /* Também escurecendo a borda ao passar o mouse */
+            color: #FFFFFF;
           }
 
           a {
@@ -147,6 +149,19 @@
             text-align: justify;
           }
 
+          .titulo{
+            color: <?php echo $cor_principal; ?>
+          }
+
+          .titulo1{
+            color: #FFFFFF;
+          }
+
+          .p-branco{
+            color: #FFFFFF;
+          }
+
+
         </style>
 
   </head>
@@ -175,7 +190,7 @@
         </div>
       </nav>
     </header> 
-   
+    <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
     <div class="page-holder">   
       <!-- Hero Section-->
       <section class="hero shape-1 shape-1-sm">
@@ -186,7 +201,7 @@
               <li aria-current="page" class="breadcrumb-item active">Consórcios</li>
             </ol>
           </nav>
-          <h1><?php echo $ds_titulo; ?></h1>
+          <h2 class="hero-heading titulo"><?php echo $ds_titulo; ?></h2>
           <div class="row">
             <div class="col-lg-8">
               <p class="lead font-weight-light"><?php echo $ds_conteudo; ?></p>
@@ -237,8 +252,10 @@
                       <div class="row align-items-center">
                         <div class="col-lg-3"><a href="#" class="schedule-item-image"><img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" alt="..." class="img-fluid"></a></div>
                         <div class="col-lg-9">
-                          <h3 class="schedule-item-name"><?php echo $ds_produto; ?> <a href="contato.php?codigo=<?php echo $codigo; ?>&produto=<?php echo $nr_produto; ?>&tipo=P" class="btn btn-primary">Simule agora <i class="icon ion-md-arrow-round-forward"></i></a></h3>
-                          <p class="detalhamento"><?php echo $ds_detalhamento; ?></p>
+                        <h3 class="schedule-item-name"><?php echo $ds_produto; ?> 
+                          <a href="javascript:void(0);" class="btn btn-primary-simulador" data-toggle="modal" data-target="#modalSimulador" data-produto="<?php echo $nr_produto; ?>">Simule agora <i class="icon ion-md-arrow-round-forward"></i></a>
+                        </h3>
+                        <p class="detalhamento"><?php echo $ds_detalhamento; ?></p>
                         </div>
                       </div>
                     </div>
@@ -249,6 +266,88 @@
         </div>
       </section>
     </div>
+
+    <!-- modal simulador -->
+    <div class="modal fade" id="modalSimulador" tabindex="-1" role="dialog" aria-labelledby="modalSimuladorLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <div class="col-md-12" style="background-color: <?php echo $cor_principal; ?>;">
+                    <div id="simuladorProduto">
+                      <h2 class="hero-heading titulo1 mt-5" style="text-align: center;">Simule seu consórcio</h2>
+                      <div class="col-md-12 mt-5">
+                        <p class="p-branco" style="text-align: center; font-size: 25px;">Selecione uma categoria</p>
+                        <?php
+                          $SQLP = "SELECT nr_sequencial, ds_imagem
+                                    FROM produtos_site 
+                                    WHERE nr_seq_configuracao = $codigo 
+                                    AND st_ativo = 'A'";
+                          $RSSP = mysqli_query($conexao, $SQLP);
+                          while($linhap = mysqli_fetch_row($RSSP)){
+                            $nr_produto = $linhap[0];
+                            $ds_imagem = $linhap[1];
+                            ?>
+                              
+                            <img src="../gerenciador/site/imagens/<?php echo $ds_imagem; ?>" class="img-fluid produto-imagem-produto" produto-data-produto="<?php echo $nr_produto; ?>" style="width: 90px; height: auto;">
+                            <?php 
+                          }
+                        ?>
+                      </div>
+
+                      <div class="col-md-12 mt-5">
+                        <p class="p-branco" style="text-align: center; font-size: 25px;">Informe o valor do consórcio</p>
+                        <input type="text" name="txtvalorproduto" id="txtvalorproduto" style="text-align: center; font-size: 30px;" class="form-control" onkeypress="return formatar_moeda_produto(this,'.',',',event);" placeholder="0,00" required>
+                      </div>
+
+                      <div class="col-md-12 mt-5" style="text-align: center;">
+                        <button type="button" class="btn btn-primary-proximo" style="text-align: center; font-size: 20px;" onClick="javascript: mostrarFormularioProduto();">Próximo</button>
+                      </div>
+                    </div>
+
+                    <div id="formularioProduto" style="display: none;">
+                      <p class="p-branco mt-3" style="text-align: center; font-size: 25px;">Preencha os campos abaixo para ver sua simulação!</p>
+                    
+                      <div class="form-group mt-5">
+                          <input type="text" name="txtnomeproduto" id="txtnomeproduto" class="form-control" placeholder="Nome" required>
+                      </div>
+                      <div class="form-group">
+                          <input type="email" name="txtemailproduto" id="txtemailproduto" class="form-control" placeholder="E-mail" required>
+                      </div>
+                      <div class="form-group">
+                          <input type="number" name="txttelefoneproduto" id="txttelefoneproduto" class="form-control" placeholder="Telefone" required>
+                      </div>
+                      <div class="form-group">          
+                          <select id="txtcidadeproduto" class="form-control">
+                              <option value='0'>Selecione uma cidade</option>
+                              <?php
+                              $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
+                                        FROM municipioibge
+                                        WHERE ds_municipioibge NOT LIKE '%TRIAL%'
+                                      ORDER BY ds_municipioibge, sg_estado;";
+                              $res = mysqli_query($conexao, $sql);
+                              while($lin=mysqli_fetch_row($res)){
+                                  $cdg = $lin[0];
+                                  $desc = $lin[1];
+
+                                  echo "<option value='$cdg'>$desc</option>";
+                              }
+                              ?>
+                          </select>
+                      </div>
+                      <div class="col-md-12 mt-5" style="text-align: center;">
+                        <button type="button" class="btn btn-primary-proximo" style="text-align: center; font-size: 20px;" onClick="javascript: enviarSimulacaoProduto();">Ver Resultado</button>
+                      </div>
+                    </div>
+                    <br><br>
+                </div>
+              </div>
+              <div class="modal-body">
+                  <div id="detalhesSimulador"></div>
+              </div>
+          </div>
+      </div>
+    </div>
+
     <footer class="footer">
       <div class="container text-center">
         <!-- Copyrights-->
@@ -293,6 +392,144 @@
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
-    
+
+    <script>
+      // Variável global para armazenar o produto selecionado
+      var produtoSelecionado = null;
+
+      // Função para definir o produto selecionado no modal
+      function setProdutoNoModal(produto) {
+        produtoSelecionado = produto;
+        document.querySelectorAll('.produto-imagem-produto').forEach(function(img) {
+          if (img.getAttribute('produto-data-produto') === produto) {
+            img.style.border = '2px solid white';  // Seleciona a imagem do produto
+          } else {
+            img.style.border = 'none';  // Desmarca as outras imagens
+          }
+        });
+      }
+
+      // Adicionar o evento de clique aos botões "Simule agora"
+      document.querySelectorAll('.btn-primary-simulador').forEach(function(button) {
+        button.addEventListener('click', function() {
+          var produto = this.getAttribute('data-produto');
+          setProdutoNoModal(produto);
+        });
+      });
+
+      function formatar_moeda_produto(campo, separador_milhar, separador_decimal, tecla) {
+        var sep = 0;
+        var key = '';
+        var i = j = 0;
+        var len = len2 = 0;
+        var strCheck = '0123456789';
+        var aux = aux2 = '';
+        var whichCode = (window.Event) ? tecla.which : tecla.keyCode;
+
+        if (whichCode == 13) return true; // Tecla Enter
+        if (whichCode == 8) return true; // Tecla Delete
+        key = String.fromCharCode(whichCode); // Pegando o valor digitado
+        if (strCheck.indexOf(key) == -1) return false; // Valor inválido (não inteiro)
+        len = campo.value.length;
+        for (i = 0; i < len; i++)
+            if ((campo.value.charAt(i) != '0') && (campo.value.charAt(i) != separador_decimal)) break;
+        aux = '';
+        for (; i < len; i++)
+            if (strCheck.indexOf(campo.value.charAt(i)) != -1) aux += campo.value.charAt(i);
+        aux += key;
+        len = aux.length;
+        if (len == 0) campo.value = '';
+        if (len == 1) campo.value = '0' + separador_decimal + '0' + aux;
+        if (len == 2) campo.value = '0' + separador_decimal + aux;
+
+        if (len > 2) {
+            aux2 = '';
+
+            for (j = 0, i = len - 3; i >= 0; i--) {
+                if (j == 3) {
+                    aux2 += separador_milhar;
+                    j = 0;
+                }
+                aux2 += aux.charAt(i);
+                j++;
+            }
+
+            campo.value = '';
+            len2 = aux2.length;
+            for (i = len2 - 1; i >= 0; i--)
+                campo.value += aux2.charAt(i);
+            campo.value += separador_decimal + aux.substr(len - 2, len);
+        }
+
+        return false;
+      }
+
+      function mostrarFormularioProduto() {
+        var valor = document.getElementById("txtvalorproduto").value;
+        if (produtoSelecionado !== null) {
+          var produto = produtoSelecionado;
+        } else {
+          alert('Selecione uma categoria para simular o consórcio!');
+          return; // Adicionei um return para parar a execução se não houver produto selecionado
+        }
+
+        if (valor == "") {
+          alert('Informe o valor para simular seu consórcio!');
+          document.getElementById('txtvalorproduto').focus();
+        } else {
+          // Oculta o conteúdo atual
+          var simulador = document.getElementById('simuladorProduto');
+          if (simulador) {
+            simulador.style.display = 'none';
+          }
+          // Mostra o formulário
+          var formulario = document.getElementById('formularioProduto');
+          if (formulario) {
+            formulario.style.display = 'block';
+          }
+        }
+      }
+
+
+      function enviarSimulacaoProduto() {
+        var tipo = 'S';
+        var modal = 'S';
+        var valor = document.getElementById("txtvalorproduto").value;
+        if (produtoSelecionado !== null) {
+          var produto = produtoSelecionado;
+        } else {
+          alert('Categoria não selecionada!');
+          return; // Adicionei um return para parar a execução se não houver produto selecionado
+        }
+        var nome = document.getElementById('txtnomeproduto').value;
+        var email = document.getElementById("txtemailproduto").value;
+        var telefone = document.getElementById('txttelefoneproduto').value;
+        var cidade = document.getElementById('txtcidadeproduto').value;
+
+        if (nome == "") {
+          alert('Informe o seu Nome!');
+          document.getElementById('txtnomeproduto').focus();
+        } else if (cidade == 0) {
+          alert('Informe a sua Cidade!');
+          document.getElementById('txtcidadeproduto').focus();
+        } else if (email == '' && telefone == '') {
+          alert('Preencha pelo menos um dos campos de contato (Email ou Telefone)!');
+          if (email == '') {
+            document.getElementById("txtemailproduto").focus();
+          } else if (telefone == '') {
+            document.getElementById('txttelefoneproduto').focus();
+          }
+        } else {
+          window.open('acao.php?Tipo=SL&tipo=' + tipo + '&nome=' + nome + '&email=' + email + '&telefone=' + telefone + '&cidade=' + cidade + '&valor=' + valor + '&produto=' + produto + '&modal=' + modal, "acao");
+        }
+      }
+
+
+      function fecharModalSimulador() {
+        $('#modalSimulador').modal('hide');
+      }
+
+    </script>
+   
   </body>
 </html>
