@@ -1,0 +1,57 @@
+<?php
+
+    foreach($_GET as $key => $value){
+        $$key = $value;
+    }
+
+?>
+<script type="text/javascript">
+
+    function Buscar(credito, nome, cidade, status, tipo, data1, data2, pg) {
+        
+        document.getElementById('pgatual').value = '';
+        document.getElementById('pgatual').value = parseInt(pg)+1;
+        document.getElementById('dvAguarde').style.display = 'block';
+        var url = 'crm/leads/listadados.php?consulta=sim&pg=' + pg + '&credito=' + credito + '&nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&tipo=' + tipo + '&data1=' + data1+ '&data2=' + data2;
+        $.get(url, function (dataReturn) {
+            $('#rslista').html(dataReturn);
+        });
+
+    }
+
+    function buscaComercial(id){
+        var url = 'crm/leads/formulario.php?consulta=sim&lead=' + id;
+        $.get(url, function (dataReturn) {
+            $('#comercial').html(dataReturn);
+            // Ativar a aba "comercial" após o carregamento dos dados
+            $('#tabformulario').tab('show');
+        });
+    }
+
+</script>
+
+<iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
+<ul class="nav nav-tabs" id="myTab">
+    <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">LEADS</a></li>
+    <li><a id="tabformulario" href="#comercial" data-toggle="tab">CRM</a></li>
+    <li><a id="tabsimulador" href="#simulador" data-toggle="tab">SIMULADOR</a></li>
+</ul> 
+
+<div class="tab-content">
+    <div class="tab-pane active" id="geral">
+        <div class="row-100">          
+            <?php include "lista.php"; ?>          
+        </div>
+    </div>
+    <div class="tab-pane" id="comercial">
+        <div class="row-100">
+            <?php include "formulario.php"; ?>        
+        </div>
+    </div>
+    <div class="tab-pane" id="simulador">
+        <div class="row-100">
+            <?php include "simulador.php"; ?>        
+        </div>
+    </div>
+</div>
+

@@ -270,7 +270,7 @@
     <header class="header">
       <nav class="navbar navbar-expand-lg">
         <div class="container">
-        <a href="index.php" class="navbar-brand font-weight-bold"><img src="<?php echo $caminho1; ?>" style="width: 100px; height: auto;"></a>
+        <a href="index.php" class="navbar-brand font-weight-bold"><img src="<?php echo $caminho1; ?>" class="img-fluid"></a>
           <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="icon ion-md-list ml-2"></i></button>
           <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mx-auto ml-auto">
@@ -333,7 +333,7 @@
                 </div>
 
                 <div class="col-md-12 mt-5">
-                  <p class="p-branco" style="text-align: center; font-size: 25px;">Informe o valor do consórcio</p>
+                  <p class="p-branco" style="text-align: center; font-size: 25px;">Informe o valor do crédito</p>
                   <input type="text" name="txtvalorindex" id="txtvalorindex" style="text-align: center; font-size: 30px;" class="form-control" onkeypress="return formatar_moeda(this,'.',',',event);" placeholder="0,00" required>
                 </div>
 
@@ -361,7 +361,7 @@
                         $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
                                   FROM municipioibge
                                   WHERE ds_municipioibge NOT LIKE '%TRIAL%'
-                                ORDER BY ds_municipioibge, sg_estado;";
+                                ORDER BY ds_municipioibge, sg_estado";
                         $res = mysqli_query($conexao, $sql);
                         while($lin=mysqli_fetch_row($res)){
                             $cdg = $lin[0];
@@ -533,7 +533,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalDetalhesLabel">Detalhes da Campanha</h5>
+                        <h5 class="modal-title" id="modalDetalhesLabel">Detalhes</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -550,18 +550,24 @@
        <!-- SEÇÃO 5-->
       <section class="subscription padding-big">
         <div class="container text-center">
-          <div class="section-header">
+          <div class="section-header text-center"><span class="section-header-title"></span>
+            <h2 class="h2 titulo"><?php echo $ds_secao5; ?></h2>
             <div class="row">
-              <div class="col-lg-10 mx-auto">
-                <form action="#" class="subscription-form">
-                  <div class="form-group">
-                    <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
-                    <button type="button" class="btn btn-primary btn-with-icon" onClick="javascript: SalvarEmail();">
-                        Receber Novidades
-                    </button>
-                  </div>
-                </form>
+              <div class="col-lg-8 mx-auto">
+                <p class="lead"><?php echo $ds_subsecao5; ?></p>
               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-10 mx-auto">
+              <form action="#" class="subscription-form">
+                <div class="form-group">
+                  <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control">
+                  <button type="button" class="btn btn-primary btn-with-icon" onClick="javascript: SalvarEmail();">
+                      Receber Novidades
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

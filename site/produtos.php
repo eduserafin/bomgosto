@@ -295,7 +295,7 @@
                       </div>
 
                       <div class="col-md-12 mt-5">
-                        <p class="p-branco" style="text-align: center; font-size: 25px;">Informe o valor do consórcio</p>
+                        <p class="p-branco" style="text-align: center; font-size: 25px;">Informe o valor do crédito</p>
                         <input type="text" name="txtvalorproduto" id="txtvalorproduto" style="text-align: center; font-size: 30px;" class="form-control" onkeypress="return formatar_moeda_produto(this,'.',',',event);" placeholder="0,00" required>
                       </div>
 
@@ -323,7 +323,7 @@
                               $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
                                         FROM municipioibge
                                         WHERE ds_municipioibge NOT LIKE '%TRIAL%'
-                                      ORDER BY ds_municipioibge, sg_estado;";
+                                      ORDER BY ds_municipioibge, sg_estado";
                               $res = mysqli_query($conexao, $sql);
                               while($lin=mysqli_fetch_row($res)){
                                   $cdg = $lin[0];

@@ -247,7 +247,7 @@
                       $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
                                 FROM municipioibge
                                 WHERE ds_municipioibge NOT LIKE '%TRIAL%'
-                              ORDER BY ds_municipioibge, sg_estado;";
+                              ORDER BY ds_municipioibge, sg_estado";
                       $res = mysqli_query($conexao, $sql);
                       while($lin=mysqli_fetch_row($res)){
                           $cdg = $lin[0];

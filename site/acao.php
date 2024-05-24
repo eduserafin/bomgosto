@@ -21,7 +21,7 @@
     else {$valor = str_replace([",", "."], "", $valor);}
 
     $insert = "INSERT INTO lead_site (tp_tipo, ds_nome, ds_email, nr_telefone, nr_whatsapp, nr_seq_cidade, ds_mensagem, nr_seq_produto, vl_valor, st_situacao) 
-              VALUES ('" . $tipo . "', '" . $nome . "',  '" . $email . "', '" . $telefone . "', '" . $whatsapp . "', " . $cidade . ", '" . $mensagem . "', " . $produto . ", " . $valor . ", 'P')";
+              VALUES ('" . $tipo . "', UPPER('" . $nome . "'),  '" . $email . "', '" . $telefone . "', '" . $whatsapp . "', " . $cidade . ", '" . $mensagem . "', " . $produto . ", " . $valor . ", 'N')";
     echo $insert;
     $rss_insert = mysqli_query($conexao, $insert);
 
