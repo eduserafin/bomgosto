@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/servers.php';
+//require_once '../../config/servers.php';
 
 foreach ($_GET as $key => $value) {
     $$key = $value;
@@ -13,7 +13,6 @@ require_once '../../Excel/Classes/PHPExcel.php';
 
 // Create new PHPExcel object
 $objPHPExcel = new PHPExcel();
-@session_start();
 $objPHPExcel->getProperties()
     ->setTitle("LEADS")
     ->setSubject("LEADS")
@@ -64,31 +63,39 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize
 $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
 
     if ($nome != "") {
-        $v_sql = " AND ls.ds_nome like UPPER('%" . $nome . "%')";
+        $v_sql .= " AND ls.ds_nome like UPPER('%" . $nome . "%')";
     }
 
     if ($credito != "") {
-        $v_sql = " AND ls.vl_valor = $credito";
+        $v_sql .= " AND ls.vl_valor = $credito";
     }
 
     if ($cidade != 0) {
-        $v_sql = " AND ls.nr_seq_cidade = $cidade";
+        $v_sql .= " AND ls.nr_seq_cidade = $cidade";
     }
 
     if ($status != "") {
-        $v_sql = " AND ls.st_situacao = '$status'";
+        $v_sql .= " AND ls.st_situacao = '$status'";
     }
 
     if ($tipo != "") {
-        $v_sql = " AND ls.tp_tipo = $tipo";
+        $v_sql .= " AND ls.tp_tipo = $tipo";
     }
 
     if ($data1 != "") {
-        $v_sql = " AND ls.dt_cadastro = '$data1'";
+        $v_sql .= " AND ls.dt_cadastro >= '$data1'";
     }
 
     if ($data2 != "") {
-        $v_sql = " AND ls.dt_cadastro = '$data2'";
+        $v_sql .= " AND ls.dt_cadastro <= '$data2'";
+    }
+
+    if ($dataagenda1 != "") {
+      $v_sql .= " AND ls.dt_agenda >= '$dataagenda1'";
+    }
+  
+    if ($dataagenda2 != "") {
+      $v_sql .= " AND ls.dt_agenda <= '$dataagenda2'";
     }
 
     $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, ps.ds_produto,

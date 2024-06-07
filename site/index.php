@@ -6,6 +6,22 @@
 
   require_once '../conexao.php';
 
+  $ip = $_SERVER['REMOTE_ADDR']; // Obtém o endereço IP do visitante
+
+  // Verifica se o IP já foi registrado recentemente (por exemplo, nas últimas 24 horas)
+  $ip_count = 0;
+  $sql = "SELECT COUNT(*) AS ip_count FROM acessos WHERE ip = '$ip' AND data >= NOW() - INTERVAL 1 DAY";
+  $rss = mysqli_query($conexao, $sql);
+  while ($linha = mysqli_fetch_row($rss)){
+    $ip_count = $linha[0];
+  }
+
+  if ($ip_count == 0) {
+      // Insere um novo registro de acesso
+      $insert = "INSERT INTO acessos (data, ip) VALUES (CURRENT_TIMESTAMP, '$ip')";
+      $rss_insert = mysqli_query($conexao, $insert);
+  } 
+
   $SQL = "SELECT ds_nome, ds_secao1, ds_subsecao1, ds_secao2, ds_subsecao2, ds_secao3, ds_subsecao3,
             ds_secao4, ds_subsecao4, ds_secao5, ds_subsecao5, nr_sequencial, cor_principal, cor_secundaria
             FROM configuracao_site
@@ -301,11 +317,21 @@
               <?php if($v_marcas > 0) { ?>
                 <div class="platforms d-none d-lg-block"><span class="platforms-title">Marcas Parceiras</span>
                   <ul class="platforms-list list-inline">
-                    <li class="list-inline-item"><img src="img/netflix.svg" alt="" class="platform-image img-fluid"></li>
-                    <li class="list-inline-item"><img src="img/apple.svg" alt="" class="platform-image img-fluid"></li>
-                    <li class="list-inline-item"><img src="img/android.svg" alt="" class="platform-image img-fluid"></li>
-                    <li class="list-inline-item"><img src="img/windows.svg" alt="" class="platform-image img-fluid"></li>
-                    <li class="list-inline-item"><img src="img/synology.svg" alt="" class="platform-image img-fluid"></li>
+                    <?php 
+                      $marca = "";
+                      $SQLM = "SELECT ds_arquivo
+                                FROM upload
+                              WHERE nr_seq_configuracao = $codigo
+                              AND nr_seq_categoria = 3";
+                      $RSSM = mysqli_query($conexao, $SQLM);
+                      while($linham = mysqli_fetch_row($RSSM)){
+                        $marca = $linham[0];
+
+                        ?>
+                          <li class="list-inline-item"><img src="../gerenciador/site/imagens/<?php echo $marca; ?>" alt="" class="platform-image img-fluid"></li>
+                        <?php 
+                      }
+                    ?>
                   </ul>
                 </div>
               <?php } ?>
@@ -462,69 +488,51 @@
       }
     
       if($v_existe_campanha != 0){ ?>
-       <!-- SEÇÃO 4-->
+        <!-- SEÇÃO 4-->
         <section class="app-showcase pb-big mt-5">
           <div class="container">
-            <div class="row align-items-center">
-              <div class="col-lg-8">
-                <h2 class="mb-4 titulo"><?php echo $ds_secao4; ?></h2>
-                <p class="lead"><?php echo $ds_subsecao4; ?></p>
-                <div class="row mt-5">
+              <div class="row align-items-center">
                   <div class="col-lg-8">
-                    <div id="v-pills-tab" role="tablist" aria-orientation="vertical" class="nav flex-column nav-pills showcase-nav">
-                      <?php
-                        $SQL4 = "SELECT nr_sequencial, ds_campanha, ds_icone, ds_imagem, ds_detalhamento
-                                  FROM campanhas_site
-                                  WHERE nr_seq_configuracao = $codigo
-                                  AND st_ativo = 'A'";
-                        $RSS4 = mysqli_query($conexao, $SQL4);
-                        $i = 0;
-                        while($linha4 = mysqli_fetch_assoc($RSS4)){
-                          $nr_seq_campanha = $linha4['nr_sequencial'];
-                          $ds_campanha = $linha4['ds_campanha'];
-                          $ds_icone_campanha = $linha4['ds_icone'];
-                          $ds_imagem_campanha = $linha4['ds_imagem'];
-                          $ds_detalhamento_campanha = $linha4['ds_detalhamento'];
-                          
-                          ?>
-  
-                          <a id="card<?php echo $i; ?>" data-toggle="pill" href="#div<?php echo $i; ?>" role="tab" aria-controls="div<?php echo $i; ?>" aria-selected="true" class="nav-link <?php echo ($i == 0 ? 'active' : ''); ?> showcase-link">
-                              <div class="gradient-icon gradient-1">
-                                  <i class="icon <?php echo $ds_icone_campanha; ?>" style="color: white;"></i>
-                              </div>
-                              <?php echo $ds_campanha; ?>
-                          </a>
+                      <h2 class="mb-4 titulo"><?php echo $ds_secao4; ?></h2>
+                      <p class="lead"><?php echo $ds_subsecao4; ?></p>
+                      <div class="row mt-5">
+                          <div class="col-lg-8">
+                              <div id="v-pills-tab" role="tablist" aria-orientation="vertical" class="nav flex-column nav-pills showcase-nav">
+                                  <?php
+                                  $SQL4 = "SELECT nr_sequencial, ds_campanha, ds_icone, ds_imagem, ds_detalhamento
+                                          FROM campanhas_site
+                                          WHERE nr_seq_configuracao = $codigo
+                                          AND st_ativo = 'A'";
+                                  $RSS4 = mysqli_query($conexao, $SQL4);
+                                  $i = 0;
+                                  while($linha4 = mysqli_fetch_assoc($RSS4)){
+                                      $nr_seq_campanha = $linha4['nr_sequencial'];
+                                      $ds_campanha = $linha4['ds_campanha'];
+                                      $ds_icone_campanha = $linha4['ds_icone'];
+                                      $ds_imagem_campanha = $linha4['ds_imagem'];
+                                      $ds_detalhamento_campanha = $linha4['ds_detalhamento'];
+                                      ?>
 
-                          <?php
-                          $i++;
-                        }
-                      ?>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div id="v-pills-tabContent" class="tab-content showcase-content">
-                  <?php
-                    // Reinicie o índice do array de resultados
-                    mysqli_data_seek($RSS4, 0);
-                    $i = 0;
-                    while($linha4 = mysqli_fetch_assoc($RSS4)){
-                      // Adicione as imagens dinamicamente com base nos dados do banco de dados
-                      echo '<div id="div'.$i.'" role="tabpanel" aria-labelledby="card'.$i.'" class="tab-pane fade '.($i == 0 ? 'show active' : '').'">
-                              <div class="showcase-image-holder">
-                                <div class="device-wrapper">
-                                  <div class="screen"><img src="../gerenciador/site/imagens/'.$linha4['ds_imagem'].'" alt="..." class="img-fluid"></div>
-                                  <a href="#" class="btn btn-primary btn-detalhes btn-block" data-toggle="modal" data-target="#modalDetalhes" data-campanha="'.$linha4['ds_detalhamento'].'">Ver Detalhes</a>
-                                </div>
+                                      <a id="card<?php echo $i; ?>" data-toggle="pill" href="#div<?php echo $i; ?>" role="tab" aria-controls="div<?php echo $i; ?>" aria-selected="true" class="nav-link <?php echo ($i == 0 ? 'active' : ''); ?> showcase-link" data-campanha="<?php echo htmlspecialchars($ds_campanha, ENT_QUOTES, 'UTF-8'); ?>" data-detalhamento="<?php echo htmlspecialchars($ds_detalhamento_campanha, ENT_QUOTES, 'UTF-8'); ?>">
+                                          <div class="gradient-icon gradient-1">
+                                              <i class="icon <?php echo $ds_icone_campanha; ?>" style="color: white;"></i>
+                                          </div>
+                                          <?php echo $ds_campanha; ?>
+                                      </a>
+
+                                      <?php
+                                      $i++;
+                                  }
+                                  ?>
                               </div>
-                            </div>';
-                      $i++;
-                    }
-                  ?>
-                </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-4">
+                      <div id="v-pills-tabContent" class="tab-content showcase-content">
+                      </div>
+                  </div>
               </div>
-            </div>
           </div>
         </section>
 
@@ -618,16 +626,19 @@
     </script>
 
     <script>
-      $(document).ready(function(){
-          // Quando um botão de detalhes é clicado
-          $('.btn-detalhes').click(function(){
-              // Obtém o ID da campanha associada ao botão clicado
-              var campanhaID = $(this).data('campanha');
+      document.addEventListener('DOMContentLoaded', function() {
+        var campanhaLinks = document.querySelectorAll('.showcase-link');
+        campanhaLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                var campanha = link.getAttribute('data-campanha');
+                var detalhamento = link.getAttribute('data-detalhamento');
 
-              // Aqui você pode fazer uma solicitação AJAX para obter os detalhes da campanha com base no ID
-              // Por enquanto, vamos apenas exibir o ID da campanha no modal
-              $('#detalhesCampanha').text(campanhaID);
-          });
+                document.getElementById('detalhesCampanha').innerHTML = '<h5>' + campanha + '</h5><p>' + detalhamento + '</p>';
+                
+                $('#modalDetalhes').modal('show');
+            });
+        });
       });
 
       var produtoSelecionado = null;

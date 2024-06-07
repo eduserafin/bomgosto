@@ -7,12 +7,12 @@
 ?>
 <script type="text/javascript">
 
-    function Buscar(credito, nome, cidade, status, tipo, data1, data2, pg) {
+    function Buscar(credito, nome, cidade, status, tipo, data1, data2, dataagenda1, dataagenda2, pg) {
         
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
         document.getElementById('dvAguarde').style.display = 'block';
-        var url = 'crm/leads/listadados.php?consulta=sim&pg=' + pg + '&credito=' + credito + '&nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&tipo=' + tipo + '&data1=' + data1+ '&data2=' + data2;
+        var url = 'crm/leads/listadados.php?consulta=sim&pg=' + pg + '&credito=' + credito + '&nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&tipo=' + tipo + '&data1=' + data1+ '&data2=' + data2 + '&dataagenda1=' + dataagenda1 + '&dataagenda2=' + dataagenda2;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });

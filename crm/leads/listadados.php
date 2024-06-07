@@ -24,37 +24,47 @@
 
   $nome = $_GET['nome'];
   if ($nome != "") {
-    $v_sql = " AND ls.ds_nome like UPPER('%" . $nome . "%')";
+    $v_sql .= " AND ls.ds_nome like UPPER('%" . $nome . "%')";
   }
 
   $credito = $_GET['credito'];
   if ($credito != "") {
-    $v_sql = " AND ls.vl_valor = $credito";
+    $v_sql .= " AND ls.vl_valor = $credito";
   }
 
   $cidade = $_GET['cidade'];
   if ($cidade != 0) {
-    $v_sql = " AND ls.nr_seq_cidade = $cidade";
+    $v_sql .= " AND ls.nr_seq_cidade = $cidade";
   }
 
   $status = $_GET['status'];
   if ($status != "") {
-    $v_sql = " AND ls.st_situacao = '$status'";
+    $v_sql .= " AND ls.st_situacao = '$status'";
   }
 
   $tipo = $_GET['tipo'];
   if ($tipo != "") {
-    $v_sql = " AND ls.tp_tipo = $tipo";
+    $v_sql .= " AND ls.tp_tipo = $tipo";
   }
 
   $data1 = $_GET['data1'];
   if ($data1 != "") {
-    $v_sql = " AND ls.dt_cadastro = '$data1'";
+    $v_sql .= " AND ls.dt_cadastro >= '$data1'";
   }
 
   $data2 = $_GET['data2'];
   if ($data2 != "") {
-    $v_sql = " AND ls.dt_cadastro = '$data2'";
+    $v_sql .= " AND ls.dt_cadastro <= '$data2'";
+  }
+
+  $dataagenda1 = $_GET['dataagenda1'];
+  if ($dataagenda1 != "") {
+    $v_sql .= " AND ls.dt_agenda >= '$dataagenda1'";
+  }
+
+  $dataagenda2 = $_GET['dataagenda2'];
+  if ($dataagenda2 != "") {
+    $v_sql .= " AND ls.dt_agenda <= '$dataagenda2'";
   }
 
   include $ant."inc/exporta_excel.php";
@@ -71,7 +81,8 @@
           <th style="vertical-align:middle;">VALOR</th>
           <th style="vertical-align:middle;">CIDADE</th>
           <th style="vertical-align:middle;">CONTATO</th>
-          <th style="vertical-align:middle;">DATA</th>
+          <th style="vertical-align:middle;">DATA LEAD</th>
+          <th style="vertical-align:middle;">DATA AGENDA</th>
           <th style="vertical-align:middle;">PRODUTO</th>
           <th style="vertical-align:middle;">TIPO</th>
           <th style="vertical-align:middle;">STATUS</th>
@@ -83,7 +94,7 @@
           $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, ps.ds_produto,
                     CONCAT(ls.nr_whatsapp, ' - ', ls.nr_telefone) AS contato,
                     CONCAT(m.ds_municipioibge, ' - ', m.sg_estado) AS municipio_estado,
-                    ls.tp_tipo, ls.st_situacao
+                    ls.tp_tipo, ls.st_situacao, ls.dt_agenda
                     FROM lead_site ls
                     INNER JOIN municipioibge m ON m.cd_municipioibge = ls.nr_seq_cidade
                     LEFT JOIN produtos_site ps ON ls.nr_seq_produto = ps.nr_sequencial
@@ -103,6 +114,8 @@
             $municipio_estado = $linha[6];
             $tp_tipo = $linha[7];
             $st_situacao = $linha[8];
+            $dt_agenda = $linha[9];
+            if($dt_agenda != "") { $dt_agenda = date('d/m/Y', strtotime($dt_agenda)); }
 
             $dstipo = '';
             if($tp_tipo == 'S'){
@@ -137,6 +150,7 @@
               <td><?php echo $municipio_estado; ?></td>
               <td><?php echo $contato; ?></td>
               <td><?php echo $dt_cadastro; ?></td>
+              <td><?php echo $dt_agenda; ?></td>
               <td><?php echo $ds_produto; ?></td>
               <td><?php echo $dstipo; ?></td>
               <td><?php echo $dsstatus; ?></td>

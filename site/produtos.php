@@ -209,13 +209,23 @@
           </div>
           <!-- Platforms-->
           <?php if($v_marcas > 0) { ?>
-            <div class="platforms mt-4 d-none d-lg-block"><span class="platforms-title">Compatible with</span>
+            <div class="platforms d-none d-lg-block"><span class="platforms-title">Marcas Parceiras</span>
               <ul class="platforms-list list-inline">
-                <li class="list-inline-item"><img src="img/netflix.svg" alt="" class="platform-image img-fluid"></li>
-                <li class="list-inline-item"><img src="img/apple.svg" alt="" class="platform-image img-fluid"></li>
-                <li class="list-inline-item"><img src="img/android.svg" alt="" class="platform-image img-fluid"></li>
-                <li class="list-inline-item"><img src="img/windows.svg" alt="" class="platform-image img-fluid"></li>
-                <li class="list-inline-item"><img src="img/synology.svg" alt="" class="platform-image img-fluid"></li>
+                <?php 
+                  $marca = "";
+                  $SQLM = "SELECT ds_arquivo
+                            FROM upload
+                          WHERE nr_seq_configuracao = $codigo
+                          AND nr_seq_categoria = 3";
+                  $RSSM = mysqli_query($conexao, $SQLM);
+                  while($linham = mysqli_fetch_row($RSSM)){
+                    $marca = $linham[0];
+
+                    ?>
+                      <li class="list-inline-item"><img src="../gerenciador/site/imagens/<?php echo $marca; ?>" alt="" class="platform-image img-fluid"></li>
+                    <?php 
+                  }
+                ?>
               </ul>
             </div>
           <?php } ?>
