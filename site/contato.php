@@ -240,23 +240,8 @@
               <div class="form-group">
                   <input type="number" name="txtwhatsapp" id="txtwhatsapp" class="form-control" placeholder="WhatsApp" required>
               </div>
-              <div class="form-group">          
-                  <select id="txtcidade" class="form-control">
-                      <option value='0'>Selecione uma cidade</option>
-                      <?php
-                      $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
-                                FROM municipioibge
-                                WHERE ds_municipioibge NOT LIKE '%TRIAL%'
-                              ORDER BY ds_municipioibge, sg_estado";
-                      $res = mysqli_query($conexao, $sql);
-                      while($lin=mysqli_fetch_row($res)){
-                          $cdg = $lin[0];
-                          $desc = $lin[1];
-
-                          echo "<option value='$cdg'>$desc</option>";
-                      }
-                      ?>
-                  </select>
+              <div class="form-group">
+                  <select id="txtcidadecontato" class="form-control" style="width: 100%"></select>
               </div>
               <div class="form-group">
                   <textarea name="txtmemsagem" id="txtmemsagem" class="form-control" rows="5" placeholder="Mensagem" required></textarea>
@@ -305,6 +290,9 @@
     <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
     <script src="vendor/swiper/js/swiper.min.js"></script>
     <script src="js/front.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
     <!---->
     <script>
@@ -316,6 +304,24 @@
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
     <script>
+
+        $(document).ready(function() {
+          $('#txtcidadecontato').select2({
+              placeholder: "Cidade",
+              minimumInputLength: 3,  // Só busca após digitar 3 letras
+              ajax: {
+                  url: 'buscar_cidades.php', // Arquivo PHP que retorna os resultados
+                  dataType: 'json',
+                  delay: 250,
+                  data: function(params) {
+                      return { term: params.term }; // Envia a pesquisa ao servidor
+                  },
+                  processResults: function(data) {
+                      return { results: data }; // Retorna os dados no formato do Select2
+                  }
+              }
+          });
+      });
 
       function redirectToWhatsApp() {
         // Obtenha o link do atributo href da tag <a>
@@ -332,7 +338,7 @@
         var email = document.getElementById("txtemail").value;
         var telefone = document.getElementById('txttelefone').value;
         var whatsapp = document.getElementById("txtwhatsapp").value;
-        var cidade = document.getElementById('txtcidade').value;
+        var cidade = document.getElementById('txtcidadecontato').value;
         var mensagem = document.getElementById("txtmemsagem").value;
 
         if (nome == "") {
@@ -343,7 +349,7 @@
           document.getElementById('txtmemsagem').focus();
         } else if (cidade == 0) {
           alert('Informe a sua Cidade!');
-          document.getElementById('txtcidade').focus();
+          document.getElementById('txtcidadecontato').focus();
         } else if (email == '' && telefone == '' && whatsapp == '') {
           alert('Preencha pelo menos um dos campos de contato (Email, Telefone ou WhatsApp)!');
           if (email == '') {

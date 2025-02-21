@@ -277,6 +277,39 @@
             margin: 0 auto; /* Centraliza o container na tela */
           }
 
+          .showcase-link {
+              position: relative;
+          }
+
+          #cardDetalhes {
+              position: absolute;
+              top: 0;
+              left: 50%;
+              width: 400px;
+              z-index: 1000;
+              border: 1px solid #ddd;
+              background-color: #fff;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+
+          /* Ajuste para telas menores */
+          @media (max-width: 768px) {
+              #cardDetalhes {
+                  position: static;
+                  width: 100%;
+                  margin-top: 10px;
+              }
+
+              .showcase-link {
+                  display: block;
+                  width: 100%;
+              }
+
+              .nav-link {
+                  text-align: left;
+              }
+          }
+
         </style>
 
   </head>
@@ -380,23 +413,8 @@
                 <div class="form-group">
                     <input type="number" name="txttelefoneindex" id="txttelefoneindex" class="form-control" placeholder="Telefone" required>
                 </div>
-                <div class="form-group">          
-                    <select id="txtcidadeindex" class="form-control">
-                        <option value='0'>Selecione uma cidade</option>
-                        <?php
-                        $sql = "SELECT cd_municipioibge, CONCAT(ds_municipioibge, ' - ', sg_estado) AS municipio_estado
-                                  FROM municipioibge
-                                  WHERE ds_municipioibge NOT LIKE '%TRIAL%'
-                                ORDER BY ds_municipioibge, sg_estado";
-                        $res = mysqli_query($conexao, $sql);
-                        while($lin=mysqli_fetch_row($res)){
-                            $cdg = $lin[0];
-                            $desc = $lin[1];
-
-                            echo "<option value='$cdg'>$desc</option>";
-                        }
-                        ?>
-                    </select>
+                <div class="form-group">
+                    <select id="txtcidadeindex" class="form-control" style="width: 100%"></select>
                 </div>
                 <div class="col-md-12 mt-5" style="text-align: center;">
                   <button type="button" class="btn btn-primary-proximo" style="text-align: center; font-size: 20px;" onClick="javascript: enviarSimulacao();">Ver Resultado</button>
@@ -491,68 +509,55 @@
         <!-- SEÇÃO 4-->
         <section class="app-showcase pb-big mt-5">
           <div class="container">
-              <div class="row align-items-center">
-                  <div class="col-lg-8">
-                      <h2 class="mb-4 titulo"><?php echo $ds_secao4; ?></h2>
-                      <p class="lead"><?php echo $ds_subsecao4; ?></p>
-                      <div class="row mt-5">
-                          <div class="col-lg-8">
-                              <div id="v-pills-tab" role="tablist" aria-orientation="vertical" class="nav flex-column nav-pills showcase-nav">
-                                  <?php
-                                  $SQL4 = "SELECT nr_sequencial, ds_campanha, ds_icone, ds_imagem, ds_detalhamento
-                                          FROM campanhas_site
-                                          WHERE nr_seq_configuracao = $codigo
-                                          AND st_ativo = 'A'";
-                                  $RSS4 = mysqli_query($conexao, $SQL4);
-                                  $i = 0;
-                                  while($linha4 = mysqli_fetch_assoc($RSS4)){
-                                      $nr_seq_campanha = $linha4['nr_sequencial'];
-                                      $ds_campanha = $linha4['ds_campanha'];
-                                      $ds_icone_campanha = $linha4['ds_icone'];
-                                      $ds_imagem_campanha = $linha4['ds_imagem'];
-                                      $ds_detalhamento_campanha = $linha4['ds_detalhamento'];
-                                      ?>
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h2 class="mb-4 titulo"><?php echo $ds_secao4; ?></h2>
+                    <p class="lead"><?php echo $ds_subsecao4; ?></p>
+                    <div class="row mt-5">
+                        <div class="col-lg-8">
+                            <div id="v-pills-tab" role="tablist" aria-orientation="vertical" class="nav flex-column nav-pills showcase-nav">
+                                <?php
+                                $SQL4 = "SELECT nr_sequencial, ds_campanha, ds_icone, ds_imagem, ds_detalhamento
+                                        FROM campanhas_site
+                                        WHERE nr_seq_configuracao = $codigo
+                                        AND st_ativo = 'A'";
+                                $RSS4 = mysqli_query($conexao, $SQL4);
+                                $i = 0;
+                                while($linha4 = mysqli_fetch_assoc($RSS4)){
+                                    $nr_seq_campanha = $linha4['nr_sequencial'];
+                                    $ds_campanha = $linha4['ds_campanha'];
+                                    $ds_icone_campanha = $linha4['ds_icone'];
+                                    $ds_imagem_campanha = $linha4['ds_imagem'];
+                                    $ds_detalhamento_campanha = $linha4['ds_detalhamento'];
+                                    ?>
 
-                                      <a id="card<?php echo $i; ?>" data-toggle="pill" href="#div<?php echo $i; ?>" role="tab" aria-controls="div<?php echo $i; ?>" aria-selected="true" class="nav-link <?php echo ($i == 0 ? 'active' : ''); ?> showcase-link" data-campanha="<?php echo htmlspecialchars($ds_campanha, ENT_QUOTES, 'UTF-8'); ?>" data-detalhamento="<?php echo htmlspecialchars($ds_detalhamento_campanha, ENT_QUOTES, 'UTF-8'); ?>">
-                                          <div class="gradient-icon gradient-1">
-                                              <i class="icon <?php echo $ds_icone_campanha; ?>" style="color: white;"></i>
-                                          </div>
-                                          <?php echo $ds_campanha; ?>
-                                      </a>
+                                    <a id="card<?php echo $i; ?>" data-toggle="pill" href="#div<?php echo $i; ?>" role="tab" aria-controls="div<?php echo $i; ?>" aria-selected="true" class="nav-link <?php echo ($i == 0 ? 'active' : ''); ?> showcase-link" data-campanha="<?php echo htmlspecialchars($ds_campanha, ENT_QUOTES, 'UTF-8'); ?>" data-detalhamento="<?php echo htmlspecialchars($ds_detalhamento_campanha, ENT_QUOTES, 'UTF-8'); ?>">
+                                        <div class="gradient-icon gradient-1">
+                                            <i class="icon <?php echo $ds_icone_campanha; ?>" style="color: white;"></i>
+                                        </div>
+                                        <?php echo $ds_campanha; ?>
+                                    </a>
 
-                                      <?php
-                                      $i++;
-                                  }
-                                  ?>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-4">
-                      <div id="v-pills-tabContent" class="tab-content showcase-content">
-                      </div>
-                  </div>
-              </div>
-          </div>
-        </section>
-
-        <!-- modal para detalhes das campanhas -->
-        <div class="modal fade" id="modalDetalhes" tabindex="-1" role="dialog" aria-labelledby="modalDetalhesLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalDetalhesLabel">Detalhes</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="detalhesCampanha"></div>
+                                    <?php
+                                    $i++;
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="v-pills-tabContent" class="tab-content showcase-content"></div>
+                            <div id="cardDetalhes" class="card mt-3" style="display: none;">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="cardTitle"></h5>
+                                    <p class="card-text" id="cardText"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+          </div>
+        </section>
       <?php } ?>
      
        <!-- SEÇÃO 5-->
@@ -615,6 +620,10 @@
     <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
     <script src="vendor/swiper/js/swiper.min.js"></script>
     <script src="js/front.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -626,18 +635,37 @@
     </script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var campanhaLinks = document.querySelectorAll('.showcase-link');
-        campanhaLinks.forEach(function(link) {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                var campanha = link.getAttribute('data-campanha');
-                var detalhamento = link.getAttribute('data-detalhamento');
 
-                document.getElementById('detalhesCampanha').innerHTML = '<h5>' + campanha + '</h5><p>' + detalhamento + '</p>';
-                
-                $('#modalDetalhes').modal('show');
+        $(document).ready(function() {
+            $('#txtcidadeindex').select2({
+                placeholder: "Cidade",
+                minimumInputLength: 3,  // Só busca após digitar 3 letras
+                ajax: {
+                    url: 'buscar_cidades.php', // Arquivo PHP que retorna os resultados
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return { term: params.term }; // Envia a pesquisa ao servidor
+                    },
+                    processResults: function(data) {
+                        return { results: data }; // Retorna os dados no formato do Select2
+                    }
+                }
             });
+        });
+
+      $(document).ready(function() {
+        $(".showcase-link").on("mouseover", function() {
+            var campanha = $(this).data("campanha");
+            var detalhamento = $(this).data("detalhamento");
+
+            $("#cardTitle").text(campanha);
+            $("#cardText").text(detalhamento);
+            $("#cardDetalhes").show();
+        });
+
+        $(".showcase-link").on("mouseout", function() {
+            $("#cardDetalhes").hide();
         });
       });
 
