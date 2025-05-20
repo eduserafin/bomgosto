@@ -7,23 +7,56 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
-                    <label for="txtnome">Nome:</label>                    
-                    <input type="text" name="txtnome" id="txtnome" size="15" maxlength="70" class="form-control"></td>
+    <div class="col-md-6">
+        <label for="txtnome">Colaborador:</label>                     
+            <select id="txtnome" class="form-control">
+                <option value='0'>Selecione um colaborador</option>
+                <?php
+                    $sql = "SELECT nr_sequencial, ds_colaborador
+                            FROM colaboradores
+                            WHERE st_ativo = 'S'
+                            ORDER BY ds_colaborador";
+                    $res = mysqli_query($conexao, $sql);
+                    while($lin=mysqli_fetch_row($res)){
+                        $cdg = $lin[0];
+                        $desc = $lin[1];
+
+                        echo "<option value='$cdg'>$desc</option>";
+                    }
+                ?>
+            </select>
+    </div>
+
+    <div class="col-md-3">
+        <label for="txtadmin">Administrador:</label>
+        <select class="form-control" name="txtadmin" id="txtadmin">
+            <option value="S">SIM</option>
+            <option value="N">NÃO</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label for="txtstatus">Status:</label>
+        <select class="form-control" name="txtstatus" id="txtstatus">
+            <option value="A">ATIVO</option>
+            <option value="I">INATIVO</option>
+        </select>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
-                    <label for="txtlogin">Login:</label>                    
-                    <input type="text" name="txtlogin" id="txtlogin" size="15" maxlength="14" class="form-control"></td>
+    <div class="col-md-4">
+        <label for="txtlogin">Login:</label>                    
+        <input type="text" name="txtlogin" id="txtlogin" size="15" maxlength="14" class="form-control"></td>
     </div>
-    <div class="col-md-3">        
-                    <label for="password">Senha:</label>
-                    <input type="password" name="txtsenha" id="txtsenha" size="20" maxlength="32" class="form-control"></td>
+
+    <div class="col-md-4">        
+        <label for="password">Senha:</label>
+        <input type="password" name="txtsenha" id="txtsenha" size="20" maxlength="32" class="form-control"></td>
     </div>
-    <div class="col-md-3">
-                    <label>E-mail:</label>
-                    <input type="text" name="txtemail" id="txtemail" size="15" maxlength="60" class="form-control"></td>
+
+    <div class="col-md-4">
+        <label>E-mail:</label>
+        <input type="text" name="txtemail" id="txtemail" size="15" maxlength="60" class="form-control"></td>
     </div>
 </div>
 
@@ -36,6 +69,8 @@ function executafuncao(id){
     document.getElementById('txtnome').value = "";
     document.getElementById('txtsenha').value = "";
     document.getElementById('txtemail').value = "";
+    document.getElementById('txtadmin').value = "S";
+    document.getElementById('txtstatus').value = "A";
     document.getElementById('txtnome').focus();
   }
   else if (id=="save"){  
@@ -44,10 +79,9 @@ function executafuncao(id){
     var nome = document.getElementById('txtnome').value;
     var senha = document.getElementById('txtsenha').value;
     var email = document.getElementById('txtemail').value;
+    var admin = document.getElementById('txtadmin').value;
+    var status = document.getElementById('txtstatus').value;
     
-    if (nome != '') {
-        nome = nome.replace("'", "");
-    }
     if (senha != '') {
         senha = senha.replace("'", "");
     }
@@ -56,10 +90,22 @@ function executafuncao(id){
     }
 
     if (login == '') {
-        alert('Informe o login!');
-        document.getElementById('clifor').focus();
-    } else if (nome == '') {
-        alert('Informe o usu�rio!');
+        swal.fire({
+            icon: 'warning',
+            title: 'Informe o login!'
+        });
+        document.getElementById('txtlogin').focus();
+    } else if (senha == '') {
+        swal.fire({
+            icon: 'warning',
+            title: 'Informe a senha!'
+        });
+        document.getElementById('txtsenha').focus();
+    } else if (nome == 0) {
+        swal.fire({
+            icon: 'warning',
+            title: 'Informe o colaborador!'
+        });
         document.getElementById('txtnome').focus();
     } else {
         if (codigo == '') {
@@ -68,7 +114,7 @@ function executafuncao(id){
             Tipo = "A";
         }
 
-        window.open('admin/usuario/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&senha=' + senha + '&login=' + login + '&email=' + email, "acao");
+        window.open('admin/usuario/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&senha=' + senha + '&login=' + login + '&email=' + email + '&admin=' + admin + '&status=' + status, "acao");
     }
   }
 }

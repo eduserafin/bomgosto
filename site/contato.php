@@ -235,13 +235,32 @@
                   <input type="email" name="txtemail" id="txtemail" class="form-control" placeholder="E-mail" required>
               </div>
               <div class="form-group">
-                  <input type="number" name="txttelefone" id="txttelefone" class="form-control" placeholder="Telefone" required>
-              </div>
-              <div class="form-group">
-                  <input type="number" name="txtwhatsapp" id="txtwhatsapp" class="form-control" placeholder="WhatsApp" required>
+                  <input type="number" name="txtwhatsapp" id="txtwhatsapp" class="form-control" placeholder="Telefone ou WhatsApp" required>
               </div>
               <div class="form-group">
                   <select id="txtcidadecontato" class="form-control" style="width: 100%"></select>
+              </div>
+              <div class="form-group">
+                <select id="selprodutocontato" name="selprodutocontato" class="form-control">
+                <option value="0">Selecione um Produto</option>
+                  <?php
+                    $SQLP = "SELECT p.nr_sequencial, p.ds_produto
+                                FROM produtos_site p 
+                                WHERE p.nr_seq_configuracao = $codigo 
+                                AND p.st_ativo = 'A'";
+                      $RSSP = mysqli_query($conexao, $SQLP);
+                      while($linhap = mysqli_fetch_row($RSSP)){
+                        $nr_produto = $linhap[0];
+                        $ds_produto = $linhap[1];
+
+                        echo "<option value=$nr_produto>" . $ds_produto ."</option>";
+
+                      }
+                  ?>
+                </select>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="txtvalorcontato" id="txtvalorcontato" class="form-control" onkeypress="return formatar_moeda_contato(this,'.',',',event);" placeholder="0,00" required>
               </div>
               <div class="form-group">
                   <textarea name="txtmemsagem" id="txtmemsagem" class="form-control" rows="5" placeholder="Mensagem" required></textarea>
@@ -305,22 +324,69 @@
     </script>
     <script>
 
-        $(document).ready(function() {
-          $('#txtcidadecontato').select2({
-              placeholder: "Cidade",
-              minimumInputLength: 3,  // Só busca após digitar 3 letras
-              ajax: {
-                  url: 'buscar_cidades.php', // Arquivo PHP que retorna os resultados
-                  dataType: 'json',
-                  delay: 250,
-                  data: function(params) {
-                      return { term: params.term }; // Envia a pesquisa ao servidor
-                  },
-                  processResults: function(data) {
-                      return { results: data }; // Retorna os dados no formato do Select2
-                  }
-              }
-          });
+      function formatar_moeda_contato(campo, separador_milhar, separador_decimal, tecla) {
+        var sep = 0;
+        var key = '';
+        var i = j = 0;
+        var len = len2 = 0;
+        var strCheck = '0123456789';
+        var aux = aux2 = '';
+        var whichCode = (window.Event) ? tecla.which : tecla.keyCode;
+
+        if (whichCode == 13) return true; // Tecla Enter
+        if (whichCode == 8) return true; // Tecla Delete
+        key = String.fromCharCode(whichCode); // Pegando o valor digitado
+        if (strCheck.indexOf(key) == -1) return false; // Valor inválido (não inteiro)
+        len = campo.value.length;
+        for (i = 0; i < len; i++)
+            if ((campo.value.charAt(i) != '0') && (campo.value.charAt(i) != separador_decimal)) break;
+        aux = '';
+        for (; i < len; i++)
+            if (strCheck.indexOf(campo.value.charAt(i)) != -1) aux += campo.value.charAt(i);
+        aux += key;
+        len = aux.length;
+        if (len == 0) campo.value = '';
+        if (len == 1) campo.value = '0' + separador_decimal + '0' + aux;
+        if (len == 2) campo.value = '0' + separador_decimal + aux;
+
+        if (len > 2) {
+            aux2 = '';
+
+            for (j = 0, i = len - 3; i >= 0; i--) {
+                if (j == 3) {
+                    aux2 += separador_milhar;
+                    j = 0;
+                }
+                aux2 += aux.charAt(i);
+                j++;
+            }
+
+            campo.value = '';
+            len2 = aux2.length;
+            for (i = len2 - 1; i >= 0; i--)
+                campo.value += aux2.charAt(i);
+            campo.value += separador_decimal + aux.substr(len - 2, len);
+        }
+
+        return false;
+      }
+
+      $(document).ready(function() {
+        $('#txtcidadecontato').select2({
+            placeholder: "Cidade",
+            minimumInputLength: 3,  // Só busca após digitar 3 letras
+            ajax: {
+                url: 'buscar_cidades.php', // Arquivo PHP que retorna os resultados
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { term: params.term }; // Envia a pesquisa ao servidor
+                },
+                processResults: function(data) {
+                    return { results: data }; // Retorna os dados no formato do Select2
+                }
+            }
+        });
       });
 
       function redirectToWhatsApp() {
@@ -333,13 +399,13 @@
       function SalvarLead(){
 
         var tipo = '<?php echo $tipo; ?>';
-        var produto = '<?php echo $produto; ?>';
         var nome = document.getElementById('txtnome').value;
         var email = document.getElementById("txtemail").value;
-        var telefone = document.getElementById('txttelefone').value;
         var whatsapp = document.getElementById("txtwhatsapp").value;
         var cidade = document.getElementById('txtcidadecontato').value;
         var mensagem = document.getElementById("txtmemsagem").value;
+        var valor = document.getElementById("txtvalorcontato").value;
+        var produto = document.getElementById("selprodutocontato").value;
 
         if (nome == "") {
           alert('Informe o seu Nome!');
@@ -347,21 +413,25 @@
         } else if (mensagem == '') {
           alert('Descreva sua mensagem!');
           document.getElementById('txtmemsagem').focus();
+        } else if (produto == 0) {
+          alert('Informe um produto!');
+          document.getElementById('selprodutocontato').focus();
+        } else if (valor == "") {
+          alert('Informe o valor!');
+          document.getElementById('txtvalorcontato').focus();
         } else if (cidade == 0) {
           alert('Informe a sua Cidade!');
           document.getElementById('txtcidadecontato').focus();
-        } else if (email == '' && telefone == '' && whatsapp == '') {
+        } else if (email == '' && whatsapp == '') {
           alert('Preencha pelo menos um dos campos de contato (Email, Telefone ou WhatsApp)!');
           if (email == '') {
               document.getElementById("txtemail").focus();
-          } else if (telefone == '') {
-              document.getElementById('txttelefone').focus();
           } else if (whatsapp == '') {
               document.getElementById("txtwhatsapp").focus();
           } 
         } else {
 
-          window.open('acao.php?Tipo=SL&tipo=' + tipo + '&nome=' + nome + '&email=' + email + '&telefone=' + telefone + '&whatsapp=' + whatsapp + '&cidade=' + cidade + '&mensagem=' + mensagem + '&produto=' + produto, "acao");
+          window.open('acao.php?Tipo=SL&tipo=' + tipo + '&nome=' + nome + '&email=' + email + '&whatsapp=' + whatsapp + '&cidade=' + cidade + '&mensagem=' + mensagem + '&produto=' + produto + '&valor=' + valor, "acao");
         
         }
       }

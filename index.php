@@ -1,10 +1,12 @@
-<?php require_once('config/servers.php'); 
-?>
-<?php
-//SE O USUÁRIO JÁ ESTÁ LOGADO REDIRECIONA PARA A DASHBOARD
-if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && isset($_SESSION['ALIAS_EMPRESA']) && strlen($_SESSION['ALIAS_EMPRESA']) > 0) {
-    header('location: dashboard.php');
-}
+<?php 
+
+    require_once('config/servers.php'); 
+
+    //SE O USUÁRIO JÁ ESTÁ LOGADO REDIRECIONA PARA A DASHBOARD
+    if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && isset($_SESSION['ALIAS_EMPRESA']) && strlen($_SESSION['ALIAS_EMPRESA']) > 0) {
+        header('location: dashboard.php');
+    }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,7 +23,7 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
+    <script type="text/javascript" src="plugins/sweetalert/sweetalert2.all.min.js"></script>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
@@ -38,7 +40,7 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
                     <br>Pense grande, mire alto, trabalhe duro e nunca desista!<b style="font-size: 12px;
                     font-weight: 400;
                     display: flex;
-                    justify-content: left;">(ANTONIO CAMOROTTI)</b></p>
+                    justify-content: left;"></b></p>
 
             </div>
             <div class="col-12 col-sm-6 login-direita">
@@ -48,14 +50,10 @@ if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && iss
                     <h6 class="titulo-h6">&nbsp;</h6>
                     <h3 class="titulo-h3">&nbsp;</h3>
                     <div class="pt-5">
-                        <?php if (!defined('ALIAS_EMPRESA') or strpos($host, 'bkp.ginfo.i9ss.com.br') !== FALSE) : ?>
-                            <!--<div class="inputBox">
-                                <input type="text" name="nomeempresa" id="nomeempresa" class="inputUser">
-                                <label for="nome" class="labelInput">Empresa</label>
-                            </div>-->
-                        <?php else : ?>
-                            <input type="hidden" name="nomeempresa" value="<?php echo $ALIAS_EMPRESA ?>">
-                        <?php endif; ?>
+                        <div class="inputBox">
+                            <input type="text" name="nomeempresa" id="nomeempresa" class="inputUser" required>
+                            <label for="nome" class="labelInput">Empresa</label>
+                        </div>
                         <div class="inputBox">
                             <input type="text" name="usuario" id="usuario" class="inputUser" required>
                             <label for="email" class="labelInput">Usuário</label>

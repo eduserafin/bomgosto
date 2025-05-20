@@ -71,7 +71,7 @@
         <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
         <script type="text/javascript" src="obj/jquery-1.4.2.js"></script>
         <script type="text/javascript" src="plugins/sweetalert/sweetalert2.all.min.js"></script>
-        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <script type='text/javascript' src="obj/jquery.autocomplete.js"></script>
         <link rel="stylesheet" type="text/css" href="obj/jquery.autocomplete.css" />
 
@@ -308,7 +308,7 @@
                             
                             $leads_novas = 0;
                             $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'P'";
+                                    WHERE st_situacao = 'N'";
                             $RSS = mysqli_query($conexao, $SQL);
                             while($linha = mysqli_fetch_row($RSS)){
                                 $leads_novas = $linha[0];
@@ -322,76 +322,114 @@
                                 $leads_contato = $linha[0];
                             }
 
-                            $leads_fria = 0;
+                            $leads_perdidas = 0;
                             $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'F'";
+                                    WHERE st_situacao = 'P'";
                             $RSS = mysqli_query($conexao, $SQL);
                             while($linha = mysqli_fetch_row($RSS)){
-                                $leads_fria = $linha[0];
+                                $leads_perdidas = $linha[0];
                             }
 
-                            $leads_quente = 0;
+                            $leads_andamento = 0;
                             $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'F'";
+                                    WHERE st_situacao = 'E'";
                             $RSS = mysqli_query($conexao, $SQL);
                             while($linha = mysqli_fetch_row($RSS)){
-                                $leads_quente = $linha[0];
+                                $leads_andamento = $linha[0];
+                            }
+
+                            $leads_contratadas = 0;
+                            $SQL = "SELECT COUNT(*) FROM lead_site
+                                    WHERE st_situacao = 'T'";
+                            $RSS = mysqli_query($conexao, $SQL);
+                            while($linha = mysqli_fetch_row($RSS)){
+                                $leads_contratadas = $linha[0];
+                            }
+
+                            $acessos = 0;
+                            $SQL = "SELECT COUNT(*) FROM acessos";
+                            $RSS = mysqli_query($conexao, $SQL);
+                            while($linha = mysqli_fetch_row($RSS)){
+                                $acessos = $linha[0];
                             }
 
                             ?>
-
-                            <div class="col-lg-6 col-xs-6">
-                                <div class="small-box bg-aqua">
-                                    <div class="inner">
-                                        <h1><?php echo number_format($leads_novas, 0, ",", "."); ?></h1>
-                                        <p>NOVAS LEADS</p>
-                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                            <div class="row">
+                                <div class="col-lg-6 col-xs-6">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h1><?php echo number_format($leads_novas, 0, ",", "."); ?></h1>
+                                            <p>NOVAS LEADS</p>
+                                            <button type="button" class="btn btn-info" onclick="detalhar('N');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
                                     </div>
-                                    <div class="icon">
-                                        <i class="fa fa-group"></i>
+                                </div>
+                                <div class="col-lg-6 col-xs-6">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h1><?php echo number_format($acessos, 0, ",", "."); ?></h1>
+                                            <p>TOTAL DE ACESSOS SITE</p><br><br>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xs-6">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h1><?php echo number_format($leads_contato, 0, ",", "."); ?></h1>
+                                            <p>ENTRAR EM CONTATO COM O CLIENTE</p>
+                                            <button type="button" class="btn btn-info" onclick="detalhar('C');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-phone"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-xs-6">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h1><?php echo number_format($leads_perdidas, 0, ",", "."); ?></h1>
+                                            <p>LEADS PERDIDAS</p>
+                                            <button type="button" class="btn btn-info" onclick="detalhar('P');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-lock"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-xs-6">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h1><?php echo number_format($leads_andamento, 0, ",", "."); ?></h1>
+                                            <p>LEADS EM ANDAMENTO</p>
+                                            <button type="button" class="btn btn-info" onclick="detalhar('E');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-unlock"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-xs-6">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h1><?php echo number_format($leads_contratadas, 0, ",", "."); ?></h1>
+                                            <p>LEADS CONTRATADAS</p>
+                                            <button type="button" class="btn btn-info" onclick="detalhar('T');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-check"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-lg-6 col-xs-6">
-                                <div class="small-box bg-aqua">
-                                    <div class="inner">
-                                        <h1><?php echo number_format($leads_contato, 0, ",", "."); ?></h1>
-                                        <p>ENTRAR EM CONTATO COM O CLIENTE</p>
-                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fa fa-phone"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6 col-xs-6">
-                                <div class="small-box bg-aqua">
-                                    <div class="inner">
-                                        <h1><?php echo number_format($leads_fria, 0, ",", "."); ?></h1>
-                                        <p>LEADS PARADAS</p>
-                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fa fa-lock"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6 col-xs-6">
-                                <div class="small-box bg-aqua">
-                                    <div class="inner">
-                                        <h1><?php echo number_format($leads_quente, 0, ",", "."); ?></h1>
-                                        <p>LEADS EM ANDAMENTO</p>
-                                        <button type="button" class="btn btn-info" onclick="detalhar(<?php echo $nr_seq_exame; ?>);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fa fa-unlock"></i>
-                                    </div>
-                                </div>
-                            </div>
-    
     
                             <?php
                         } else {
@@ -450,13 +488,18 @@
                     document.getElementById("ModalRs").click();
                 }
 
+                function detalhar(status) {
+                    const url = "http://localhost/csimulador/dashboard.php?form=crm/leads/index.php&id_menu=12&ds_men=Leads&ds_mod=CRM&id_smenu=33&status=" + encodeURIComponent(status);
+                    window.open(url, '_blank');
+                }
+
             </script>
 
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
                 <b>Vers&atilde;o</b> 1.0
                 </div>
-                <strong>Viveiro Florestal Dois Irmãos.</strong>
+                <strong>Csimulador</strong>
                 <input type="hidden" name="pgatual" id="pgatual" value="2">
             </footer>
             <div class="control-sidebar-bg"></div>

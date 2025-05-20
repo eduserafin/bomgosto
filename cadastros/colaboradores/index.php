@@ -5,10 +5,10 @@ foreach($_GET as $key => $value){
 ?>
 <script type="text/javascript">
 
-    function Buscar(descricao, averba, gxml, bloqueio, contrato, certificado, pg) {
+    function Buscar(descricao, pg) {
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'admin/clientes/listadados.php?consulta=sim&pg=' + pg + '&descricao=' + descricao + '&averba=' + averba + '&gxml=' + gxml + '&bloqueio=' + bloqueio + '&contrato=' + contrato + '&certificado=' + certificado;
+        var url = 'cadastros/colaboradores/listadados.php?consulta=sim&pg=' + pg + '&descricao=' + descricao;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });
@@ -25,12 +25,12 @@ foreach($_GET as $key => $value){
 
 <div class="tab-content">
     <div class="tab-pane active" id="geral">
-        <div class="row">          
+        <div class="row-100">          
             <?php include "formulario.php"; ?>          
         </div>
     </div>
     <div class = "tab-pane" id = "lista">
-        <div class="row">
+        <div class="row-100">
             <?php include 'lista.php'; ?>        
         </div>
     </div>
