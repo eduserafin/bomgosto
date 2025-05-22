@@ -20,11 +20,16 @@
               WHERE nr_sequencial=" . $Codigo;
       $RSS = mysqli_query($conexao, $SQL);
       $RS = mysqli_fetch_assoc($RSS);
-
       if ($RS["nr_sequencial"] == $Codigo) {
-
-        echo "<script language='javascript'>window.parent.buscaComercial('".$RS["nr_sequencial"]."');</script>";
-      
+            echo "<script language='javascript'>window.parent.document.getElementById('cd_lead').value='" . $RS["nr_sequencial"] . "';</script>";
+            echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_nome"] . "';</script>";
+            echo "<script language='javascript'>window.parent.document.getElementById('txtcontato').value='" . $RS["nr_telefone"] . "';</script>";
+            echo "<script language='javascript'>window.parent.document.getElementById('txtmunicipio').value='" . $RS["nr_seq_cidade"] . "';</script>";
+            echo "<script language='javascript'>window.parent.document.getElementById('txtvalor').value='" . $RS["vl_valor"] . "';</script>";
+            echo "<script language='javascript'>window.parent.document.getElementById('txtsegmento').value='" . $RS["nr_seq_produto"] . "';</script>";
+            echo "<script language='javascript'>window.parent.document.getElementById('txtemail').value='" . $RS["ds_email"] . "';</script>";
+            echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
+            echo "<script language='javascript'>window.parent.buscaComercial('".$RS["nr_sequencial"]."');</script>";
       }
 
   } 

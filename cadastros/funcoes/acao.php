@@ -2,89 +2,190 @@
 foreach($_GET as $key => $value){
 	$$key = $value;
 }
-?>
-<?php
+
 session_start(); 
 include "../../conexao.php";
+
 //=======================		CARREGA DADOS NO FORMULARIO
 if ($Tipo == "D") {
     $SQL = "SELECT * 
-		FROM tb_usuarios 
-		WHERE idusuario=" . $Codigo;
+            FROM funcoes 
+            WHERE nr_sequencial=" . $Codigo;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
-    if ($RS["idusuario"] == $Codigo) {
-        echo "<script language='javascript'>window.parent.document.getElementById('cd_user').value='" . $RS["idusuario"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["nome"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtlogin').value='" . $RS["login"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtemail').value='" . $RS["email"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtsenha').value='';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
+    if ($RS["nr_sequencial"] == $Codigo) {
+        echo "<script language='javascript'>window.parent.document.getElementById('cd_funcao').value='" . $RS["nr_sequencial"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtfuncao').value='" . $RS["ds_funcao"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtstatus').value='" . $RS["st_status"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtfuncao').focus();</script>";
     }
 }
+
 //=======================		INCLUSAO DOS DADOS
 if ($Tipo == "I") {
 
-  $SQL = "SELECT login 
-              FROM tb_usuarios
-             WHERE UPPER(login)=UPPER('" . $login . "') 
-             LIMIT 1"; //echo  $SQL;
+    $SQL = "SELECT nr_sequencial 
+          FROM funcoes
+          WHERE UPPER(ds_funcao)=UPPER('" . $funcao . "') 
+          LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
-     if ($RS["login"] !='') {
-        echo "<script language='JavaScript'>alert('Usuario ja cadastrado! Verifique.');</script>";
+    if ($RS["nr_sequencial"] !='') {
+
+      echo "<script language='javascript'>
+            window.parent.Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Função já cadastrada! Verifique.'
+            });
+        </script>";
+
     } else {
 
-        $insert = "INSERT INTO tb_usuarios (login, senha, nome, email) 
-      VALUES (LOWER('" . $login . "'), '" . $senha . "', '" . $nome . "', '" . $email . "') ";
-        $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
+      $insert = "INSERT INTO funcoes (ds_funcao, st_status, cd_usercadastro) 
+                  VALUES (UPPER('" . $funcao . "'), '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
+      $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
-       $SQL1 = "SELECT idusuario
-                     FROM tb_usuarios
-                WHERE idusuario = (SELECT max(idusuario) FROM tb_usuarios)
-                 AND UPPER(login)=UPPER('" . $login . "') ";     
-               // echo $SQL1;
-        $RSS1 = mysqli_query($conexao, $SQL1);
-        while ($linha1 = mysqli_fetch_row($RSS1)) {
-            $nr_usuario = $linha1[0];
-        }
+      // Valida se deu certo
+      if ($rss_insert) {
 
-        if ($nr_usuario != '') {
-            echo "<script language='JavaScript'>
-                    alert('Usu\u00e1rio cadastrado com sucesso!');
-                    window.parent.executafuncao('new');
-                    window.parent.consultar(0);
-                  </script>";
-        } else {
-            echo "<script language='JavaScript'>alert('Problemas ao gravar!');</script>";
-        }
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'success',
+                    title: 'Show...',
+                    text: 'Função cadastrada com sucesso!'
+                });
+                window.parent.executafuncao('new');
+                window.parent.consultar(0);
+            </script>";
+
+      } else {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Problemas ao gravar!'
+                });
+            </script>";
+      }
+
     }
 }
+
 //=======================		ALTERACAO DOS DADOS
 if ($Tipo == "A") {
 
-    $SQL = "SELECT login 
-              FROM tb_usuarios
-            WHERE UPPER(login)=UPPER('" . $login . "') 
-            AND idusuario<>" . $codigo . "  
-             LIMIT 1"; //echo  $SQL;
+    $SQL = "SELECT nr_sequencial 
+            FROM funcoes
+            WHERE UPPER(ds_funcao)=UPPER('" . $funcao . "')
+            AND nr_sequencial <> " . $codigo . "  
+            LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
-     if ($RS["login"] !='') {
-        echo "<script language='JavaScript'>alert('Usuario ja cadastrado! Verifique.');</script>";
+    if ($RS["nr_sequencial"] !='') {
+
+      echo "<script language='javascript'>
+            window.parent.Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Função já cadastrada! Verifique.'
+            });
+        </script>";
+
     } else {
 
-        $update = "UPDATE tb_usuarios 
-      SET nome=UPPER('" . $nome . "'), email='" . $email . "',
-          login='" . $login . "', senha='". $senha ."'
-      WHERE idusuario=" . $codigo;
-        mysqli_query($conexao, $update);
+      $update = "UPDATE funcoes 
+                SET ds_funcao = UPPER('" . $funcao . "'), 
+                    st_status ='" . $status . "',
+                    cd_useralterado = " . $_SESSION["CD_USUARIO"] . ",
+                    dt_alterado = CURRENT_TIMESTAMP
+                WHERE nr_sequencial = " . $codigo;
+      //echo"<pre> $update</pre>";
+      $rss_update = mysqli_query($conexao, $update);
+
+      // Valida se deu certo
+      if ($rss_update) {
 
         echo "<script language='JavaScript'>
-                alert('Usu\u00e1rio alterado com sucesso!');
+                window.parent.Swal.fire({
+                    icon: 'success',
+                    title: 'Show...',
+                    text: 'Função alterada com sucesso!'
+                });
                 window.parent.executafuncao('new');
                 window.parent.consultar(0);
+            </script>";
+
+      } else {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Problemas ao gravar!'
+                });
               </script>";
+
+      }
+
     }
+}
+
+//==================================-EXCLUSÃO DOS DADOS-===============================================
+
+if ($Tipo == "E") {
+
+  $v_existe = 0;
+  $SQL = "SELECT COUNT(*)  
+          FROM colaboradores 
+          WHERE nr_seq_funcao = $codigo";
+  $RSS = mysqli_query($conexao, $SQL);
+  while ($line = mysqli_fetch_row($RSS)) {
+    $v_existe = $line[0];
+  }
+
+  if ($v_existe > 0) {
+
+    echo "<script language='javascript'>
+            window.parent.Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Não é possível excluir o registro, função está vinculada a um colaborador!'
+            });
+        </script>";
+        exit;
+
+  } else {
+
+    $delete = "DELETE FROM funcoes WHERE nr_sequencial=" . $codigo;
+    $result = mysqli_query($conexao, $delete);
+
+    if ($result) {
+    
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'success',
+                title: 'Show...',
+                text: 'Função excluída com sucesso!'
+              });
+              window.parent.executafuncao('new');
+              window.parent.consultar(0);
+            </script>";
+
+    } else {
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao excluir a função. Verifique!'
+              });
+            </script>";
+
+    }
+
+  }
+
 }
 ?>

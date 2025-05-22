@@ -8,7 +8,7 @@ foreach($_GET as $key => $value){
     function Buscar(descricao, pg) {
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'cadastros/colaboradores/listadados.php?consulta=sim&pg=' + pg + '&descricao=' + descricao;
+        var url = 'cadastros/funcoes/listadados.php?consulta=sim&pg=' + pg + '&descricao=' + descricao;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });

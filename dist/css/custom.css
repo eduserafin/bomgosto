@@ -10,6 +10,10 @@
     background-color: transparent;
 }
 
+.bg-white{
+    background-color: white;
+}
+
 .p-20{
     padding: 5px 20px;
 }
@@ -20,38 +24,112 @@
 .pt-10{
     padding-top: 10px;
 }
+.pb-0{
+    padding-bottom: 0px;
+}
 .pb-20{
     padding-bottom: 20px;
 }
+.pb-10{
+    padding-bottom: 10px;
+}
 .mb-10{
     margin-bottom: 10px;
+}
+.mr-20{
+    margin-right: 20px;
+}
+.ml-10{
+    margin-left: 10px;
+}
+.ml-0{
+    margin-left: 0px !important;
+}
+.mr-10{
+    margin-left: 10px;
+}
+.p-0{
+    padding: 0;
 }
 
 .w-100{
     width: 100%;
 }
+.h-45{
+    height: 45px;
+}
+.h-75{
+    height: 75px;
+}
 
-.info-box-inner{
+.info-box-inner:not(.info-box-padrao){
     display:flex;
     width:100%;
     min-height: 90px;
 }
 
-.info-box-content{
+.info-box-content:not(.info-box-padrao){
     margin-left: 0;
 }
-.info-box-icon{
+.info-box-icon:not(.info-box-padrao){
     height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 95px;
 }
+
+.info-box-icon.info-box-padrao{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .small-box .icon{
     top: 10px;
 }
 
-.select2-selection{
+.select2-no-vgrow .select2-selection{
     height: 34px;
     overflow: hidden;
 }
+
+.ui-tooltip {
+    white-space: pre-line;
+}
+
+.input-obrigatorio{
+    background:#E0FFFF !important;
+}
+.input-obrigatorio:disabled{
+    background: #eee !important;
+}
+
+.v-middle{
+    vertical-align: middle !important; 
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.border-danger{
+    border-color: #d73925 !important;
+}
+.border-warning:{
+    border-color: #f39c12 !important
+}
+.border-primary:{
+    border-color: #f39c12 !important
+}
+.border-info:{
+    border-color: #f39c12 !important
+}
+.border-black:{
+    border-color: #f39c12 !important
+}
+.border-green{border-color: green!important;}
+.border-blue{border-color: blue!important;}
+.border-orange{border-color: orange !important;}
+.border-red{border-color: #d73925 !important;}
+.border-black{border-color: black !important;}
