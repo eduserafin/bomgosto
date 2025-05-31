@@ -25,7 +25,7 @@ if ($Tipo == "D") {
               window.parent.document.getElementById('cd_empresa').value='" . $RS["nr_sequencial"] . "';
                 window.parent.document.getElementById('txtempresa').value='" . $RS["ds_empresa"] . "';
                 window.parent.document.getElementById('txtnome').value='" . $RS["ds_nome"] . "';
-                window.parent.document.getElementById('txtcnpj').value='" . $RS["cnpj_empresa"] . "';
+                window.parent.document.getElementById('txtcnpj').value='" . $RS["nr_cnpj"] . "';
                 window.parent.document.getElementById('txtie').value='" . $RS["nr_ie"] . "';
                 window.parent.document.getElementById('txtlogradouro').value='" . $RS["ds_logradouro"] . "';
                 window.parent.document.getElementById('txtbairro').value='" . $RS["ds_bairro"] . "';
@@ -49,7 +49,7 @@ if ($Tipo == "I") {
 
     $SQL = "SELECT nr_sequencial  
           		FROM empresas  
-          		WHERE cnpj_empresa='" . $cnpj . "'  
+          		WHERE nr_cnpj='" . $cnpj . "'  
           		LIMIT 1";
     $RSS = mysqli_query($conexao, $SQL);
     if (pg_num_rows($RSS) > 0) {
@@ -64,7 +64,7 @@ if ($Tipo == "I") {
 
     } else {
 
-        $insert = "INSERT INTO empresas (ds_nome, ds_empresa, cnpj_empresa, nr_ie, ds_logradouro, ds_bairro, nr_endereco, ds_complemento, nr_cep, nr_seq_cidade, nr_seq_estado, cd_usercadastro, ds_email, nr_telefone, st_status) 
+        $insert = "INSERT INTO empresas (ds_nome, ds_empresa, nr_cnpj, nr_ie, ds_logradouro, ds_bairro, nr_endereco, ds_complemento, nr_cep, nr_seq_cidade, nr_seq_estado, nr_seq_usercadastro, ds_email, nr_telefone, st_status) 
                         VALUES (UPPER('" . $nome . "'), UPPER('" . $empresa . "'), '$cnpj', '$ie', UPPER('" . $logradouro . "'), UPPER('" . $bairro . "'), '$numero', UPPER('" . $complemento . "'), '$cep', $municipio, $estado, " . $_SESSION["CD_USUARIO"] . ", '$email', '$telefone', '$status')";
         $rss_insert = mysqli_query($conexao, $insert); //echo $insert;
 
@@ -100,7 +100,7 @@ if ($Tipo == "A") {
 
     $SQL = "SELECT nr_sequencial 
               FROM empresas 
-             WHERE cnpj_empresa = '" . $cnpj . "'
+             WHERE nr_cnpj = '" . $cnpj . "'
                AND nr_sequencial <> " . $codigo . " 
              LIMIT 1";
     $RSS = mysqli_query($conexao, $SQL);
@@ -119,7 +119,7 @@ if ($Tipo == "A") {
         $update = "UPDATE empresas   
                       SET ds_nome = UPPER('" . $nome . "'), 
                         ds_empresa = UPPER('" . $empresa . "'), 
-                        cnpj_empresa = '$cnpj', 
+                        nr_cnpj = '$cnpj', 
                         nr_ie = '$ie',
                         ds_logradouro = UPPER('" . $logradouro . "'), 
                         ds_bairro = UPPER('" . $bairro . "'), 
@@ -128,7 +128,7 @@ if ($Tipo == "A") {
                         nr_cep = '$cep', 
                         nr_seq_cidade = $municipio, 
                         nr_seq_estado = $estado, 
-                        cd_useralterado = " . $_SESSION["CD_USUARIO"] . ", 
+                        nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado = CURRENT_TIMESTAMP,
                         nr_telefone = '$telefone',
                         ds_email = '$email',
@@ -186,7 +186,7 @@ if ($Tipo == 'enviarArquivo') {
         $values[] = "($codigo, '$arquivo', NOW(), $_SESSION[CD_USUARIO])";
     }
 
-    $sql = "INSERT INTO empresa_anexos (nr_seq_empresa, ds_arquivo, dt_cadastro, cd_usercadastro)
+    $sql = "INSERT INTO anexos_empresa (nr_seq_empresa, ds_arquivo, dt_cadastro, nr_seq_usercadastro)
         VALUES " . join(', ', $values);
 
     $rss = mysqli_query($conexao, $sql);
@@ -206,7 +206,7 @@ elseif ($Tipo == 'removerArquivo') {
     }
 
     if (unlink("./arquivos/$arquivo")) {
-        $sql = "DELETE FROM empresa_anexos WHERE nr_sequencial = $nr_sequencial";
+        $sql = "DELETE FROM anexos_empresa WHERE nr_sequencial = $nr_sequencial";
         mysqli_query($conexao, $sql);
         response_json('200', '');
     } else {

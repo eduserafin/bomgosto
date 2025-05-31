@@ -9,13 +9,13 @@ include "../../conexao.php";
 //=======================		CARREGA DADOS NO FORMULARIO
 if ($Tipo == "D") {
     $SQL = "SELECT * 
-            FROM segmentos 
+            FROM administradoras 
             WHERE nr_sequencial=" . $Codigo;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
     if ($RS["nr_sequencial"] == $Codigo) {
-        echo "<script language='javascript'>window.parent.document.getElementById('cd_segmento').value='" . $RS["nr_sequencial"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_segmento"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('cd_administradora').value='" . $RS["nr_sequencial"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_administradora"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtstatus').value='" . $RS["st_status"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
     }
@@ -25,8 +25,8 @@ if ($Tipo == "D") {
 if ($Tipo == "I") {
 
     $SQL = "SELECT nr_sequencial 
-          FROM segmentos
-          WHERE UPPER(ds_segmento)=UPPER('" . $segmento . "') 
+          FROM administradoras
+          WHERE UPPER(ds_administradora)=UPPER('" . $administradora . "') 
           LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -36,14 +36,14 @@ if ($Tipo == "I") {
             window.parent.Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Segmento já cadastrado! Verifique.'
+                text: 'Administradora já cadastrada! Verifique.'
             });
         </script>";
 
     } else {
 
-      $insert = "INSERT INTO segmentos (ds_segmento, st_status, nr_seq_usercadastro) 
-                  VALUES (UPPER('" . $segmento . "'), '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
+      $insert = "INSERT INTO administradoras (ds_administradora, st_status, nr_seq_usercadastro) 
+                  VALUES (UPPER('" . $administradora . "'), '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
       $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
       // Valida se deu certo
@@ -53,7 +53,7 @@ if ($Tipo == "I") {
                 window.parent.Swal.fire({
                     icon: 'success',
                     title: 'Show...',
-                    text: 'Segmento cadastrado com sucesso!'
+                    text: 'Administradora cadastrada com sucesso!'
                 });
                 window.parent.executafuncao('new');
                 window.parent.consultar(0);
@@ -77,8 +77,8 @@ if ($Tipo == "I") {
 if ($Tipo == "A") {
 
     $SQL = "SELECT nr_sequencial 
-            FROM segmentos
-            WHERE UPPER(ds_segmento)=UPPER('" . $segmento . "')
+            FROM administradoras
+            WHERE UPPER(ds_administradora)=UPPER('" . $administradora . "')
             AND nr_sequencial <> " . $codigo . "  
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
@@ -89,14 +89,14 @@ if ($Tipo == "A") {
             window.parent.Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Segmento já cadastrado! Verifique.'
+                text: 'Administradora já cadastrada! Verifique.'
             });
         </script>";
 
     } else {
 
-      $update = "UPDATE segmentos 
-                SET ds_segmento = UPPER('" . $segmento . "'), 
+      $update = "UPDATE administradoras 
+                SET ds_administradora = UPPER('" . $administradora . "'), 
                     st_status ='" . $status . "',
                     nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
                     dt_alterado = CURRENT_TIMESTAMP
@@ -111,7 +111,7 @@ if ($Tipo == "A") {
                 window.parent.Swal.fire({
                     icon: 'success',
                     title: 'Show...',
-                    text: 'Segmento alterado com sucesso!'
+                    text: 'Administradora alterada com sucesso!'
                 });
                 window.parent.executafuncao('new');
                 window.parent.consultar(0);
@@ -151,14 +151,14 @@ if ($Tipo == "E") {
             window.parent.Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Não é possível excluir o registro, segmento está vinculado a outros cadastros!'
+                text: 'Não é possível excluir o registro, administradora está vinculado a outros cadastros!'
             });
         </script>";
         exit;
 
   } else {
 
-    $delete = "DELETE FROM segmentos WHERE nr_sequencial=" . $codigo;
+    $delete = "DELETE FROM administradoras WHERE nr_sequencial=" . $codigo;
     $result = mysqli_query($conexao, $delete);
 
     if ($result) {
@@ -167,7 +167,7 @@ if ($Tipo == "E") {
               window.parent.Swal.fire({
                 icon: 'success',
                 title: 'Show...',
-                text: 'Segmento excluído com sucesso!'
+                text: 'Administradora excluído com sucesso!'
               });
               window.parent.executafuncao('new');
               window.parent.consultar(0);
@@ -179,7 +179,7 @@ if ($Tipo == "E") {
               window.parent.Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Problemas ao excluir o segmento. Verifique!'
+                text: 'Problemas ao excluir a administradora. Verifique!'
               });
             </script>";
 

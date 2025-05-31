@@ -15,6 +15,7 @@
                     $sql = "SELECT nr_sequencial, ds_colaborador
                             FROM colaboradores
                             WHERE st_ativo = 'S'
+                            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
                             ORDER BY ds_colaborador";
                     $res = mysqli_query($conexao, $sql);
                     while($lin=mysqli_fetch_row($res)){
@@ -62,6 +63,7 @@
 
 </body>
 <script type="text/javascript">
+
 function executafuncao(id){
   if (id=='new'){
     document.getElementById('cd_user').value = "";
@@ -76,7 +78,7 @@ function executafuncao(id){
   else if (id=="save"){  
     var codigo = document.getElementById('cd_user').value;
     var login = document.getElementById('txtlogin').value;
-    var nome = document.getElementById('txtnome').value;
+    var colaborador = document.getElementById('txtnome').value;
     var senha = document.getElementById('txtsenha').value;
     var email = document.getElementById('txtemail').value;
     var admin = document.getElementById('txtadmin').value;
@@ -90,21 +92,24 @@ function executafuncao(id){
     }
 
     if (login == '') {
-        swal.fire({
+        Swal.fire({
             icon: 'warning',
-            title: 'Informe o login!'
+            title: 'Oops...',
+            text: 'Informe o Login!'
         });
         document.getElementById('txtlogin').focus();
     } else if (senha == '') {
-        swal.fire({
+        Swal.fire({
             icon: 'warning',
-            title: 'Informe a senha!'
+            title: 'Oops...',
+            text: 'Informe a Senha!'
         });
         document.getElementById('txtsenha').focus();
-    } else if (nome == 0) {
-        swal.fire({
+    } else if (colaborador == 0) {
+        Swal.fire({
             icon: 'warning',
-            title: 'Informe o colaborador!'
+            title: 'Oops...',
+            text: 'Selecione um colaborador'
         });
         document.getElementById('txtnome').focus();
     } else {
@@ -113,9 +118,9 @@ function executafuncao(id){
         } else {
             Tipo = "A";
         }
-
-        window.open('admin/usuario/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&senha=' + senha + '&login=' + login + '&email=' + email + '&admin=' + admin + '&status=' + status, "acao");
+        window.open('admin/usuario/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&colaborador=' + colaborador + '&senha=' + senha + '&login=' + login + '&email=' + email + '&admin=' + admin + '&status=' + status, "acao");
     }
   }
 }
+
 </script>

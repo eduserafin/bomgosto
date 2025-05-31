@@ -42,7 +42,7 @@ if ($Tipo == "I") {
 
     } else {
 
-      $insert = "INSERT INTO funcoes (ds_funcao, st_status, cd_usercadastro) 
+      $insert = "INSERT INTO funcoes (ds_funcao, st_status, nr_seq_usercadastro) 
                   VALUES (UPPER('" . $funcao . "'), '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
       $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
@@ -98,7 +98,7 @@ if ($Tipo == "A") {
       $update = "UPDATE funcoes 
                 SET ds_funcao = UPPER('" . $funcao . "'), 
                     st_status ='" . $status . "',
-                    cd_useralterado = " . $_SESSION["CD_USUARIO"] . ",
+                    nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
                     dt_alterado = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;
       //echo"<pre> $update</pre>";

@@ -77,8 +77,8 @@ foreach($_GET as $key => $value){
                     <select name="txtestado" id="txtestado" class="form-control" style="background:#E0FFFF;">
                         <option value="0">Selecione</option>
                         <?php
-                            $sel = "SELECT cd_estado, sg_estado
-                                    FROM estado
+                            $sel = "SELECT nr_sequencial, sg_estado
+                                    FROM estados
                                     ORDER BY sg_estado";
                             $res = mysqli_query($conexao, $sel);
                             while($lin=mysqli_fetch_row($res)){
@@ -94,9 +94,9 @@ foreach($_GET as $key => $value){
                     <select name="txtmunicipio" id="txtmunicipio" class="form-control" style="background:#E0FFFF;">
                         <option value="0">Selecione</option>
                         <?php
-                            $sel = "SELECT cd_municipioibge, ds_municipioibge
-                                    FROM municipioibge
-                                    ORDER BY ds_municipioibge";
+                            $sel = "SELECT nr_sequencial, ds_municipio
+                                    FROM cidades
+                                    ORDER BY ds_municipio";
                             $res = mysqli_query($conexao, $sel);
                             while($lin=mysqli_fetch_row($res)){
                                 $nr_cdgo = $lin[0];

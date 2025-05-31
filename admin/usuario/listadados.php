@@ -26,7 +26,7 @@ $inicio = $pg * $porpagina;
 
 $descricao = $_GET['descricao'];
 if ($descricao !== "") {
-    $pesquisanome = " AND u.nome like UPPER('%$descricao%')";
+    $pesquisanome = " AND c.ds_colaborador like UPPER('%$descricao%')";
 }
 
 ?>
@@ -44,28 +44,29 @@ if ($descricao !== "") {
             <th class="bg-info"><strong>AÇÕES</strong></th>
         </tr>
         <?php
-        
-                $SQL = "SELECT u.idusuario, UPPER(u.nome), u.login, u.email
-                        FROM tb_usuarios u
-                        WHERE 1 = 1 $pesquisanome 
-                        ORDER BY u.nome asc limit $porpagina offset $inicio";
-                //echo $SQL;
-                $RSS = mysqli_query($conexao, $SQL);
-                while ($linha = mysqli_fetch_row($RSS)) {
-                    $nr_sequencial = $linha[0];
-                    $user = $linha[1];
-                    $login = $linha[2];
-                    $email = $linha[3];
-                    ?>
-                    <tr>
-                        <td><?php echo $user; ?></td>
-                        <td><?php echo $login; ?></td>
-                        <td><?php echo $email; ?></td>
-                        <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
-                    </tr>
-                    <?php
-                }
+            $SQL = "SELECT u.nr_sequencial, UPPER(c.ds_colaborador), u.ds_login, u.ds_email
+                    FROM usuarios u
+                    INNER JOIN colaboradores c ON c.nr_sequencial = u.nr_seq_colaborador
+                    WHERE u.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
+                    $pesquisanome 
+                    ORDER BY c.ds_colaborador asc limit $porpagina offset $inicio";
+            //echo $SQL;
+            $RSS = mysqli_query($conexao, $SQL);
+            while ($linha = mysqli_fetch_row($RSS)) {
+                $nr_sequencial = $linha[0];
+                $user = $linha[1];
+                $login = $linha[2];
+                $email = $linha[3];
                 ?>
+                <tr>
+                    <td><?php echo $user; ?></td>
+                    <td><?php echo $login; ?></td>
+                    <td><?php echo $email; ?></td>
+                    <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
+                </tr>
+                <?php
+            }
+        ?>
     </table>
     <br>
     <?php include $ant."inc/paginacao.php";?>

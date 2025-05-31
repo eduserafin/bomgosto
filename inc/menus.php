@@ -8,7 +8,7 @@
     <option selected value=0>Selecione um menu</option>
 	<?php
     $SQL = "SELECT distinct(nr_sequencial), ds_menu
-        FROM g_menus 
+        FROM menus 
         ORDER BY ds_menu";
                  
     $RSS = mysqli_query($conexao, $SQL);

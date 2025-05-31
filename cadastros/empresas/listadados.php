@@ -41,7 +41,7 @@ if ($empresa !== "") {
     </thead>
     <tbody>
         <?php
-            $SQL = "SELECT nr_sequencial, ds_nome, ds_empresa, cnpj_empresa,
+            $SQL = "SELECT nr_sequencial, ds_nome, ds_empresa, nr_cnpj,
                     CASE WHEN st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
                     FROM empresas
                     WHERE 1=1 
@@ -53,11 +53,11 @@ if ($empresa !== "") {
                 $nr_sequencial = $linha[0];
                 $ds_nome = $linha[1];
                 $ds_empresa = $linha[2];
-                $cnpj_empresa = $linha[3];
+                $nr_cnpj = $linha[3];
                 $st_status = $linha[4];
 
                 $SQL1 = "SELECT nr_sequencial, ds_arquivo
-                        FROM empresa_anexos
+                        FROM anexos_empresa
                         WHERE nr_seq_empresa = $nr_sequencial";
                 $RSS1 = mysqli_query($conexao, $SQL1);
                 $anexos = array(); 
@@ -84,7 +84,7 @@ if ($empresa !== "") {
                     </td>
                     <td><?php echo $ds_empresa; ?></td>
                     <td><?php echo $ds_nome; ?></td>
-                    <td><?php echo $cnpj_empresa; ?></td>
+                    <td><?php echo $nr_cnpj; ?></td>
                     <td><?php echo $st_status; ?></td>
                     <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
                     <!--<td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>-->

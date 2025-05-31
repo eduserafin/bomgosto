@@ -6,7 +6,7 @@ foreach($_GET as $key => $value){
 require_once '../../conexao.php';
 
 $SQL = "SELECT nr_sequencial, ds_arquivo
-        FROM empresa_anexos
+        FROM anexos_empresa
         WHERE nr_seq_empresa = $codigo";
 $RSS = mysqli_query($conexao, $SQL);
 while($linha = mysqli_fetch_assoc($RSS)){ 

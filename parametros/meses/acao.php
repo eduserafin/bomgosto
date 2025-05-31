@@ -56,7 +56,7 @@
       
       } else {
   
-        $insert = "INSERT INTO consorcio_quantidade_mes (nr_quantidade, st_status, cd_usercadastro) 
+        $insert = "INSERT INTO consorcio_quantidade_mes (nr_quantidade, st_status, nr_seq_usercadastro) 
                     VALUES (" . $prazo . ", '" . $status . "', " . $_SESSION["CD_USUARIO"] . ") ";
                     //echo $insert;
         $rss_insert = mysqli_query($conexao, $insert);
@@ -106,7 +106,7 @@
       $update = "UPDATE consorcio_quantidade_mes
                     SET nr_quantidade=" . $prazo . ",
                         st_status='" . $status . "', 
-                        cd_useralterado=" . $_SESSION["CD_USUARIO"] . ", 
+                        nr_seq_useralterado=" . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado=CURRENT_TIMESTAMP   
                   WHERE nr_sequencial=" . $codigo;
         mysqli_query($conexao, $update);

@@ -61,7 +61,7 @@
         if($percentual == "") {$percentual = "NULL";}
         if($quantidade == "") {$quantidade = "NULL";}
   
-        $insert = "INSERT INTO consorcio_parcelas_reduzidas (ds_plano, pc_percentual, nr_quantidade, st_status, cd_usercadastro) 
+        $insert = "INSERT INTO consorcio_parcelas_reduzidas (ds_plano, pc_percentual, nr_quantidade, st_status, nr_seq_usercadastro) 
                     VALUES (UPPER('" . $nome . "'), " . $percentual . ", " . $quantidade . ", '" . $status . "', " . $_SESSION["CD_USUARIO"] . ") ";
                     //echo $insert;
         $rss_insert = mysqli_query($conexao, $insert);
@@ -116,7 +116,7 @@
                         pc_percentual=" . $percentual . ",
                         nr_quantidade=" . $quantidade . ",
                         st_status='" . $status . "', 
-                        cd_useralterado=" . $_SESSION["CD_USUARIO"] . ", 
+                        nr_seq_useralterado=" . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado=CURRENT_TIMESTAMP   
                   WHERE nr_sequencial=" . $codigo;
         mysqli_query($conexao, $update);

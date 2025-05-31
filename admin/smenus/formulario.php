@@ -14,42 +14,42 @@ foreach($_GET as $key => $value){
     </div>
 </div>
 
-
     <div class="row">
-      <div class="col-md-12">
-                        <label for="menu">MENU:</label>
-                        <?php include "inc/menus.php"; ?>
-      </div>
+        <div class="col-md-12">
+            <label for="menu">MENU:</label>
+            <?php include "inc/menus.php"; ?>
+        </div>
     </div>
     <div class="row">
-      <div class="col-md-6">
-                        <label for="txtnome">DESCRI&Ccedil;&Atilde;O:</label>
-                        <input type="text" class="form-control" name="txtnome" id="txtnome" size="45" maxlength="60" style="background:#E0FFFF;">
-      </div>
-      <div class="col-md-6">
-                        <label for="txtlink">LINK:</label>
-                        <input type="text" class="form-control" name="txtlink" id="txtlink" size="50" maxlength="50" style="background:#E0FFFF;">
-      </div>  
+        <div class="col-md-6">
+            <label for="txtnome">DESCRI&Ccedil;&Atilde;O:</label>
+            <input type="text" class="form-control" name="txtnome" id="txtnome" size="45" maxlength="60" style="background:#E0FFFF;">
+        </div>
+        <div class="col-md-6">
+            <label for="txtlink">LINK:</label>
+            <input type="text" class="form-control" name="txtlink" id="txtlink" size="50" maxlength="50" style="background:#E0FFFF;">
+        </div>  
     </div>
     <div class="row">
-      <div class="col-md-6">
-                        <label for="txticone">&Iacute;CONE:</label>
-                        <input type="text" class="form-control" name="txticone" id="txticone" size="15" maxlength="25" style="background:#E0FFFF;">
-      </div>
-      <div class="col-md-6">
-                        <label for="modulo">M&Oacute;DULO:</label>
-                        <select class="form-control" name="modulo" id="modulo">
-                            <option selected value="0">Selecione</option>
-                            <option value="1">GERAL</option>
-                            <option value="2">MOVIMENTOS</option>
-                            <option value="3">RELATÓRIOS</option>
-                        </select>
-      </div>
+        <div class="col-md-6">
+            <label for="txticone">&Iacute;CONE:</label>
+            <input type="text" class="form-control" name="txticone" id="txticone" size="15" maxlength="25" style="background:#E0FFFF;">
+        </div>
+        <div class="col-md-6">
+            <label for="modulo">M&Oacute;DULO:</label>
+            <select class="form-control" name="modulo" id="modulo">
+                <option selected value="0">Selecione</option>
+                <option value="1">GERAL</option>
+                <option value="2">MOVIMENTOS</option>
+                <option value="3">RELATÓRIOS</option>
+            </select>
+        </div>
     </div>
 
 </body>
 
 <script language="JavaScript">
+
     function executafuncao(id) {
         if (id == "new") {
             document.getElementById("cd_smenu").value = "";
@@ -59,8 +59,8 @@ foreach($_GET as $key => $value){
             document.getElementById("modulo").value = 0;
             document.getElementById("menu").value = 0;
             document.getElementById('menu').focus();
-        } else if (id == 'save') {
-            
+        } 
+        else if (id == 'save') {
             var codigo = document.getElementById("cd_smenu").value;
             var nome = document.getElementById("txtnome").value;
             nome = nome.replace("'", "");
@@ -72,16 +72,32 @@ foreach($_GET as $key => $value){
             var menu = document.getElementById("menu").value;
 
             if (menu == 0) {
-                alert("Selecione um menu!");
-                document.getElementById("menu").focus();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Selecione um menu!'
+                });
+                document.getElementById('menu').focus();
             } else if (nome == "") {
-                alert("Informe o nome do sub-menu!");
-                document.getElementById("txtnome").focus();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Informe o nome do sub-menu!'
+                });
+                document.getElementById('menu').focus();
             } else if (link == "") {
-                alert("Informe o link de acesso!");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Informe o link de acesso!'
+                });
                 document.getElementById("txtlink").focus();
             } else if (icone == "") {
-                alert("Informe o icone do sub-menu!");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Informe o icone do sub-menu!'
+                });
                 document.getElementById("txticone").focus();
             } else {
                 if (codigo == "") {
@@ -94,18 +110,41 @@ foreach($_GET as $key => $value){
             }
         }
         else if (id=="delete"){
-          if (document.getElementById('cd_smenu').value == "")
-          {
-              alert('Para efetuar a exclus?o ? necess?rio selecionar um registro primeiro');
-              return;
-          }
-          if (!confirm("Deseja excluir o registro selecionado?")) {
-              return false;
-          } else
-          {
-              var codigo = document.getElementById('cd_smenu').value;
-              window.open('admin/smenus/acao.php?Tipo=E&codigo=' + codigo, 'acao');
-          }
+
+            var codigo = document.getElementById('cd_smenu').value;
+
+            if(codigo==''){  
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Selecione um registro para realizar a exclusão!'
+                }); 
+
+            } else {
+
+                Swal.fire({
+                    title: 'Deseja excluir o registro selecionado?',
+                    text: "Não tem como reverter esta ação!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sim, excluir!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        
+                        window.open("admin/smenus/acao.php?Tipo=E&codigo="+codigo, "acao");
+
+                    } else {
+
+                        return false;
+
+                    }
+                });
+
+            }
         }
     }
+
 </script>

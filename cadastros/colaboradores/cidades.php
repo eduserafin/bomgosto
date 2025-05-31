@@ -18,10 +18,10 @@ $seluf = $_GET['seluf'];
           <select class="form-control" name="selcidade" id="selcidade" required>
             <option selected value=0>Selecione...</option>
             <?php
-              $SQL = "SELECT cd_municipioibge, ds_municipioibge
-                      FROM municipioibge
-                      WHERE cd_estado = $seluf
-                      ORDER BY ds_municipioibge";
+              $SQL = "SELECT nr_sequencial, ds_municipio
+                      FROM cidades
+                      WHERE nr_seq_estado = $seluf
+                      ORDER BY ds_municipio";
               $RES = mysqli_query($conexao, $SQL);
               while($lin=mysqli_fetch_row($RES)){
                 $nr_cdgo = $lin[0];

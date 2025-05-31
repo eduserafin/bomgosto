@@ -34,6 +34,159 @@
 
   } 
 
+  //=======================		INCLUSAO DOS DADOS
+if ($Tipo == "I") {
+
+    $SQL = "SELECT nr_sequencial 
+          FROM lead_site
+          WHERE UPPER(ds_nome)=UPPER('" . $nome . "') 
+          AND vl_valor = $valor
+          AND nr_seq_produto = $segmento
+          LIMIT 1"; //echo  $SQL;
+    $RSS = mysqli_query($conexao, $SQL);
+    $RS = mysqli_fetch_assoc($RSS);
+    if ($RS["nr_sequencial"] !='') {
+
+      echo "<script language='javascript'>
+            window.parent.Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Lead já cadastrada! Verifique.'
+            });
+        </script>";
+
+    } else {
+
+      $insert = "INSERT INTO lead_site (ds_nome, nr_telefone, nr_seq_cidade, vl_valor, nr_seq_produto, ds_email, nr_seq_usercadastro) 
+                  VALUES (UPPER('" . $nome . "'), '" . $contato . "', " . $cidade . ", " . $valor . ", " . $segmento . ", '" . $email . "', " . $_SESSION["CD_USUARIO"] . ")";
+      $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
+
+      // Valida se deu certo
+      if ($rss_insert) {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'success',
+                    title: 'Show...',
+                    text: 'Lead cadastrada com sucesso!'
+                });
+                window.parent.executafuncao('new');
+                window.parent.consultar(0);
+            </script>";
+
+      } else {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Problemas ao gravar!'
+                });
+            </script>";
+      }
+
+    }
+}
+
+//=======================		ALTERACAO DOS DADOS
+if ($Tipo == "A") {
+
+    $SQL = "SELECT nr_sequencial 
+            FROM lead_site
+            WHERE UPPER(ds_nome)=UPPER('" . $nome . "') 
+            AND vl_valor = $valor
+            AND nr_seq_produto = $segmento
+            AND nr_sequencial <> " . $codigo . "  
+            LIMIT 1"; //echo  $SQL;
+    $RSS = mysqli_query($conexao, $SQL);
+    $RS = mysqli_fetch_assoc($RSS);
+    if ($RS["nr_sequencial"] !='') {
+
+      echo "<script language='javascript'>
+            window.parent.Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Lead já cadastrada! Verifique.'
+            });
+        </script>";
+
+    } else {
+
+      $update = "UPDATE lead_site 
+                    SET ds_nome = UPPER('" . $nome . "'), 
+                        nr_telefone = '" . $contato . "',
+                        nr_seq_cidade = " . $cidade . ",
+                        vl_valor = " . $valor . ",
+                        nr_seq_produto = " . $segmento . ",
+                        ds_email = '" . $email . "',
+                        nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
+                        dt_alterado = CURRENT_TIMESTAMP
+                WHERE nr_sequencial = " . $codigo;
+      //echo"<pre> $update</pre>";
+      $rss_update = mysqli_query($conexao, $update);
+
+      // Valida se deu certo
+      if ($rss_update) {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'success',
+                    title: 'Show...',
+                    text: 'Lead alterada com sucesso!'
+                });
+                window.parent.executafuncao('new');
+                window.parent.consultar(0);
+            </script>";
+
+      } else {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Problemas ao gravar!'
+                });
+              </script>";
+
+      }
+
+    }
+}
+
+//==================================-EXCLUSÃO DOS DADOS-===============================================
+
+if ($Tipo == "E") {
+
+    $delete = "DELETE FROM lead_site WHERE nr_sequencial=" . $codigo;
+    $result = mysqli_query($conexao, $delete);
+
+    if ($result) {
+    
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'success',
+                title: 'Show...',
+                text: 'Lead excluído com sucesso!'
+              });
+              window.parent.executafuncao('new');
+              window.parent.consultar(0);
+            </script>";
+
+    } else {
+
+      echo "<script language='JavaScript'>
+              window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao excluir a lead. Verifique!'
+              });
+            </script>";
+
+    }
+
+
+}
+
    //=====================================-ALTERA STATUS LEAD-=========================================
 
    if ($Tipo == "STATUS") {
@@ -108,7 +261,7 @@
 if($Tipo == 'enviaComentario'){
 
   $arquivo = '';
-  $insert = "INSERT INTO lead_anexos (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro, cd_usercadastro)
+  $insert = "INSERT INTO lead_anexos (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro, nr_seq_usercadastro)
           VALUES ($codigo, '$comentario', '$arquivo', NOW(), $_SESSION[CD_USUARIO])";
   echo $insert;
   $rss_insert = mysqli_query($conexao, $insert);
@@ -162,7 +315,7 @@ if($Tipo == 'enviarArquivo'){
       $values[] = "($codigo, '', '$arquivo', NOW(), $_SESSION[CD_USUARIO])";
   }
 
-  $sql = "INSERT INTO lead_anexos (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro, cd_usercadastro)
+  $sql = "INSERT INTO lead_anexos (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro, nr_seq_usercadastro)
       VALUES " . join(', ', $values);
   $rss =  mysqli_query($conexao, $sql);
 

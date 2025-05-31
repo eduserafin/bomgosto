@@ -56,7 +56,7 @@
       
       } else {
   
-        $insert = "INSERT INTO consorcio_planos (ds_plano, st_status, cd_usercadastro) 
+        $insert = "INSERT INTO consorcio_planos (ds_plano, st_status, nr_seq_usercadastro) 
                     VALUES (UPPER('" . $nome . "'), '" . $status . "', " . $_SESSION["CD_USUARIO"] . ") ";
                     //echo $insert;
         $rss_insert = mysqli_query($conexao, $insert);
@@ -106,7 +106,7 @@
       $update = "UPDATE consorcio_planos
                     SET ds_plano=UPPER('" . $nome . "'),
                         st_status='" . $status . "', 
-                        cd_useralterado=" . $_SESSION["CD_USUARIO"] . ", 
+                        nr_seq_useralterado=" . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado=CURRENT_TIMESTAMP   
                   WHERE nr_sequencial=" . $codigo;
         mysqli_query($conexao, $update);

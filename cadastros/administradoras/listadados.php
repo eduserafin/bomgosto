@@ -1,4 +1,7 @@
 <?php
+$consulta = '';
+$pesquisanome = '';
+$pg = '';
 foreach($_GET as $key => $value){
 	$$key = $value;
 }
@@ -23,7 +26,7 @@ $inicio = $pg * $porpagina;
 
 $descricao = $_GET['descricao'];
 if ($descricao !== "") {
-    $pesquisanome = " AND c.ds_colaborador like UPPER('%$descricao%')";
+    $pesquisanome = " AND ds_segmento like UPPER('%$descricao%')";
 }
 ?>
 <html>
@@ -33,37 +36,27 @@ if ($descricao !== "") {
     <body>
     <table width="100%" class="table table-bordered table-striped">
         <tr>
-            <th><strong>NOME</strong></th>
-            <th><strong>CPF</strong></th>
-            <th><strong>RG</strong></th>
-            <th><strong>FUNÇÃO</strong></th>
+            <th><strong>SEGMENTO</strong></th>
             <th><strong>STATUS</strong></th>
             <th colspan=2><strong>AÇÕES</strong></th>
         </tr>
         <?php
         
-            $SQL = "SELECT c.nr_sequencial, c.ds_colaborador, c.nr_cpf, c.nr_rg, f.ds_funcao,
-                    CASE WHEN c.st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
-                    FROM colaboradores c
-                    INNER JOIN funcoes f ON c.nr_seq_funcao = f.nr_sequencial
-                    WHERE c.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
-                    $pesquisanome 
-                    ORDER BY c.ds_colaborador ASC limit $porpagina offset $inicio";
+            $SQL = "SELECT nr_sequencial, ds_administradora,
+                    CASE WHEN st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
+                    FROM administradoras
+                    WHERE 1 = 1 $pesquisanome 
+                    ORDER BY ds_administradora ASC 
+                    limit $porpagina offset $inicio";
             //echo $SQL;
             $RSS = mysqli_query($conexao, $SQL);
             while ($linha = mysqli_fetch_row($RSS)) {
                 $nr_sequencial = $linha[0];
-                $ds_nome = $linha[1];
-                $nr_cpf = $linha[2];
-                $nr_rg = $linha[3];
-                $ds_funcao = $linha[4];
-                $st_status = $linha[5];
+                $ds_administradora = $linha[1];
+                $st_status = $linha[2];
                 ?>
                 <tr>
-                    <td><?php echo $ds_nome; ?></td>
-                    <td><?php echo $nr_cpf; ?></td>
-                    <td><?php echo $nr_rg; ?></td>
-                    <td><?php echo $ds_funcao; ?></td>
+                    <td><?php echo $ds_administradora; ?></td>
                     <td><?php echo $st_status; ?></td>
                     <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
                     <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
@@ -83,7 +76,7 @@ if ($descricao !== "") {
 
         if (tipo == 'ED'){
             document.getElementById('tabgeral').click();
-            window.open('cadastros/colaboradores/acao.php?Tipo=D&Codigo=' + id, "acao");
+            window.open('cadastros/administradoras/acao.php?Tipo=D&Codigo=' + id, "acao");
         } else if (tipo == 'EX'){
             Swal.fire({
                 title: 'Deseja excluir o registro selecionado?',
@@ -96,7 +89,7 @@ if ($descricao !== "") {
             }).then((result) => {
                 if (result.isConfirmed) {
                     
-                    window.open("cadastros/colaboradores/acao.php?Tipo=E&codigo="+id, "acao");
+                    window.open("cadastros/administradoras/acao.php?Tipo=E&codigo="+id, "acao");
 
                 } else {
 

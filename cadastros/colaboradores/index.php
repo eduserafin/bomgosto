@@ -14,12 +14,23 @@ foreach($_GET as $key => $value){
         });
     }
 
+    function buscaParametros(codigo) {
+
+        var url = 'cadastros/colaboradores/parametros.php?consulta=sim&codigo=' + codigo;
+        $.get(url, function(dataReturn) {
+            $('#parametros').html(dataReturn);
+            $('#tabparametros').tab('show');
+        });
+
+    }
+
 </script>
 
 
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">CADASTRO</a></li>
+    <li><a id="tabparametros" href="#parametros" data-toggle="tab">PARAMETROS</a></li>
     <li><a id="tablista" href="#lista" data-toggle="tab">LISTA</a></li>
 </ul> 
 
@@ -27,6 +38,11 @@ foreach($_GET as $key => $value){
     <div class="tab-pane active" id="geral">
         <div class="row-100">          
             <?php include "formulario.php"; ?>          
+        </div>
+    </div>
+    <div class="tab-pane" id="parametros">
+        <div class="row-100">
+            <?php include "parametros.php"; ?>        
         </div>
     </div>
     <div class = "tab-pane" id = "lista">
