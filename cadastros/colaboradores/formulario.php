@@ -31,7 +31,7 @@
                 <?php
                     $SQL = "SELECT nr_sequencial, ds_funcao
                             FROM funcoes
-                            WHERE st_ativa = 'A'
+                            WHERE st_status = 'A'
                             AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
                             ORDER BY ds_funcao";
                     $RES = mysqli_query($conexao, $SQL);
@@ -129,6 +129,10 @@
 </body>
 
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#selfuncao').select2();
+    });
 
     function limparTexto(texto) {
         return texto.replace(/[^a-zA-Z0-9\s]/g, '');
@@ -248,7 +252,7 @@
                     Tipo = "A";
                 }
 
-                window.open('cadastros/colaboradores/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&cpf=' + cpf + '&rg=' + rg + '&orgaorg=' + orgaorg + '&ufrg=' + ufrg + '&datarg=' + datarg + '&escolaridade=' + escolaridade + '&nacionalidade=' + nacionalidade + '&local=' + local + '&civil=' + civil + '&sexo=' + sexo + '&telefone=' + telefone + '&dataadm=' + dataadm + '&datadem=' + datadem + '&datanasc=' + datanasc + '&email=' + email + '&endereco=' + endereco + '&nrendereco=' + nrendereco + '&bairro=' + bairro + '&complemento=' + complemento + '&estado=' + estado + '&cidade=' + cidade + '&cep=' + cep + '&nomemae=' + nomemae + '&nomepai=' + nomepai + '&comissao=' + comissao + '&status=' + status + '&funcao=' + funcao, "acao");
+                window.open('cadastros/colaboradores/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&cpf=' + cpf + '&rg=' + rg + '&funcao=' + funcao + '&dataadm=' + dataadm + '&datadem=' + datadem + '&status=' + status + '&telefone=' + telefone + '&email=' + email + '&endereco=' + endereco + '&nrendereco=' + nrendereco + '&bairro=' + bairro + '&complemento=' + complemento + '&estado=' + estado + '&cidade=' + cidade + '&cep=' + cep, "acao");
 
             }
         } else if (id == "delete") {

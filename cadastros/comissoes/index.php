@@ -5,20 +5,20 @@ foreach($_GET as $key => $value){
 ?>
 <script type="text/javascript">
 
-    function Buscar(descricao, pg) {
+    function Buscar(colaborador, administradora, pg) {
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
-        var url = 'cadastros/colaboradores/listadados.php?consulta=sim&pg=' + pg + '&descricao=' + descricao;
+        var url = 'cadastros/comissoes/listadados.php?consulta=sim&pg=' + pg + '&colaborador=' + colaborador + '&administradora=' + administradora;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });
     }
 
-    function BuscarCidades(estado, cidade) {
+    function BuscarComissao(parcelas, codigo) {
 
-        var url = 'cadastros/colaboradores/cidades.php?consulta=sim&estado=' + estado + '&cidade=' + cidade;
+        var url = 'cadastros/comissoes/comissao.php?consulta=sim&parcelas=' + parcelas + '&codigo=' + codigo;
         $.get(url, function(dataReturn) {
-            $('#rscidades').html(dataReturn);
+            $('#rscomissoes').html(dataReturn);
         });
 
     }

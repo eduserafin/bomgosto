@@ -9,7 +9,7 @@ if ($consulta == 'sim') {
   include "../../conexao.php"; 
 }
 
-$seluf = $_GET['seluf'];
+$estado = $_GET['estado'];
 
 ?>
 <div class="row">
@@ -20,7 +20,7 @@ $seluf = $_GET['seluf'];
             <?php
               $SQL = "SELECT nr_sequencial, ds_municipio
                       FROM cidades
-                      WHERE nr_seq_estado = $seluf
+                      WHERE nr_seq_estado = $estado
                       ORDER BY ds_municipio";
               $RES = mysqli_query($conexao, $SQL);
               while($lin=mysqli_fetch_row($RES)){
@@ -32,3 +32,11 @@ $seluf = $_GET['seluf'];
           </select>
     </div>
 </div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+        $('#selcidade').select2();
+    });
+  
+</script>

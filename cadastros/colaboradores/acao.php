@@ -32,7 +32,6 @@ if ($Tipo == "D") {
         echo "<script language='javascript'>window.parent.document.getElementById('seluf').value='" . $RS["nr_seq_estado"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('selcidade').value='" . $RS["nr_seq_cidade"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtcep').value='" . $RS["nr_cep"] . "';</script>";
-        echo "<script language='javascript'>window.parent.buscaParametros('".$RS["nr_sequencial"]."');</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
     }
 }
