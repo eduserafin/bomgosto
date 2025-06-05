@@ -22,8 +22,10 @@ $porpagina = 15;
 $inicio = $pg * $porpagina;
 
 $descricao = $_GET['descricao'];
+$descricao = mb_strtoupper($descricao, 'UTF-8');
+
 if ($descricao !== "") {
-    $pesquisanome = " AND c.ds_colaborador like UPPER('%$descricao%')";
+    $pesquisanome = " AND c.ds_colaborador like '%$descricao%'";
 }
 ?>
 <html>

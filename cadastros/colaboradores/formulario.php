@@ -135,7 +135,7 @@
     });
 
     function limparTexto(texto) {
-        return texto.replace(/[^a-zA-Z0-9\s]/g, '');
+        return texto.replace(/[^\p{L}\p{N}\s]/gu, '');
     }
 
     function executafuncao(id){

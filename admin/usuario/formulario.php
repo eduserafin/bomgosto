@@ -8,13 +8,13 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <label for="txtnome">Colaborador:</label>                     
+        <label for="txtnome">COLABORADOR:</label>                     
             <select id="txtnome" class="form-control">
                 <option value='0'>Selecione um colaborador</option>
                 <?php
                     $sql = "SELECT nr_sequencial, ds_colaborador
                             FROM colaboradores
-                            WHERE st_ativo = 'S'
+                            WHERE st_status = 'A'
                             AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
                             ORDER BY ds_colaborador";
                     $res = mysqli_query($conexao, $sql);
@@ -29,15 +29,15 @@
     </div>
 
     <div class="col-md-3">
-        <label for="txtadmin">Administrador:</label>
+        <label for="txtadmin">PERFIL:</label>
         <select class="form-control" name="txtadmin" id="txtadmin">
-            <option value="S">SIM</option>
-            <option value="N">NÃO</option>
+            <option value="G">Gerente</option>
+            <option value="C">Colaborador</option>
         </select>
     </div>
 
     <div class="col-md-3">
-        <label for="txtstatus">Status:</label>
+        <label for="txtstatus">STATUS:</label>
         <select class="form-control" name="txtstatus" id="txtstatus">
             <option value="A">ATIVO</option>
             <option value="I">INATIVO</option>
@@ -46,17 +46,17 @@
 </div>
 <div class="row">
     <div class="col-md-4">
-        <label for="txtlogin">Login:</label>                    
+        <label for="txtlogin">LOGIN:</label>                    
         <input type="text" name="txtlogin" id="txtlogin" size="15" maxlength="14" class="form-control"></td>
     </div>
 
     <div class="col-md-4">        
-        <label for="password">Senha:</label>
+        <label for="password">SENHA:</label>
         <input type="password" name="txtsenha" id="txtsenha" size="20" maxlength="32" class="form-control"></td>
     </div>
 
     <div class="col-md-4">
-        <label>E-mail:</label>
+        <label>E-MAIL:</label>
         <input type="text" name="txtemail" id="txtemail" size="15" maxlength="60" class="form-control"></td>
     </div>
 </div>

@@ -1,5 +1,5 @@
 <body onLoad="document.getElementById('txtnome').focus();">
-<input type="hidden" name="cd_segmento" id="cd_segmento" value="">
+<input type="hidden" name="cd_situacao" id="cd_situacao" value="">
 <div class="form-group col-md-12">
     <div class="row">
         <?php include "inc/botao_novo.php"; ?>
@@ -9,7 +9,7 @@
 </div>
     <div class="row">
         <div class="col-md-9">
-            <label>SEGMENTO:</label>
+            <label>SITUAÇÃO:</label>
             <input type="text" name="txtnome" id="txtnome" size="10" maxlength="100" style="background:#E6FFE0;" class="form-control">
         </div>
         <div class="col-md-3">
@@ -31,21 +31,21 @@
     function executafuncao(id){
 
         if (id=='new'){
-            document.getElementById('cd_segmento').value = "";
+            document.getElementById('cd_situacao').value = "";
             document.getElementById('txtnome').value = "";
             document.getElementById('txtstatus').value = "A";
             document.getElementById('txtnome').focus();
         }
         else if (id=="save"){  
-            var codigo = document.getElementById('cd_segmento').value;
-            var segmento = limparTexto(document.getElementById('txtnome').value);
+            var codigo = document.getElementById('cd_situacao').value;
+            var situacao = limparTexto(document.getElementById('txtnome').value);
             var status = document.getElementById('txtstatus').value;
             
-            if (segmento == "") {
+            if (situacao == "") {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Oops...',
-                    text: 'Informe o nome do segmento!'
+                    text: 'Informe o nome da situação!'
                 });
                 document.getElementById('txtnome').focus();
             } else {
@@ -55,12 +55,12 @@
                     Tipo = "A";
                 }
 
-                window.open('cadastros/segmentos/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&segmento=' + segmento + '&status=' + status, "acao");
+                window.open('cadastros/situacoes/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&situacao=' + situacao + '&status=' + status, "acao");
 
             }
         } else if (id == "delete") {
 
-            var codigo = document.getElementById('cd_segmento').value;
+            var codigo = document.getElementById('cd_situacao').value;
 
             if(codigo==''){  
 
@@ -83,7 +83,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         
-                        window.open("cadastros/segmentos/acao.php?Tipo=E&codigo="+codigo, "acao");
+                        window.open("cadastros/situacoes/acao.php?Tipo=E&codigo="+codigo, "acao");
 
                     } else {
 

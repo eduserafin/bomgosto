@@ -28,7 +28,7 @@ $descricao = $_GET['descricao'];
 $descricao = mb_strtoupper($descricao, 'UTF-8');
 
 if ($descricao !== "") {
-    $pesquisanome = " AND ds_funcao like '%$descricao%'";
+    $pesquisanome = " AND ds_situacao like '%$descricao%'";
 }
 ?>
 <html>
@@ -38,27 +38,27 @@ if ($descricao !== "") {
     <body>
     <table width="100%" class="table table-bordered table-striped">
         <tr>
-            <th><strong>FUNÇÃO</strong></th>
+            <th><strong>SITUAÇÃO</strong></th>
             <th><strong>STATUS</strong></th>
             <th colspan=2><strong>AÇÕES</strong></th>
         </tr>
         <?php
         
-            $SQL = "SELECT nr_sequencial, ds_funcao,
+            $SQL = "SELECT nr_sequencial, ds_situacao,
                     CASE WHEN st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
-                    FROM funcoes
+                    FROM situacoes
                     WHERE 1 = 1 $pesquisanome 
                     AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
-                    ORDER BY ds_funcao ASC limit $porpagina offset $inicio";
+                    ORDER BY ds_situacao ASC limit $porpagina offset $inicio";
             //echo $SQL;
             $RSS = mysqli_query($conexao, $SQL);
             while ($linha = mysqli_fetch_row($RSS)) {
                 $nr_sequencial = $linha[0];
-                $ds_funcao = $linha[1];
+                $ds_situacao = $linha[1];
                 $st_status = $linha[2];
                 ?>
                 <tr>
-                    <td><?php echo $ds_funcao; ?></td>
+                    <td><?php echo $ds_situacao; ?></td>
                     <td><?php echo $st_status; ?></td>
                     <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
                     <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
@@ -78,7 +78,7 @@ if ($descricao !== "") {
 
         if (tipo == 'ED'){
             document.getElementById('tabgeral').click();
-            window.open('cadastros/funcoes/acao.php?Tipo=D&Codigo=' + id, "acao");
+            window.open('cadastros/situacoes/acao.php?Tipo=D&Codigo=' + id, "acao");
         } else if (tipo == 'EX'){
             Swal.fire({
                 title: 'Deseja excluir o registro selecionado?',
@@ -91,7 +91,7 @@ if ($descricao !== "") {
             }).then((result) => {
                 if (result.isConfirmed) {
                     
-                    window.open("cadastros/funcoes/acao.php?Tipo=E&codigo="+id, "acao");
+                    window.open("cadastros/situacoes/acao.php?Tipo=E&codigo="+id, "acao");
 
                 } else {
 

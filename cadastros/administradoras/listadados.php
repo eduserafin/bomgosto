@@ -25,8 +25,10 @@ $porpagina = 15;
 $inicio = $pg * $porpagina;
 
 $descricao = $_GET['descricao'];
+$descricao = mb_strtoupper($descricao, 'UTF-8');
+
 if ($descricao !== "") {
-    $pesquisanome = " AND ds_segmento like UPPER('%$descricao%')";
+    $pesquisanome = " AND ds_administradora like '%$descricao%'";
 }
 ?>
 <html>
@@ -46,6 +48,7 @@ if ($descricao !== "") {
                     CASE WHEN st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
                     FROM administradoras
                     WHERE 1 = 1 $pesquisanome 
+                    AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
                     ORDER BY ds_administradora ASC 
                     limit $porpagina offset $inicio";
             //echo $SQL;

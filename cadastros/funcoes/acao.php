@@ -24,9 +24,12 @@ if ($Tipo == "D") {
 //=======================		INCLUSAO DOS DADOS
 if ($Tipo == "I") {
 
+    $funcao = mb_strtoupper($funcao, 'UTF-8');
+  
     $SQL = "SELECT nr_sequencial 
           FROM funcoes
-          WHERE UPPER(ds_funcao)=UPPER('" . $funcao . "') 
+          WHERE ds_funcao = '" . $funcao . "' 
+          AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
           LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -42,8 +45,8 @@ if ($Tipo == "I") {
 
     } else {
 
-      $insert = "INSERT INTO funcoes (ds_funcao, st_status, nr_seq_usercadastro) 
-                  VALUES (UPPER('" . $funcao . "'), '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
+      $insert = "INSERT INTO funcoes (ds_funcao, st_status, nr_seq_usercadastro, nr_seq_empresa) 
+                  VALUES ('" . $funcao . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
       $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
       // Valida se deu certo
@@ -76,9 +79,12 @@ if ($Tipo == "I") {
 //=======================		ALTERACAO DOS DADOS
 if ($Tipo == "A") {
 
+    $funcao = mb_strtoupper($funcao, 'UTF-8');
+
     $SQL = "SELECT nr_sequencial 
             FROM funcoes
-            WHERE UPPER(ds_funcao)=UPPER('" . $funcao . "')
+            WHERE ds_funcao = '" . $funcao . "'
+            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
             AND nr_sequencial <> " . $codigo . "  
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
@@ -96,8 +102,9 @@ if ($Tipo == "A") {
     } else {
 
       $update = "UPDATE funcoes 
-                SET ds_funcao = UPPER('" . $funcao . "'), 
+                SET ds_funcao = '" . $funcao . "', 
                     st_status ='" . $status . "',
+                    nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . ",
                     nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
                     dt_alterado = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;

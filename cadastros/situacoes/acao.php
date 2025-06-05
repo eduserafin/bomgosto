@@ -9,13 +9,13 @@ include "../../conexao.php";
 //=======================		CARREGA DADOS NO FORMULARIO
 if ($Tipo == "D") {
     $SQL = "SELECT * 
-            FROM administradoras 
+            FROM situacoes 
             WHERE nr_sequencial=" . $Codigo;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
     if ($RS["nr_sequencial"] == $Codigo) {
-        echo "<script language='javascript'>window.parent.document.getElementById('cd_administradora').value='" . $RS["nr_sequencial"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_administradora"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('cd_situacao').value='" . $RS["nr_sequencial"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_situacao"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtstatus').value='" . $RS["st_status"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
     }
@@ -24,11 +24,11 @@ if ($Tipo == "D") {
 //=======================		INCLUSAO DOS DADOS
 if ($Tipo == "I") {
 
-    $administradora = mb_strtoupper($administradora, 'UTF-8');
+    $situacao = mb_strtoupper($situacao, 'UTF-8');
 
     $SQL = "SELECT nr_sequencial 
-          FROM administradoras
-          WHERE ds_administradora = '" . $administradora . "' 
+          FROM situacoes
+          WHERE ds_situacao = '" . $situacao . "'
           AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
           LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
@@ -39,14 +39,14 @@ if ($Tipo == "I") {
             window.parent.Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Administradora já cadastrada! Verifique.'
+                text: 'Situação já cadastrada! Verifique.'
             });
         </script>";
 
     } else {
 
-      $insert = "INSERT INTO administradoras (ds_administradora, st_status, nr_seq_usercadastro, nr_seq_empresa) 
-                  VALUES ('" . $administradora . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
+      $insert = "INSERT INTO situacoes (ds_situacao, st_status, nr_seq_usercadastro, nr_seq_empresa) 
+                  VALUES ('" . $situacao . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
       $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
       // Valida se deu certo
@@ -56,7 +56,7 @@ if ($Tipo == "I") {
                 window.parent.Swal.fire({
                     icon: 'success',
                     title: 'Show...',
-                    text: 'Administradora cadastrada com sucesso!'
+                    text: 'Situação cadastrada com sucesso!'
                 });
                 window.parent.executafuncao('new');
                 window.parent.consultar(0);
@@ -79,13 +79,13 @@ if ($Tipo == "I") {
 //=======================		ALTERACAO DOS DADOS
 if ($Tipo == "A") {
 
-    $administradora = mb_strtoupper($administradora, 'UTF-8');
+    $situacao = mb_strtoupper($situacao, 'UTF-8');
 
     $SQL = "SELECT nr_sequencial 
-            FROM administradoras
-            WHERE ds_administradora = '" . $administradora . "'
-            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
+            FROM situacoes
+            WHERE ds_situacao = '" . $situacao . "'
             AND nr_sequencial <> " . $codigo . "  
+            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -95,14 +95,14 @@ if ($Tipo == "A") {
             window.parent.Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Administradora já cadastrada! Verifique.'
+                text: 'Situação já cadastrada! Verifique.'
             });
         </script>";
 
     } else {
 
-      $update = "UPDATE administradoras 
-                SET ds_administradora = '" . $administradora . "', 
+      $update = "UPDATE situacoes 
+                SET ds_situacao = '" . $situacao . "', 
                     st_status ='" . $status . "',
                     nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . ",
                     nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
@@ -118,7 +118,7 @@ if ($Tipo == "A") {
                 window.parent.Swal.fire({
                     icon: 'success',
                     title: 'Show...',
-                    text: 'Administradora alterada com sucesso!'
+                    text: 'Situação alterada com sucesso!'
                 });
                 window.parent.executafuncao('new');
                 window.parent.consultar(0);
@@ -146,7 +146,7 @@ if ($Tipo == "E") {
   $v_existe = 0;
   $SQL = "SELECT COUNT(*)  
           FROM lead
-          WHERE nr_seq_administradora = $codigo";
+          WHERE nr_seq_situacao = $codigo";
   $RSS = mysqli_query($conexao, $SQL);
   while ($line = mysqli_fetch_row($RSS)) {
     $v_existe = $line[0];
@@ -158,14 +158,14 @@ if ($Tipo == "E") {
             window.parent.Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Não é possível excluir o registro, administradora está vinculado a outros cadastros!'
+                text: 'Não é possível excluir o registro, Situação está vinculado a outros cadastros!'
             });
         </script>";
         exit;
 
   } else {
 
-    $delete = "DELETE FROM administradoras WHERE nr_sequencial=" . $codigo;
+    $delete = "DELETE FROM situacoes WHERE nr_sequencial=" . $codigo;
     $result = mysqli_query($conexao, $delete);
 
     if ($result) {
@@ -174,7 +174,7 @@ if ($Tipo == "E") {
               window.parent.Swal.fire({
                 icon: 'success',
                 title: 'Show...',
-                text: 'Administradora excluído com sucesso!'
+                text: 'Situação excluída com sucesso!'
               });
               window.parent.executafuncao('new');
               window.parent.consultar(0);
@@ -186,7 +186,7 @@ if ($Tipo == "E") {
               window.parent.Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Problemas ao excluir a administradora. Verifique!'
+                text: 'Problemas ao excluir a Situação. Verifique!'
               });
             </script>";
 

@@ -47,6 +47,9 @@ if ($Tipo == "D") {
 
 if ($Tipo == "I") {
 
+    $nome = mb_strtoupper($nome, 'UTF-8');
+    $empresa = mb_strtoupper($empresa, 'UTF-8');
+   
     $SQL = "SELECT nr_sequencial  
           		FROM empresas  
           		WHERE nr_cnpj='" . $cnpj . "'  
@@ -65,7 +68,7 @@ if ($Tipo == "I") {
     } else {
 
         $insert = "INSERT INTO empresas (ds_nome, ds_empresa, nr_cnpj, nr_ie, ds_logradouro, ds_bairro, nr_endereco, ds_complemento, nr_cep, nr_seq_cidade, nr_seq_estado, nr_seq_usercadastro, ds_email, nr_telefone, st_status) 
-                        VALUES (UPPER('" . $nome . "'), UPPER('" . $empresa . "'), '$cnpj', '$ie', UPPER('" . $logradouro . "'), UPPER('" . $bairro . "'), '$numero', UPPER('" . $complemento . "'), '$cep', $municipio, $estado, " . $_SESSION["CD_USUARIO"] . ", '$email', '$telefone', '$status')";
+                        VALUES ('" . $nome . "', '" . $empresa . "', '$cnpj', '$ie', '" . $logradouro . "', '" . $bairro . "', '$numero', '" . $complemento . "', '$cep', $municipio, $estado, " . $_SESSION["CD_USUARIO"] . ", '$email', '$telefone', '$status')";
         $rss_insert = mysqli_query($conexao, $insert); //echo $insert;
 
         // Valida se deu certo
@@ -98,6 +101,9 @@ if ($Tipo == "I") {
 
 if ($Tipo == "A") {
 
+    $nome = mb_strtoupper($nome, 'UTF-8');
+    $empresa = mb_strtoupper($empresa, 'UTF-8');
+
     $SQL = "SELECT nr_sequencial 
               FROM empresas 
              WHERE nr_cnpj = '" . $cnpj . "'
@@ -117,14 +123,14 @@ if ($Tipo == "A") {
     } else {
 
         $update = "UPDATE empresas   
-                      SET ds_nome = UPPER('" . $nome . "'), 
-                        ds_empresa = UPPER('" . $empresa . "'), 
+                      SET ds_nome = '" . $nome . "', 
+                        ds_empresa = '" . $empresa . "', 
                         nr_cnpj = '$cnpj', 
                         nr_ie = '$ie',
-                        ds_logradouro = UPPER('" . $logradouro . "'), 
-                        ds_bairro = UPPER('" . $bairro . "'), 
+                        ds_logradouro = '" . $logradouro . "', 
+                        ds_bairro = '" . $bairro . "', 
                         nr_endereco = '$numero', 
-                        ds_complemento = UPPER('" . $complemento . "'), 
+                        ds_complemento = '" . $complemento . "', 
                         nr_cep = '$cep', 
                         nr_seq_cidade = $municipio, 
                         nr_seq_estado = $estado, 

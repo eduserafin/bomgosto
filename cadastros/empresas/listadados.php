@@ -22,8 +22,10 @@ else if ($_GET['pg'] !== 0) {
 $porpagina = 15;
 $inicio = $pg * $porpagina;
 
+$empresa = mb_strtoupper($empresa, 'UTF-8');
+
 if ($empresa !== "") {
-    $buscasql = "AND UPPER(ds_nome) like UPPER('%".$empresa."%')";
+    $buscasql = "AND ds_nome like '%".$empresa."%'";
 }
 
 ?>

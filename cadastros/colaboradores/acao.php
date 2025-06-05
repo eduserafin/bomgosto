@@ -39,9 +39,11 @@ if ($Tipo == "D") {
 //=======================		INCLUSAO DOS DADOS
 if ($Tipo == "I") {
 
+    $nome = mb_strtoupper($nome, 'UTF-8');
+
     $SQL = "SELECT nr_sequencial 
             FROM colaboradores
-            WHERE UPPER(ds_colaborador) = UPPER('" . $nome . "') 
+            WHERE nr_cpf = '" . $cpf . "'  
             AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
@@ -59,7 +61,7 @@ if ($Tipo == "I") {
     } else {
 
       $insert = "INSERT INTO colaboradores (ds_colaborador, tp_sexo, nr_cpf, nr_rg, nr_seq_funcao, dt_admissao, dt_demissao, st_status, nr_telefone, ds_email, ds_endereco, nr_endereco, ds_bairro, ds_complemento, nr_seq_estado, nr_seq_cidade, nr_cep, nr_seq_usercadastro, nr_seq_empresa) 
-                  VALUES (UPPER('" . $nome . "'), '" . $sexo . "', '" . $cpf . "', '" . $rg . "', " . $funcao . ", '" . $dataadm . "' ,'" . $datadem . "', '" . $status . "', '" . $telefone . "', '" . $email . "', '" . $endereco . "', '" . $nrendereco . "', '" . $bairro . "', '" . $complemento . "', " . $estado . ", " . $cidade . ", '" . $cep . "' , " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
+                  VALUES ('" . $nome . "', '" . $sexo . "', '" . $cpf . "', '" . $rg . "', " . $funcao . ", '" . $dataadm . "' ,'" . $datadem . "', '" . $status . "', '" . $telefone . "', '" . $email . "', '" . $endereco . "', '" . $nrendereco . "', '" . $bairro . "', '" . $complemento . "', " . $estado . ", " . $cidade . ", '" . $cep . "' , " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
       $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
       // Valida se deu certo
@@ -92,9 +94,11 @@ if ($Tipo == "I") {
 //=======================		ALTERACAO DOS DADOS
 if ($Tipo == "A") {
 
+    $nome = mb_strtoupper($nome, 'UTF-8');
+
     $SQL = "SELECT nr_sequencial 
             FROM colaboradores
-            WHERE UPPER(ds_colaborador) = UPPER('" . $nome . "')
+            WHERE nr_cpf = '" . $cpf . "'
             AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
             AND nr_sequencial <> " . $codigo . "  
             LIMIT 1"; //echo  $SQL;
@@ -113,7 +117,7 @@ if ($Tipo == "A") {
     } else {
 
       $update = "UPDATE colaboradores 
-                SET ds_colaborador = UPPER('" . $nome . "'), 
+                SET ds_colaborador = '" . $nome . "', 
                     tp_sexo = '" . $sexo . "', 
                     nr_cpf = '" . $cpf . "', 
                     nr_rg = '" . $rg . "', 
