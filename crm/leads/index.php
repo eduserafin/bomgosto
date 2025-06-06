@@ -7,12 +7,12 @@
 ?>
 <script type="text/javascript">
 
-    function Buscar(credito, nome, cidade, status, tipo, data1, data2, dataagenda1, dataagenda2, pg) {
+    function Buscar(credito, nome, cidade, status, segmento, data1, data2, dataagenda1, dataagenda2, pg) {
         
         document.getElementById('pgatual').value = '';
         document.getElementById('pgatual').value = parseInt(pg)+1;
         document.getElementById('dvAguarde').style.display = 'block';
-        var url = 'crm/leads/listadados.php?consulta=sim&pg=' + pg + '&credito=' + credito + '&nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&tipo=' + tipo + '&data1=' + data1+ '&data2=' + data2 + '&dataagenda1=' + dataagenda1 + '&dataagenda2=' + dataagenda2;
+        var url = 'crm/leads/listadados.php?consulta=sim&pg=' + pg + '&credito=' + credito + '&nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&data1=' + data1+ '&data2=' + data2 + '&dataagenda1=' + dataagenda1 + '&dataagenda2=' + dataagenda2 + '&segmento=' + segmento;
         $.get(url, function (dataReturn) {
             $('#rslista').html(dataReturn);
         });
@@ -23,8 +23,6 @@
         var url = 'crm/leads/crm.php?consulta=sim&lead=' + id;
         $.get(url, function (dataReturn) {
             $('#comercial').html(dataReturn);
-            // Ativar a aba "comercial" após o carregamento dos dados
-            $('#tabformulario').tab('show');
         });
     }
 
@@ -34,7 +32,6 @@
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">CADASTRO</a></li>
     <li><a id="tabformulario" href="#comercial" data-toggle="tab">CRM</a></li>
-    <li><a id="tabsimulador" href="#simulador" data-toggle="tab">SIMULADOR</a></li>
     <li><a id="tablista" href="#lista" data-toggle="tab">LISTA</a></li>
 </ul> 
 
@@ -52,11 +49,6 @@
     <div class="tab-pane" id="comercial">
         <div class="row-100">
             <?php include "crm.php"; ?>        
-        </div>
-    </div>
-    <div class="tab-pane" id="simulador">
-        <div class="row-100">
-            <?php include "simulador.php"; ?>        
         </div>
     </div>
 </div>

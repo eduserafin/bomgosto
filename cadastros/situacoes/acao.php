@@ -29,7 +29,6 @@ if ($Tipo == "I") {
     $SQL = "SELECT nr_sequencial 
           FROM situacoes
           WHERE ds_situacao = '" . $situacao . "'
-          AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
           LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -45,8 +44,8 @@ if ($Tipo == "I") {
 
     } else {
 
-      $insert = "INSERT INTO situacoes (ds_situacao, st_status, nr_seq_usercadastro, nr_seq_empresa) 
-                  VALUES ('" . $situacao . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
+      $insert = "INSERT INTO situacoes (ds_situacao, st_status, nr_seq_usercadastro) 
+                  VALUES ('" . $situacao . "', '" . $status . "', " . $_SESSION["CD_USUARIO"] . ")";
       $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
       // Valida se deu certo
@@ -85,7 +84,6 @@ if ($Tipo == "A") {
             FROM situacoes
             WHERE ds_situacao = '" . $situacao . "'
             AND nr_sequencial <> " . $codigo . "  
-            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -104,7 +102,6 @@ if ($Tipo == "A") {
       $update = "UPDATE situacoes 
                 SET ds_situacao = '" . $situacao . "', 
                     st_status ='" . $status . "',
-                    nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . ",
                     nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
                     dt_alterado = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;

@@ -48,7 +48,6 @@ if ($descricao !== "") {
                     CASE WHEN st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
                     FROM situacoes
                     WHERE 1 = 1 $pesquisanome 
-                    AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
                     ORDER BY ds_situacao ASC limit $porpagina offset $inicio";
             //echo $SQL;
             $RSS = mysqli_query($conexao, $SQL);

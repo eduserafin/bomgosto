@@ -19,261 +19,417 @@
         $chave = substr(md5(date("dmYHis")), 0, 7);
     }
 
-    //require_once $ant.'conexao.php';
+    if ($lead != "") { 
+        
+        $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento, ls.nr_telefone, 
+                CONCAT(c.ds_municipio, ' - ', e.sg_estado) AS municipio_estado, st.ds_situacao, 
+                ls.ds_email, ls.dt_agenda, ls.nr_seq_situacao, ls.nr_seq_administradora, ls.nr_seq_grupo,
+                ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado
+                FROM lead ls
+                INNER JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
+                INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+                LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
+                LEFT JOIN situacoes st ON ls.nr_seq_situacao = s.nr_sequencial
+                WHERE ls.nr_sequencial = $lead";
+        //echo "<pre>$SQL</pre>";
+        $RSS = mysqli_query($conexao, $SQL);
+        while ($linha = mysqli_fetch_row($RSS)) {
+            $nr_sequencial = $linha[0];
+            $ds_nome = $linha[1];
+            $vl_valor = $linha[2]; 
+            $valor = number_format($vl_valor, 2, ',', '.');
+            $dt_cadastro = date('d/m/Y', strtotime($linha[3]));
+            $ds_segmento = $linha[4];
+            $nr_telefone = $linha[5];
+            $municipio_estado = $linha[6];
+            $ds_situacao = $linha[7];
+            $ds_email = $linha[8];
+            $dt_agenda = $linha[9];
+            $nr_seq_situacao = $linha[10];
+            $nr_seq_situacao = isset($nr_seq_situacao) ? $nr_seq_situacao : 0;
+            $nr_seq_administradora = $linha[11];
+            $nr_seq_administradora = isset($nr_seq_administradora) ? $nr_seq_administradora : 0;
+            $nr_seq_grupo = $linha[12];
+            $nr_seq_grupo = isset($nr_seq_grupo) ? $nr_seq_grupo : 0;
+            $nr_cota = $linha[13];
+            $pc_reduzido = $linha[14];
+            $vl_contratado = $linha[15];
+            $valor_contratado = number_format($vl_contratado, 2, ',', '.');
+            $vl_considerado = $linha[16];
+            $valor_considerado = number_format($vl_considerado, 2, ',', '.');
 
-    if ($lead != "") { ?>
 
-        <div class="row"><br>
+        }
+        
+        ?>
+
+        <style>
+            .panel-heading-custom {
+                background-color: #337ab7 !important;
+                color: white !important;
+                font-weight: bold;
+            }
+
+            .section-title {
+                background-color: #f5f5f5;
+                border-left: 4px solid #337ab7;
+                padding: 8px 12px;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+
+            textarea[disabled] {
+                background-color: #f9f9f9 !important;
+            }
+
+            .panel-comment {
+                border-left: 3px solid #337ab7;
+                margin-bottom: 10px;
+            }
+
+            #divcomentarios {
+                max-height: 450px;
+                overflow-y: auto;
+            }
+
+            .file-info {
+                font-size: 13px;
+            }
+        </style>
+
+        <div class="row">
+            <!-- Hidden inputs -->
             <input type="hidden" name="nr_seq_lead" id="nr_seq_lead" value="<?php echo $lead; ?>">
             <input type="hidden" name="chave" id="chave" value="<?php echo $chave; ?>">
 
-            <!-- DETALHES DO CLIENTE-->
+            <!-- Lado esquerdo -->
             <div class="col-md-4">
-
-                        <?php
-
-                            $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, 
-                                        ps.ds_produto, ls.nr_whatsapp, ls.nr_telefone,
-                                        CONCAT(m.ds_municipioibge, ' - ', m.sg_estado) AS municipio_estado,
-                                        ls.tp_tipo, ls.st_situacao, ls.ds_mensagem, ls.ds_email, ls.dt_agenda
-                                        FROM lead_site ls
-                                        INNER JOIN municipioibge m ON m.cd_municipioibge = ls.nr_seq_cidade
-                                        LEFT JOIN produtos_site ps ON ls.nr_seq_produto = ps.nr_sequencial
-                                    WHERE ls.nr_sequencial = $lead";
-                                    //echo "<pre>$SQL</pre>";
-                            $RSS = mysqli_query($conexao, $SQL);
-                            while ($linha = mysqli_fetch_row($RSS)) {
-                                $nr_sequencial = $linha[0];
-                                $ds_nome = $linha[1];
-                                $vl_valor = $linha[2]; 
-                                $valor = number_format($vl_valor / 100, 2, ',', '.');
-                                $dt_cadastro = date('d/m/Y', strtotime($linha[3]));
-                                $ds_produto = $linha[4];
-                                $nr_whatsapp = $linha[5];
-                                $nr_telefone = $linha[6];
-                                $municipio_estado = $linha[7];
-                                $tp_tipo = $linha[8];
-                                $st_situacao = $linha[9];
-                                $ds_mensagem = $linha[10];
-                                $ds_email = $linha[11];
-                                $dt_agenda = $linha[12];
-
-                                $dstipo = '';
-                                if($tp_tipo == 'S'){
-                                $dstipo = 'SIMULAÇÃO';
-                                } else if ($tp_tipo == 'C'){
-                                $dstipo = 'CONTATO';
-                                } else {
-                                $dstipo = '';
-                                }
+                <!-- Status -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading panel-heading-custom text-center">
+                        <span class="glyphicon glyphicon-star"></span> STATUS LEAD
+                    </div>
+                    <div class="panel-body">
+                        <label>Status:</label>
+                        <select class="form-control" name="selstatus" id="selstatus" onchange="AlteraStatus(this);">
+                            <option value="0">Selecione...</option>
+                            <?php
+                            $sel = "SELECT nr_sequencial, ds_situacao 
+                                    FROM situacoes 
+                                    WHERE st_status = 'A'  
+                                    ORDER BY ds_situacao";
+                            $res = mysqli_query($conexao, $sel);
+                            while($lin = mysqli_fetch_row($res)){
+                                $selecionado = $lin[0] == $nr_seq_situacao ? "selected" : "";
+                                echo "<option $selecionado value=$lin[0]>$lin[1]</option>";
                             }
+                            ?>
+                        </select>
 
-                        ?>
+                        <label class="mt-2">Agendar Conversa:</label>
+                        <input type="date" id="dataagenda" name="dataagenda" class="form-control" onchange="AlteraAgenda(this.value);" value="<?php echo $dt_agenda; ?>">
+                    </div>
+                </div>
 
-                <table width="100%" class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="bottom-bordered-dark">
-                            <td class="border-right-dark bg-info" style="text-align:center;"><font size=3><strong>STATUS LEAD</strong> <i class="fa fa-star" aria-hidden="true"></i></font></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>STATUS:</b>
-                            <select class="form-control" name="selstatus" id="selstatus" onchange="javascript: AlteraStatus(this.value);">
-                                <option value="" <?php echo $st_situacao == '' ? 'selected' : ''; ?>></option>
-                                <option value="N" <?php echo $st_situacao == 'N' ? 'selected' : ''; ?>>NOVOS</option>
-                                <option value="C" <?php echo $st_situacao == 'C' ? 'selected' : ''; ?>>ENTRAR EM CONTATO</option>
-                                <option value="P" <?php echo $st_situacao == 'P' ? 'selected' : ''; ?>>PERDIDA</option>
-                                <option value="E" <?php echo $st_situacao == 'E' ? 'selected' : ''; ?>>EM ANDAMENTO</option>
-                                <option value="T" <?php echo $st_situacao == 'T' ? 'selected' : ''; ?>>CONTRATADA</option>
-                            </select>
-                        </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>AGENDA CONVERSA:</b>
-                            <input type="date" id="dataagenda" name="dataagenda" class="form-control" onchange="javascript: AlteraAgenda(this.value);" value="<?php echo $dt_agenda; ?>">
-                        </td>
-                        </tr>
-                    </thead>
-                </table>
+                <!-- Valor do Crédito -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading panel-heading-custom text-center">
+                        <span class="glyphicon glyphicon-usd"></span> CRÉDITO CONTRATADO
+                    </div>
+                    <div class="panel-body">
+                        <p><strong>Valor Solicitado:</strong> <?php echo $valor; ?></p>
+                        <p><strong>Tipo do Crédito:</strong> <?php echo $ds_segmento; ?></p>
 
-                <table width="100%" class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="bottom-bordered-dark">
-                            <td class="border-right-dark bg-info" style="text-align:center;"><font size=3><strong>VALOR DO CRÉDITO</strong> <i class="fa fa-money" aria-hidden="true"></i></font></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>VALOR:</b> <?php echo $valor;?></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>CONSÓRCIO:</b> <?php echo $ds_produto;?></td>
-                        </tr>
-                    </thead>
-                </table>
+                        <label>Grupo: <font color='red'>*</font></label>
+                        <select class="form-control" name="selgrupo" id="selgrupo">
+                            <option value="0">Selecione...</option>
+                            <?php 
+                                $sel = "SELECT nr_sequencial, ds_grupo 
+                                        FROM grupos 
+                                        WHERE st_status = 'A' 
+                                        AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
+                                        ORDER BY ds_grupo";
+                                $res = mysqli_query($conexao, $sel);
+                                while($lin = mysqli_fetch_row($res)){
+                                    $selecionado = $lin[0] == $nr_seq_grupo ? "selected" : "";
+                                    echo "<option $selecionado value=$lin[0]>$lin[1]</option>";
+                                }
+                            ?>
+                        </select>
 
-                <table width="100%" class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="bottom-bordered-dark">
-                            <td class="border-right-dark bg-info" style="text-align:center;"><font size=3><strong>DETALHES DO CLIENTE</strong> <i class="fa fa-user" aria-hidden="true"></i></font></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>NOME:</b> <?php echo $ds_nome;?></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>CIDADE E ESTADO:</b> <?php echo $municipio_estado?></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>MENSAGEM:</b> <?php echo $ds_mensagem;?></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>TIPO:</b> <?php echo $dstipo;?></td>
-                        </tr>
-                    </thead>
-                </table>
+                        <label class="mt-2">Cota: <font color='red'>*</font></label>
+                        <input type="number" name="txtcota" id="txtcota" class="form-control" value="<?php echo $nr_cota; ?>">
 
-                <table width="100%" class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="bottom-bordered-dark">
-                            <td class="border-right-dark bg-info" style="text-align:center;"><font size=3><strong>INFORMAÇÕES DO CONTATO</strong> <i class="fa fa-phone-square"></i> </font></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>E-MAIL:</b> <?php echo $ds_email;?></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>TELEFONE:</b> <?php echo $nr_telefone;?></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle;"><b>WHATSAPP:</b> <?php echo $nr_whatsapp;?></td>
-                        </tr>
-                    </thead>
-                </table>
+                        <label class="mt-2">Administradora: <font color='red'>*</font></label>
+                        <select class="form-control" name="seladministradora" id="seladministradora">
+                            <option value="0">Selecione...</option>
+                            <?php
+                                $sel = "SELECT nr_sequencial, ds_administradora 
+                                        FROM administradoras 
+                                        WHERE st_status = 'A' 
+                                        AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
+                                        ORDER BY ds_administradora";
+                                $res = mysqli_query($conexao, $sel);
+                                while($lin = mysqli_fetch_row($res)){
+                                    $selecionado = $lin[0] == $nr_seq_administradora ? "selected" : "";
+                                    echo "<option $selecionado value=$lin[0]>$lin[1]</option>";
+                                }
+                            ?>
+                        </select>
 
+                        <label class="mt-2">Valor Contratado: <font color='red'>*</font></label>
+                        <input type="text" class="form-control" name="txtvalorcontratado" id="txtvalorcontratado" size="10" maxlength="20" style="text-align:right;" onkeypress="return formatar_moeda(this,'.',',',event);" value="<?php echo $valor_contratado; ?>"> 
+
+                        <label class="mt-2">% Crédito Reduzido:</label>
+                        <input type="number" name="txtpercentual" id="txtpercentual" step="0.01" class="form-control" value="<?php echo $pc_reduzido; ?>">
+
+                        <label class="mt-2">Valor Final:</label>
+                        <input type="text" class="form-control" name="txtvalorfinal" id="txtvalorfinal" readonly style="text-align:right;" value="<?php echo $valor_considerado; ?>">
+
+                        <button class="btn btn-primary btn-sm pull-right" style="margin-top:10px;" onclick="Contratar();">
+                            <span class="glyphicon glyphicon-ok"></span> Salvar
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- Cliente -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading panel-heading-custom text-center">
+                        <span class="glyphicon glyphicon-user"></span> CLIENTE
+                    </div>
+                    <div class="panel-body">
+                        <p><strong>Nome:</strong> <?php echo $ds_nome; ?></p>
+                        <p><strong>Cidade e Estado:</strong> <?php echo $municipio_estado; ?></p>
+                        <p><strong>Email:</strong> <?php echo $ds_email; ?></p>
+                        <p><strong>Telefone:</strong> <?php echo $nr_telefone; ?></p>
+                    </div>
+                </div>
             </div>
 
-            <!--ITERAÇÕES COM O CLIENTE-->
+            <!-- Lado direito -->
             <div class="col-md-8">
-                <div class="row-100">
-
-                    <h3><b>COMENTÁRIOS</b> <i class="fa fa-commenting" aria-hidden="true"></i></h3>
-
-                    <div class="row">
-                        <textarea class="form-control" id="txtcomentario" name="txtcomentario" rows="8" maxlength="1000"></textarea>
+                <!-- Comentários -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading panel-heading-custom">
+                        <span class="glyphicon glyphicon-comment"></span> COMENTÁRIOS
                     </div>
-                    <div class="row">
-                        <button class="btn btn-primary" id="btnEnviar" onclick="enviaComentario();"><i class="fa fa-upload"></i> Enviar Comentário</button>
-                    </div> 
-                    <br>
-                    <div class="col-md-8">
-                        <p><b><font color='red'>Os arquivos são enviados automaticamente após selecionar eles!</font></b></p>
-                        <input type="file" multiple="true" id="campoAnexoComercial" onchange="verificaExtensaoGeral(this);">
-                        <label class="w-100 hidden" id="enviandoArquivo">
-                            <i class="fa fa-spin fa-pulse"></i> Enviando arquivo...
+                    <div class="panel-body">
+                        <textarea class="form-control" id="txtcomentario" name="txtcomentario" rows="5" maxlength="1000" placeholder="Escreva seu comentário..."></textarea>
+                        <button class="btn btn-primary btn-sm pull-right" style="margin-top:10px;" onclick="enviaComentario();">
+                            <span class="glyphicon glyphicon-upload"></span> Enviar Comentário
+                        </button>
+                        <div class="clearfix"></div>
+                        <p class="text-danger" style="margin-top:15px;">
+                            <strong>Os arquivos são enviados automaticamente após selecioná-los!</strong>
+                        </p>
+                        <input type="file" multiple id="campoAnexoComercial" onchange="verificaExtensaoGeral(this);">
+                        <label class="text-muted file-info" id="enviandoArquivo" style="display:none;">
+                            <span class="glyphicon glyphicon-refresh spinning"></span> Enviando arquivo...
                         </label>
                     </div>
-
-                    <div class="w-100" hidden>
-                        <div class="w-100" id="listaArquivos">
-                            <?php include 'listaanexos.php'; ?>
-                        </div>
-                    </div>
-                </div> 
-                
-                <br><br><br>
-
-                <div class="col-md-12 table-responsive" id="divcomentarios" style="height: 450px; overflow-y:auto">
-                    <div class="row">
-                        <h3><b>HISTÓRICO</b> <i class="fa fa-history" aria-hidden="true"></i></h3>
-                    </div>
-
-                    <?php 
-
-                    $comentarios = 0;
-                    $SQL0 = "SELECT COUNT(nr_sequencial)
-                                FROM lead_anexos  
-                            WHERE nr_seq_lead = $lead"; //echo $SQL0;
-                    $RS0 = mysqli_query($conexao, $SQL0);
-                    while ($linha0 =  mysqli_fetch_row($RS0)) {
-                        $comentarios = $linha0[0];
-                    }
-
-                    if($comentarios == 0) { ?>
-                        <div class="row"><br>
-                            <textarea style="text-align:center" class="form-control" id="historico" name="historico" rows="1" maxlength="1000" disabled>SEM COMENTÁRIOS</textarea>
-                        </div>
-                    <?php } else {
-
-                        $SQL1 = "SELECT DISTINCT(DATE(dt_cadastro))
-                                    FROM lead_anexos  
-                                WHERE nr_seq_lead = $lead
-                                ORDER BY DATE(dt_cadastro) DESC"; //echo $SQL1;
-                        $RS1 = mysqli_query($conexao, $SQL1);
-                        while ($linha1 =  mysqli_fetch_row($RS1)) {
-                            $dt_cadastro = $linha1[0];
-
-                            ?>
-
-                            <div class="row"><br>
-                                <pre><?php echo date('d/m/Y', strtotime($dt_cadastro)); ?></pre>
-                            </div>
-
-                            <?php
-
-                            $ds_comentario = "";
-                            $ds_arquivo = "";
-                            $SQL = "SELECT nr_sequencial, UPPER(ds_comentario), ds_arquivo
-                                        FROM lead_anexos  
-                                    WHERE nr_seq_lead = $lead
-                                    AND DATE(dt_cadastro) = DATE('$dt_cadastro')
-                                    ORDER BY nr_sequencial DESC"; //echo $SQL;
-                            $RS = mysqli_query($conexao, $SQL);
-                            while ($linha =  mysqli_fetch_row($RS)) {
-                                $nr_sequencial = $linha[0];
-                                $ds_comentario = $linha[1];
-                                $ds_arquivo = $linha[2];
-
-                                ?>
-
-                                <?php if($ds_comentario != "") { ?>
-                                    <div class="row"><br>
-                                        <textarea class="form-control" id="historico" name="historico" rows="6" maxlength="1000" disabled><?php echo $ds_comentario; ?></textarea>
-                                    </div>
-                                <?php } ?>
-                                <?php if($ds_arquivo != "") { ?>
-                                    <div class="row"><br>
-                                        <div class="btn btn-default" style="margin: 5px 0">
-                                            <a data-toggle='tooltip' title="Abrir arquivo" href="crm/leads/arquivos/<?php echo $ds_arquivo ?>" target="_blank"><?php echo $ds_arquivo ?></a>
-                                            <!--<a onclick="removerArquivo('<?php echo $ds_arquivo?>', '<?php echo $nr_sequencial ?>', '<?php echo $cd_cliente ?>')" class="text-danger cursor-pointer"><i class="fa fa-trash" data-toggle='tooltip' title="Excluir arquivo"></i></a>
-                                            <i class="fa fa-pulse fa-spinner hidden" id="excluindoarquivo"></i> -->
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                            <?php } ?>
-                        <?php } ?>
-                    <?php } ?>
                 </div>
-    
-            </div>
 
+                <!-- Histórico de Comentários -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading panel-heading-custom">
+                        <span class="glyphicon glyphicon-time"></span> HISTÓRICO DE COMENTÁRIOS
+                    </div>
+                    <div class="panel-body" id="divcomentarios">
+                        <?php
+                            $comentarios = 0;
+                            $SQL0 = "SELECT COUNT(nr_sequencial) FROM anexos_lead WHERE nr_seq_lead = $lead";
+                            $RS0 = mysqli_query($conexao, $SQL0);
+                            while ($linha0 = mysqli_fetch_row($RS0)) {
+                                $comentarios = $linha0[0];
+                            }
+
+                            if ($comentarios == 0) {
+                                echo '<div class="alert alert-info text-center">SEM COMENTÁRIOS</div>';
+                            } else {
+                                $SQL1 = "SELECT DISTINCT(DATE(dt_cadastro)) FROM anexos_lead WHERE nr_seq_lead = $lead ORDER BY DATE(dt_cadastro) DESC";
+                                $RS1 = mysqli_query($conexao, $SQL1);
+
+                                while ($linha1 = mysqli_fetch_row($RS1)) {
+                                    $dt_cadastro = $linha1[0];
+                                    echo '<div>';
+                                    echo '<div class="section-title"><span class="glyphicon glyphicon-calendar"></span> ' . date('d/m/Y', strtotime($dt_cadastro)) . '</div>';
+
+                                    $SQL = "SELECT nr_sequencial, UPPER(ds_comentario), ds_arquivo FROM anexos_lead WHERE nr_seq_lead = $lead AND DATE(dt_cadastro) = DATE('$dt_cadastro') ORDER BY nr_sequencial DESC";
+                                    $RS = mysqli_query($conexao, $SQL);
+
+                                    while ($linha = mysqli_fetch_row($RS)) {
+                                        $nr_sequencial = $linha[0];
+                                        $ds_comentario = $linha[1];
+                                        $ds_arquivo = $linha[2];
+
+                                        if ($ds_comentario != "") {
+                                            echo '<div class="panel panel-default panel-comment">';
+                                            echo '<div class="panel-body"><textarea class="form-control" rows="3" disabled>' . $ds_comentario . '</textarea></div></div>';
+                                        }
+
+                                        if ($ds_arquivo != "") {
+                                            echo '<a class="btn btn-default btn-sm" href="crm/leads/arquivos/' . $ds_arquivo . '" target="_blank">';
+                                            echo '<span class="glyphicon glyphicon-file"></span> ' . $ds_arquivo . '</a><br>';
+                                        }
+                                    }
+                                    echo '</div>';
+                                }
+                            }
+                        ?>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script>
 
-            function AlteraStatus(status) {
+            let statusAnterior = document.getElementById("selstatus").value;
 
-                var codigo = document.getElementById("nr_seq_lead").value;
+            function AlteraStatus(selectElement) {
+                const status = selectElement.value;
+                const codigo = document.getElementById("nr_seq_lead").value;
+                const grupo = document.getElementById("selgrupo").value;
+                const cota = document.getElementById("txtcota").value.trim();
+                const valorcontratado = document.getElementById("txtvalorcontratado").value.trim();
+                const percentual = document.getElementById("txtpercentual").value.trim();
+                const administratadora = document.getElementById("seladministradora").value;
+                const valorfinal = document.getElementById("txtvalorfinal").value.trim();
+
+                // Validação única para status 1 (CONTRATADA)
+                if (status == 1) {
+                    const camposInvalidos = (
+                        grupo == 0 ||
+                        cota == "" ||
+                        valorcontratado == "" ||
+                        administratadora == 0
+                    );
+
+                    if (camposInvalidos) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Campos obrigatórios!',
+                            text: 'Preencha todos os campos obrigatórios (*) antes de alterar para esse status.'
+                        });
+                        selectElement.value = statusAnterior;
+                        return;
+                    }
+                }
+
+                // Atualiza status anterior após validação
+                statusAnterior = status;
+
                 window.open('crm/leads/acao.php?Tipo=STATUS&codigo=' + codigo + '&status=' + status, "acao");
-
             }
 
             function AlteraAgenda(data) {
-
                 var codigo = document.getElementById("nr_seq_lead").value;
                 window.open('crm/leads/acao.php?Tipo=AGENDA&codigo=' + codigo + '&data=' + data, "acao");
-
             }
 
+            function limparMascara(valor) {
+                return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+            }
 
+            function formatarParaMoedaBrasileira(valor) {
+                return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            function atualizarValorFinal() {
+                const campoValor = document.getElementById('txtvalorcontratado');
+                const campoPercentual = document.getElementById('txtpercentual');
+                const campoFinal = document.getElementById('txtvalorfinal');
+
+                const valorBruto = campoValor.value;
+                const percentual = parseFloat(campoPercentual.value);
+                const valorContratado = limparMascara(valorBruto);
+
+                if (!isNaN(valorContratado)) {
+                    if (!isNaN(percentual)) {
+                        const desconto = valorContratado * (percentual / 100);
+                        const valorFinal = valorContratado - desconto;
+                        campoFinal.value = formatarParaMoedaBrasileira(valorFinal);
+                    } else {
+                        campoFinal.value = formatarParaMoedaBrasileira(valorContratado);
+                    }
+                } else {
+                    campoFinal.value = '';
+                }
+            }
+
+            // Eventos com máscara funcionando
+            document.getElementById('txtvalorcontratado').addEventListener('keyup', function () {
+                setTimeout(atualizarValorFinal, 100); // espera a máscara aplicar
+            });
+            document.getElementById('txtpercentual').addEventListener('input', atualizarValorFinal);
+
+            function Contratar() {
+                var codigo = document.getElementById("nr_seq_lead").value;
+                var grupo = document.getElementById("selgrupo").value;
+                var cota = document.getElementById("txtcota").value;
+                var valorcontratado = document.getElementById("txtvalorcontratado").value;
+                var percentual = document.getElementById("txtpercentual").value;
+                var administratadora = document.getElementById("seladministradora").value;
+                var valorfinal = document.getElementById("txtvalorfinal").value;
+
+                if (valorcontratado != '') {
+                    valorcontratado = valorcontratado.replace(/\./g, '');     // remove todos os pontos
+                    valorcontratado = valorcontratado.replace(',', '.');      // troca a vírgula por ponto
+                } else {
+                    valorcontratado = 0;
+                }
+
+                if (valorfinal != '') {
+                    valorfinal = valorfinal.replace(/\./g, '');     // remove todos os pontos
+                    valorfinal = valorfinal.replace(',', '.');      // troca a vírgula por ponto
+                } else {
+                    valorfinal = 0;
+                }
+
+                if (grupo == 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe o Grupo!'
+                    });
+                    document.getElementById('txtcomentario').focus();
+                    return;
+                } 
+                else if (cota == "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe a Cota!'
+                    });
+                    document.getElementById('txtcota').focus();
+                    return;
+                } 
+                else if (valorcontratado == "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe o valor Contratado!'
+                    });
+                    document.getElementById('txtvalorcontratado').focus();
+                    return;
+                } 
+                else if (administratadora == 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe a Administradora!'
+                    });
+                    document.getElementById('seladministradora').focus();
+                    return;
+                } 
+                else{
+
+                    window.open('crm/leads/acao.php?Tipo=CONTRATAR&codigo=' + codigo + '&grupo=' + grupo + '&cota=' + cota + '&valorcontratado=' + valorcontratado + '&percentual=' + percentual + '&administratadora=' + administratadora + '&valorfinal=' + valorfinal, "acao");
+
+                }
+            }
 
             function enviaComentario(campo) {
-
                 var codigo = document.getElementById("nr_seq_lead").value;
                 var comentario = document.getElementById("txtcomentario").value;
                     comentario = comentario.replace("'", "");
@@ -297,7 +453,6 @@
             }
 
             function enviaAnexo(campo) {
-
                 var codigo = document.getElementById("nr_seq_lead").value;
                 var files = campo.files; 
     
@@ -318,7 +473,6 @@
                 var url = `crm/leads/acao.php?Tipo=enviarArquivo&codigo=${codigo}`;
 
                 document.getElementById('enviandoArquivo').classList.remove('hidden');
-                document.getElementById('btnEnviar').setAttribute('disabled', true);
 
                 $.ajax({
                     url: url,
@@ -326,7 +480,6 @@
                     data: formData,
                     success: function(data) {
                         console.log(data);
-                        carregarAnexos(codigo);
                         buscaComercial(codigo);
                     },
                     error: function (response) {
@@ -342,23 +495,12 @@
                     complete: function () {
                         campo.value = '';
                         document.getElementById('enviandoArquivo').classList.add('hidden');
-                        document.getElementById('btnEnviar').removeAttribute('disabled');
                     },
                     cache: false,
                     contentType: false,
                     processData: false,
                 }); 
 
-            }
-
-            function carregarAnexos(codigo){
-                //var codigo = document.getElementById("nr_seq_cliente").value;
-
-                var url = `crm/leads/listaanexos.php?codigo=${codigo}`;
-                document.getElementById('listaArquivos').innerHTML = 'Aguarde, carregando...';
-                $.get(url, function (htmlRetorno) {
-                    document.getElementById('listaArquivos').innerHTML = htmlRetorno;
-                })
             }
 
             function removerArquivo(arquivo, nr_sequencial, codigo){
@@ -413,8 +555,4 @@
         </script>
 
    
-<?php } else { ?>
-
-    <pre>Selecione um registro na aba LISTA!</pre>
-
 <?php } ?>

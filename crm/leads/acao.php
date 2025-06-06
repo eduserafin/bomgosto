@@ -16,20 +16,23 @@
   if ($Tipo == "D") {
 
       $SQL = "SELECT * 
-                FROM lead_site
+                FROM lead
               WHERE nr_sequencial=" . $Codigo;
       $RSS = mysqli_query($conexao, $SQL);
       $RS = mysqli_fetch_assoc($RSS);
       if ($RS["nr_sequencial"] == $Codigo) {
-            echo "<script language='javascript'>window.parent.document.getElementById('cd_lead').value='" . $RS["nr_sequencial"] . "';</script>";
-            echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_nome"] . "';</script>";
-            echo "<script language='javascript'>window.parent.document.getElementById('txtcontato').value='" . $RS["nr_telefone"] . "';</script>";
-            echo "<script language='javascript'>window.parent.document.getElementById('txtmunicipio').value='" . $RS["nr_seq_cidade"] . "';</script>";
-            echo "<script language='javascript'>window.parent.document.getElementById('txtvalor').value='" . $RS["vl_valor"] . "';</script>";
-            echo "<script language='javascript'>window.parent.document.getElementById('txtsegmento').value='" . $RS["nr_seq_produto"] . "';</script>";
-            echo "<script language='javascript'>window.parent.document.getElementById('txtemail').value='" . $RS["ds_email"] . "';</script>";
-            echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
-            echo "<script language='javascript'>window.parent.buscaComercial('".$RS["nr_sequencial"]."');</script>";
+
+        $valor_formatado = number_format($RS["vl_valor"], 2, ',', '.');
+        echo "<script language='javascript'>window.parent.document.getElementById('cd_lead').value='" . $RS["nr_sequencial"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_nome"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtcontato').value='" . $RS["nr_telefone"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtmunicipio').value='" . $RS["nr_seq_cidade"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtvalor').value='" . $valor_formatado . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtsegmento').value='" . $RS["nr_seq_segmento"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtemail').value='" . $RS["ds_email"] . "';</script>";
+        echo "<script language='javascript'>window.parent.buscaComercial('".$RS["nr_sequencial"]."');</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
+      
       }
 
   } 
@@ -37,11 +40,14 @@
   //=======================		INCLUSAO DOS DADOS
 if ($Tipo == "I") {
 
+    $nome = mb_strtoupper($nome, 'UTF-8');
+
     $SQL = "SELECT nr_sequencial 
-          FROM lead_site
-          WHERE UPPER(ds_nome)=UPPER('" . $nome . "') 
-          AND vl_valor = $valor
-          AND nr_seq_produto = $segmento
+          FROM lead
+          WHERE ds_nome = '" . $nome . "' 
+          AND vl_valor = " . $valor . "
+          AND nr_seq_segmento = " . $segmento . "
+          AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
           LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -57,9 +63,9 @@ if ($Tipo == "I") {
 
     } else {
 
-      $insert = "INSERT INTO lead_site (ds_nome, nr_telefone, nr_seq_cidade, vl_valor, nr_seq_produto, ds_email, nr_seq_usercadastro) 
-                  VALUES (UPPER('" . $nome . "'), '" . $contato . "', " . $cidade . ", " . $valor . ", " . $segmento . ", '" . $email . "', " . $_SESSION["CD_USUARIO"] . ")";
-      $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
+      $insert = "INSERT INTO lead (ds_nome, nr_telefone, nr_seq_cidade, vl_valor, nr_seq_segmento, ds_email, nr_seq_usercadastro, nr_seq_empresa) 
+                  VALUES (UPPER('" . $nome . "'), '" . $contato . "', " . $cidade . ", " . $valor . ", " . $segmento . ", '" . $email . "', " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
+      $rss_insert = mysqli_query($conexao, $insert); echo  $insert;
 
       // Valida se deu certo
       if ($rss_insert) {
@@ -91,11 +97,14 @@ if ($Tipo == "I") {
 //=======================		ALTERACAO DOS DADOS
 if ($Tipo == "A") {
 
+    $nome = mb_strtoupper($nome, 'UTF-8');
+
     $SQL = "SELECT nr_sequencial 
-            FROM lead_site
-            WHERE UPPER(ds_nome)=UPPER('" . $nome . "') 
-            AND vl_valor = $valor
-            AND nr_seq_produto = $segmento
+            FROM lead
+            WHERE ds_nome = '" . $nome . "' 
+            AND vl_valor = " . $valor . "
+            AND nr_seq_segmento = " . $segmento . "
+            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
             AND nr_sequencial <> " . $codigo . "  
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
@@ -112,13 +121,14 @@ if ($Tipo == "A") {
 
     } else {
 
-      $update = "UPDATE lead_site 
-                    SET ds_nome = UPPER('" . $nome . "'), 
+      $update = "UPDATE lead 
+                    SET ds_nome = '" . $nome . "', 
                         nr_telefone = '" . $contato . "',
                         nr_seq_cidade = " . $cidade . ",
                         vl_valor = " . $valor . ",
-                        nr_seq_produto = " . $segmento . ",
+                        nr_seq_segmento = " . $segmento . ",
                         ds_email = '" . $email . "',
+                        nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . ",
                         nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
                         dt_alterado = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;
@@ -157,7 +167,7 @@ if ($Tipo == "A") {
 
 if ($Tipo == "E") {
 
-    $delete = "DELETE FROM lead_site WHERE nr_sequencial=" . $codigo;
+    $delete = "DELETE FROM lead WHERE nr_sequencial=" . $codigo;
     $result = mysqli_query($conexao, $delete);
 
     if ($result) {
@@ -191,7 +201,7 @@ if ($Tipo == "E") {
 
    if ($Tipo == "STATUS") {
 
-      $update = "UPDATE lead_site SET st_situacao = '$status' WHERE nr_sequencial = $codigo";
+      $update = "UPDATE lead SET nr_seq_situacao = $status WHERE nr_sequencial = $codigo";
       $rss_update = mysqli_query($conexao, $update);
 
       if ($rss_update) {
@@ -220,6 +230,53 @@ if ($Tipo == "E") {
 
    }
 
+    //=====================================-ALTERA VALOR CONTRATADO LEAD-=========================================
+
+    if ($Tipo == "CONTRATAR") {
+
+      if($percentual == "") { $percentual = "NULL"; }
+      $status = 1; //Altera o status para CONTRATADO
+
+      $update = "UPDATE lead 
+                  SET nr_seq_situacao = " . $status . ",
+                      nr_seq_grupo = " . $grupo . ", 
+                      nr_seq_administradora = " . $administratadora . ",
+                      nr_cota = " . $cota . ",
+                      pc_reduzido = " . $percentual . ",
+                      vl_contratado = " . $valorcontratado . ",
+                      vl_considerado = " . $valorfinal . ",
+                      nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
+                      dt_alterado = CURRENT_TIMESTAMP
+                WHERE nr_sequencial = " . $codigo;
+      //echo"<pre> $update</pre>";
+      $rss_update = mysqli_query($conexao, $update);
+
+      if ($rss_update) {
+
+        echo "<script language='JavaScript'>
+                window.parent.Swal.fire({
+                    icon: 'success',
+                    title: 'Show...',
+                    text: 'Gravado com sucesso!'
+                });
+                window.parent.buscaComercial($codigo);
+                window.parent.consultar(0);
+            </script>";
+
+      } else {
+
+          echo "<script language='JavaScript'>
+                  window.parent.Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Problemas ao gravar!'
+                  });
+              </script>";
+
+      }
+
+   }
+
    //=====================================-ALTERA DATA AGENDA-=========================================
 
    if ($Tipo == "AGENDA") {
@@ -227,7 +284,7 @@ if ($Tipo == "E") {
     if($data=="") { $data = "NULL"; }
     else { $data = "'$data'"; } 
 
-    $update = "UPDATE lead_site SET dt_agenda = $data WHERE nr_sequencial = $codigo";
+    $update = "UPDATE lead SET dt_agenda = $data WHERE nr_sequencial = $codigo";
     $rss_update = mysqli_query($conexao, $update); 
 
     if ($rss_update) {
@@ -261,9 +318,9 @@ if ($Tipo == "E") {
 if($Tipo == 'enviaComentario'){
 
   $arquivo = '';
-  $insert = "INSERT INTO lead_anexos (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro, nr_seq_usercadastro)
-          VALUES ($codigo, '$comentario', '$arquivo', NOW(), $_SESSION[CD_USUARIO])";
-  echo $insert;
+  $insert = "INSERT INTO anexos_lead (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro)
+          VALUES ($codigo, '$comentario', '$arquivo', NOW())";
+  //echo $insert;
   $rss_insert = mysqli_query($conexao, $insert);
 
   if ($rss_insert) {
@@ -312,10 +369,10 @@ if($Tipo == 'enviarArquivo'){
 
       $arquivo = $resultadoUpload['filename'];
   
-      $values[] = "($codigo, '', '$arquivo', NOW(), $_SESSION[CD_USUARIO])";
+      $values[] = "($codigo, '', '$arquivo', NOW())";
   }
 
-  $sql = "INSERT INTO lead_anexos (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro, nr_seq_usercadastro)
+  $sql = "INSERT INTO anexos_lead (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro)
       VALUES " . join(', ', $values);
   $rss =  mysqli_query($conexao, $sql);
 
@@ -336,7 +393,7 @@ elseif($Tipo == 'removerArquivo'){
   }
 
   if(unlink("./arquivos/$arquivo")){
-      $sql = "DELETE FROM lead_anexos WHERE nr_sequencial = $nr_sequencial";
+      $sql = "DELETE FROM anexos_lead WHERE nr_sequencial = $nr_sequencial";
        mysqli_query($conexao, $sql);
       response_json('200', '');
   }else{

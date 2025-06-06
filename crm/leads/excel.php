@@ -25,10 +25,10 @@ $coluna = 0;
 $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'NOME');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'VALOR');
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'CIDADE');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'CIDADE');
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'ESTADO');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
 $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'CONTATO');
@@ -43,22 +43,31 @@ $coluna++;
 $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'DATA AGENDA');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'PRODUTO');
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
-$coluna++;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'TIPO');
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'SEGMENTO');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
 $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'STATUS');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'MENSAGEM');
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'GRUPO');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'DATA|HORA COMENTÁRIO');
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'COTA');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'COMENTÁRIOS');
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'ADMINISTRADORA');
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
+$coluna++;
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'VALOR CONTRATADO');
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
+$coluna++;
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '% CRÉDITO REDUZIDO');
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
+$coluna++;
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'VALOR FINAL');
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
+$coluna++;
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'VALOR SOLICITADO');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
 
@@ -74,12 +83,12 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
         $v_sql .= " AND ls.nr_seq_cidade = $cidade";
     }
 
-    if ($status != "") {
-        $v_sql .= " AND ls.st_situacao = '$status'";
+    if ($status != 0) {
+        $v_sql .= " AND ls.nr_seq_situacao = $status";
     }
 
-    if ($tipo != "") {
-        $v_sql .= " AND ls.tp_tipo = $tipo";
+    if ($segmento != 0) {
+      $v_sql .= " AND ls.nr_seq_segmento = $segmento";
     }
 
     if ($data1 != "") {
@@ -98,71 +107,53 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
       $v_sql .= " AND ls.dt_agenda <= '$dataagenda2'";
     }
 
-    $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, ps.ds_produto,
-            CONCAT(ls.nr_whatsapp, ' - ', ls.nr_telefone) AS contato, 
-            CONCAT(m.ds_municipioibge, ' - ', m.sg_estado) AS municipio_estado,
-            ls.tp_tipo, ls.st_situacao, ls.ds_email, ls.ds_mensagem, ls.dt_agenda
-            FROM lead_site ls
-            INNER JOIN municipioibge m ON m.cd_municipioibge = ls.nr_seq_cidade
-            LEFT JOIN produtos_site ps ON ls.nr_seq_produto = ps.nr_sequencial
-            WHERE 1 = 1  
-            $v_sql
+    $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento, ls.nr_telefone, 
+            c.ds_municipio, e.sg_estado, st.ds_situacao, ls.ds_email, ls.dt_agenda, a.ds_administradora, g.ds_grupo,
+            ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado
+            FROM lead ls
+            INNER JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
+            INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+            LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
+            LEFT JOIN situacoes st ON ls.nr_seq_situacao = s.nr_sequencial
+            LEFT JOIN grupos g ON ls.nr_seq_grupo = g.nr_sequencial
+            LEFT JOIN administradoras a ON ls.nr_seq_administradora = a.nr_sequencial
+            WHERE 1 = 1 " . $v_sql . "
             ORDER BY ls.nr_sequencial DESC";
     //echo "<pre>$SQL</pre>";
     $RSS = mysqli_query($conexao, $SQL);
-    while ($linha1 = mysqli_fetch_row($RSS)) {
-        $nr_sequencial = $linha1[0];
-        $ds_nome = $linha1[1];
-        $vl_valor = $linha1[2]; 
-        $valor = number_format($vl_valor / 100, 2, ',', '.');
-        $dt_cadastro = date('d/m/Y', strtotime($linha1[3]));
-        $ds_produto = $linha1[4];
-        $contato = $linha1[5];
-        $municipio_estado = $linha1[6];
-        $tp_tipo = $linha1[7];
-        $st_situacao = $linha1[8];
-        $ds_email = $linha1[9];
-        $ds_mensagem = $linha1[10];
-        $dt_agenda = $linha1[11];
-        if($dt_agenda != ""){ $dt_agenda = date('d/m/Y', strtotime($dt_agenda));}
-
-        $dstipo = '';
-        if($tp_tipo == 'S'){
-            $dstipo = 'SIMULAÇÃO';
-        } else if ($tp_tipo == 'C'){
-            $dstipo = 'CONTATO';
-        } else {
-            $dstipo = '';
-        }
-
-        $dsstatus = '';
-        if($st_situacao == 'N'){
-            $dsstatus = 'NOVO';
-        } else if ($st_situacao == 'C'){
-            $dsstatus = 'CONTATO';
-        } else if ($st_situacao == 'P'){
-            $dsstatus = 'PERDIDA';
-        } else if ($st_situacao == 'E'){
-            $dsstatus = 'EM ANDAMENTO';
-        } else if ($st_situacao == 'T'){
-            $dsstatus = 'CONTRATADA';
-        } else {
-            $dsstatus = '';
-        }
+    while ($lin = mysqli_fetch_row($RSS)) {
+        $nr_sequencial = $lin[0];
+        $ds_nome = $lin[1];
+        $vl_valor = $lin[2]; 
+        $dt_cadastro = date('d/m/Y', strtotime($lin[3]));
+        $ds_segmento = $lin[4];
+        $contato = $lin[5];
+        $municipio = $lin[6];
+        $estado = $lin[7];
+        $ds_situacao = $lin[8];
+        $ds_email = $lin[9];
+        $dt_agenda = $lin[10];
+        $ds_administradora = $lin[11];
+        $ds_grupo = $lin[12];
+        $nr_cota = $lin[13];
+        $pc_reduzido = $lin[14];
+        if($pc_reduzido == "") { $pc_reduzido = 0; }
+        $vl_contratado = $lin[15];
+        $vl_considerado = $lin[16];
 
         if ($corlinha == "FFFFFF") {
             $corlinha = "DDDDDD";
         } else {
             $corlinha = "FFFFFF";
         }
-
+        
         $linha++;
         $coluna = 0;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_nome);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $vl_valor);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $municipio);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $municipio_estado);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $estado);
         $coluna++;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $contato);
         $coluna++;
@@ -172,69 +163,24 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
         $coluna++;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $dt_agenda);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_produto);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_segmento);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $dstipo);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_situacao);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $dsstatus);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_grupo);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_mensagem);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $nr_cota);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_administradora);
         $coluna++;
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $vl_contratado);
         $coluna++;
-
-        $SQL0 = "SELECT UPPER(ds_comentario), dt_cadastro, ds_arquivo
-                    FROM lead_anexos  
-                WHERE nr_seq_lead = $nr_sequencial
-                ORDER BY nr_sequencial ASC"; //echo $SQL0;
-        $RS0 = mysqli_query($conexao, $SQL0);
-        while ($linha_comentario = mysqli_fetch_row($RS0)) {
-            $ds_comentario = $linha_comentario[0];
-            $dt_comentario = $linha_comentario[1];
-            $ds_anexo = $linha_comentario[2];
-            if($dt_comentario != "") { $dt_comentario = date('d/m/Y H:i', strtotime($dt_comentario)); }
-    
-            $comentario = "";
-            if($ds_comentario == ""){
-                $comentario = $ds_anexo;
-            } else {
-                $comentario = $ds_comentario;
-            }
-
-            $linha++;
-            $coluna = 0;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, '');
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $dt_comentario);
-            $coluna++;
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $comentario);
-            $coluna++;
-
-        }
-    
-
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $pc_reduzido);
+        $coluna++;
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $vl_considerado);
+        $coluna++;
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $vl_valor);
+        $coluna++;
         $objPHPExcel->getActiveSheet()->getStyle('A1:' . $ultimaColuna . $linha)->applyFromArray(
             array(
                 'fill' => array(
@@ -246,6 +192,12 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
     }
 
 $objPHPExcel->getActiveSheet()->setTitle('LEADS');
+
+for($lin_pl=0;$lin_pl<=$linha;$lin_pl++){
+    $objPHPExcel->getActiveSheet()->getStyle('M' . $lin_pl)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    $objPHPExcel->getActiveSheet()->getStyle('O' . $lin_pl)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    $objPHPExcel->getActiveSheet()->getStyle('P' . $lin_pl)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+}
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:' . $ultimaColuna . '1')->applyFromArray(
     array(

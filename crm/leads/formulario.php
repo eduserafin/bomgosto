@@ -1,3 +1,4 @@
+
 <body onLoad="document.getElementById('txtnome').focus();">
 <input type="hidden" name="cd_lead" id="cd_lead" value="">
 <div class="form-group col-md-12">
@@ -17,14 +18,17 @@
             <select name="txtmunicipio" id="txtmunicipio" class="form-control" style="background:#E0FFFF;">
                 <option value="0">Selecione</option>
                 <?php
-                    $sel = "SELECT cd_municipioibge, ds_municipioibge
-                            FROM municipioibge
-                            ORDER BY ds_municipioibge";
+                    $sel = "SELECT c.nr_sequencial, c.ds_municipio, e.sg_estado
+                            FROM cidades c
+                            INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+                            ORDER BY c.ds_municipio";
                     $res = mysqli_query($conexao, $sel);
                     while($lin=mysqli_fetch_row($res)){
                         $nr_cdgo = $lin[0];
                         $ds_munic = $lin[1];
-                        echo "<option value=$nr_cdgo>$ds_munic</option>";
+                        $sg_estado = $lin[2];
+
+                        echo "<option value=$nr_cdgo>$ds_munic - $sg_estado</option>";
                     }
                 ?>
             </select>
@@ -36,6 +40,8 @@
                 <?php
                     $sel = "SELECT nr_sequencial, ds_segmento
                             FROM segmentos
+                            WHERE st_status = 'A'
+                            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
                             ORDER BY ds_segmento";
                     $res = mysqli_query($conexao, $sel);
                     while($lin=mysqli_fetch_row($res)){
@@ -51,7 +57,7 @@
     <div class="row">
         <div class="col-md-2">
             <label>VALOR:</label>
-            <input type="number" name="txtvalor" id="txtvalor" size="10" maxlength="10" style="background:#E6FFE0;" class="form-control">
+            <input type="text" class="form-control" name="txtvalor" id="txtvalor" size="10" maxlength="20" style="background:#E0FFFF;text-align:right;" onkeypress="return formatar_moeda(this,'.',',',event);">
         </div>
         <div class="col-md-2">
             <label>CONTATO:</label>
@@ -75,8 +81,55 @@
         $('#txtsegmento').select2();
     });
 
+    function formatar_moeda(campo, separador_milhar, separador_decimal, tecla) {
+        var sep = 0;
+        var key = '';
+        var i = j = 0;
+        var len = len2 = 0;
+        var strCheck = '0123456789';
+        var aux = aux2 = '';
+        var whichCode = (window.Event) ? tecla.which : tecla.keyCode;
+
+        if (whichCode == 13) return true; // Tecla Enter
+        if (whichCode == 8) return true; // Tecla Delete
+        key = String.fromCharCode(whichCode); // Pegando o valor digitado
+        if (strCheck.indexOf(key) == -1) return false; // Valor inv�lido (n�o inteiro)
+        len = campo.value.length;
+        for(i = 0; i < len; i++)
+        if ((campo.value.charAt(i) != '0') && (campo.value.charAt(i) != separador_decimal)) break;
+        aux = '';
+        for(; i < len; i++)
+        if (strCheck.indexOf(campo.value.charAt(i))!=-1) aux += campo.value.charAt(i);
+        aux += key;
+        len = aux.length;
+        if (len == 0) campo.value = '';
+        if (len == 1) campo.value = '0'+ separador_decimal + '0' + aux;
+        if (len == 2) campo.value = '0'+ separador_decimal + aux;
+
+        if (len > 2) {
+            aux2 = '';
+
+            for (j = 0, i = len - 3; i >= 0; i--) {
+                if (j == 3) {
+                    aux2 += separador_milhar;
+                    j = 0;
+                }
+                aux2 += aux.charAt(i);
+                j++;
+            }
+
+            campo.value = '';
+            len2 = aux2.length;
+            for (i = len2 - 1; i >= 0; i--)
+            campo.value += aux2.charAt(i);
+            campo.value += separador_decimal + aux.substr(len - 2, len);
+        }
+
+        return false;
+    }
+
     function limparTexto(texto) {
-        return texto.replace(/[^a-zA-Z0-9\s]/g, '');
+        return texto.replace(/[^\p{L}\p{N}\s]/gu, '');
     }
 
     function executafuncao(id){
@@ -99,6 +152,13 @@
             var valor = document.getElementById('txtvalor').value;
             var segmento = document.getElementById('txtsegmento').value;
             var email = document.getElementById('txtemail').value;
+
+            if (valor != '') {
+                valor = valor.replace(/\./g, '');     // remove todos os pontos
+                valor = valor.replace(',', '.');      // troca a vírgula por ponto
+            } else {
+                valor = 0;
+            }
 
             if (nome == "") {
                 Swal.fire({

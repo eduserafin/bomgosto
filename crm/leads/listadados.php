@@ -23,8 +23,9 @@
   $inicio = $pg * $porpagina;
 
   $nome = $_GET['nome'];
+  $nome = mb_strtoupper($nome, 'UTF-8');
   if ($nome != "") {
-    $v_sql .= " AND ls.ds_nome like UPPER('%" . $nome . "%')";
+    $v_sql .= " AND ls.ds_nome like '%" . $nome . "%'";
   }
 
   $credito = $_GET['credito'];
@@ -38,13 +39,13 @@
   }
 
   $status = $_GET['status'];
-  if ($status != "") {
-    $v_sql .= " AND ls.st_situacao = '$status'";
+  if ($status != 0) {
+    $v_sql .= " AND ls.nr_seq_situacao = $status";
   }
 
-  $tipo = $_GET['tipo'];
-  if ($tipo != "") {
-    $v_sql .= " AND ls.tp_tipo = $tipo";
+  $segmento = $_GET['segmento'];
+  if ($segmento != 0) {
+    $v_sql .= " AND ls.nr_seq_segmento = $segmento";
   }
 
   $data1 = $_GET['data1'];
@@ -83,21 +84,21 @@
           <th style="vertical-align:middle;">CONTATO</th>
           <th style="vertical-align:middle;">DATA LEAD</th>
           <th style="vertical-align:middle;">DATA AGENDA</th>
-          <th style="vertical-align:middle;">PRODUTO</th>
-          <th style="vertical-align:middle;">TIPO</th>
+          <th style="vertical-align:middle;">SEGMENTO</th>
           <th style="vertical-align:middle;">STATUS</th>
           <th colspan=2 style="vertical-align:middle; text-align:center">A&Ccedil;&Otilde;ES</th>
         </tr>
 
         <?php
         
-          $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, ps.ds_produto,
-                    CONCAT(ls.nr_whatsapp, ' - ', ls.nr_telefone) AS contato,
-                    CONCAT(m.ds_municipioibge, ' - ', m.sg_estado) AS municipio_estado,
-                    ls.tp_tipo, ls.st_situacao, ls.dt_agenda
-                    FROM lead_site ls
-                    INNER JOIN municipioibge m ON m.cd_municipioibge = ls.nr_seq_cidade
-                    LEFT JOIN produtos_site ps ON ls.nr_seq_produto = ps.nr_sequencial
+          $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento,
+                    ls.nr_telefone AS contato, CONCAT(c.ds_municipio, ' - ', e.sg_estado) AS municipio_estado,
+                    st.ds_situacao, ls.dt_agenda
+                    FROM lead ls
+                    INNER JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
+                    INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+                    LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
+                    LEFT JOIN situacoes st ON ls.nr_seq_situacao = st.nr_sequencial
                   WHERE 1 = 1  
                   $v_sql
                   ORDER BY ls.nr_sequencial DESC LIMIT $porpagina offset $inicio";
@@ -107,40 +108,14 @@
             $nr_sequencial = $linha[0];
             $ds_nome = $linha[1];
             $vl_valor = $linha[2]; 
-            $valor = number_format($vl_valor / 100, 2, ',', '.');
+            $valor = number_format($vl_valor, 2, ',', '.');
             $dt_cadastro = date('d/m/Y', strtotime($linha[3]));
-            $ds_produto = $linha[4];
+            $ds_segmento = $linha[4];
             $contato = $linha[5];
             $municipio_estado = $linha[6];
-            $tp_tipo = $linha[7];
-            $st_situacao = $linha[8];
-            $dt_agenda = $linha[9];
+            $ds_situacao = $linha[7];
+            $dt_agenda = $linha[8];
             if($dt_agenda != "") { $dt_agenda = date('d/m/Y', strtotime($dt_agenda)); }
-
-            $dstipo = '';
-            if($tp_tipo == 'S'){
-              $dstipo = 'SIMULAÇÃO';
-            } else if ($tp_tipo == 'C'){
-              $dstipo = 'CONTATO';
-            } else {
-              $dstipo = '';
-            }
-
-            $dsstatus = '';
-            if($st_situacao == 'N'){
-              $dsstatus = 'NOVO';
-            } else if ($st_situacao == 'C'){
-              $dsstatus = 'CONTATO';
-            } else if ($st_situacao == 'P'){
-              $dsstatus = 'PERDIDA';
-            } else if ($st_situacao == 'E'){
-              $dsstatus = 'EM ANDAMENTO';
-            } else if ($st_situacao == 'T'){
-              $dsstatus = 'CONTRATADA';
-            } else {
-              $dsstatus = '';
-            }
-
 
             ?>
 
@@ -151,9 +126,8 @@
               <td><?php echo $contato; ?></td>
               <td><?php echo $dt_cadastro; ?></td>
               <td><?php echo $dt_agenda; ?></td>
-              <td><?php echo $ds_produto; ?></td>
-              <td><?php echo $dstipo; ?></td>
-              <td><?php echo $dsstatus; ?></td>
+              <td><?php echo $ds_segmento; ?></td>
+              <td><?php echo $ds_situacao; ?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
               <!--<td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>-->
             </tr>
