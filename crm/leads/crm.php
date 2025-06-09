@@ -64,36 +64,101 @@
         ?>
 
         <style>
+           /* Painéis mais modernos */
+            .panel {
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                border: none;
+            }
+
             .panel-heading-custom {
-                background-color: #337ab7 !important;
-                color: white !important;
+                background: linear-gradient(90deg, #5bc0de, #0056b3);
+                color: #fff !important;
                 font-weight: bold;
+                font-size: 14px;
+                border-radius: 8px 8px 0 0;
+                padding: 10px 15px;
             }
 
-            .section-title {
-                background-color: #f5f5f5;
-                border-left: 4px solid #337ab7;
-                padding: 8px 12px;
-                margin-bottom: 10px;
+            /* Labels e inputs com mais espaçamento */
+            label {
+                margin-top: 10px;
+                font-weight: 600;
+                color: #333;
+            }
+
+            input.form-control, select.form-control, textarea.form-control {
+                border-radius: 6px;
+                border-color: #ccc;
+                box-shadow: none;
+                transition: all 0.3s ease-in-out;
+            }
+
+            input.form-control:focus, select.form-control:focus, textarea.form-control:focus {
+                border-color: #5bc0de;
+                box-shadow: 0 0 5px rgba(0,123,255,0.4);
+            }
+
+            /* Botões mais modernos */
+            .btn-primary {
+                background: #007bff;
+                border-color: #007bff;
                 font-weight: bold;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                transition: background 0.3s;
             }
 
-            textarea[disabled] {
-                background-color: #f9f9f9 !important;
+            .btn-primary:hover {
+                background: #5bc0de;
+                border-color: #004085;
             }
 
-            .panel-comment {
-                border-left: 3px solid #337ab7;
-                margin-bottom: 10px;
-            }
-
-            #divcomentarios {
-                max-height: 450px;
-                overflow-y: auto;
-            }
-
-            .file-info {
+            /* Comentários */
+            .panel-comment textarea {
+                background-color: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                resize: none;
                 font-size: 13px;
+            }
+
+            /* Histórico */
+            .section-title {
+                font-size: 14px;
+                font-weight: bold;
+                margin-top: 15px;
+                margin-bottom: 5px;
+                color: #5bc0de;
+            }
+
+            textarea#txtcomentario {
+                resize: vertical;
+            }
+
+            /* Botões de arquivos */
+            #divcomentarios a.btn {
+                margin-bottom: 8px;
+            }
+
+            /* Texto de alerta */
+            .text-danger {
+                font-size: 13px;
+            }
+
+            /* Responsivo extra */
+            @media (max-width: 768px) {
+                .pull-right {
+                    float: none !important;
+                    display: block;
+                    width: 100%;
+                    margin-top: 10px;
+                }
+
+                .panel-body input, .panel-body select, .panel-body textarea {
+                    margin-bottom: 10px;
+                }
             }
         </style>
 
@@ -107,7 +172,7 @@
                 <!-- Status -->
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-heading-custom text-center">
-                        <span class="glyphicon glyphicon-star"></span> STATUS LEAD
+                        <span class="glyphicon glyphicon-star" style="margin-right: 5px;"></span> STATUS LEAD
                     </div>
                     <div class="panel-body">
                         <label>Status:</label>
@@ -134,7 +199,7 @@
                 <!-- Valor do Crédito -->
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-heading-custom text-center">
-                        <span class="glyphicon glyphicon-usd"></span> CRÉDITO CONTRATADO
+                        <span class="glyphicon glyphicon-usd" style="margin-right: 5px;"></span> CRÉDITO CONTRATADO
                     </div>
                     <div class="panel-body">
                         <p><strong>Valor Solicitado:</strong> <?php echo $valor; ?></p>
@@ -187,7 +252,7 @@
                         <input type="text" class="form-control" name="txtvalorfinal" id="txtvalorfinal" readonly style="text-align:right;" value="<?php echo $valor_considerado; ?>">
 
                         <button class="btn btn-primary btn-sm pull-right" style="margin-top:10px;" onclick="Contratar();">
-                            <span class="glyphicon glyphicon-ok"></span> Salvar
+                            <span class="glyphicon glyphicon-ok" style="margin-right: 5px;"></span> Salvar
                         </button>
 
                     </div>
@@ -196,7 +261,7 @@
                 <!-- Cliente -->
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-heading-custom text-center">
-                        <span class="glyphicon glyphicon-user"></span> CLIENTE
+                        <span class="glyphicon glyphicon-user" style="margin-right: 5px;"></span> CLIENTE
                     </div>
                     <div class="panel-body">
                         <p><strong>Nome:</strong> <?php echo $ds_nome; ?></p>
@@ -208,16 +273,16 @@
             </div>
 
             <!-- Lado direito -->
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <!-- Comentários -->
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-heading-custom">
-                        <span class="glyphicon glyphicon-comment"></span> COMENTÁRIOS
+                        <span class="glyphicon glyphicon-comment" style="margin-right: 5px;"></span> OBSERVAÇÕES
                     </div>
                     <div class="panel-body">
                         <textarea class="form-control" id="txtcomentario" name="txtcomentario" rows="5" maxlength="1000" placeholder="Escreva seu comentário..."></textarea>
                         <button class="btn btn-primary btn-sm pull-right" style="margin-top:10px;" onclick="enviaComentario();">
-                            <span class="glyphicon glyphicon-upload"></span> Enviar Comentário
+                            <span class="glyphicon glyphicon-upload" style="margin-right: 5px;"></span> Enviar Comentário
                         </button>
                         <div class="clearfix"></div>
                         <p class="text-danger" style="margin-top:15px;">
@@ -225,7 +290,7 @@
                         </p>
                         <input type="file" multiple id="campoAnexoComercial" onchange="verificaExtensaoGeral(this);">
                         <label class="text-muted file-info" id="enviandoArquivo" style="display:none;">
-                            <span class="glyphicon glyphicon-refresh spinning"></span> Enviando arquivo...
+                            <span class="glyphicon glyphicon-refresh spinning" style="margin-right: 5px;"></span> Enviando arquivo...
                         </label>
                     </div>
                 </div>
@@ -233,7 +298,7 @@
                 <!-- Histórico de Comentários -->
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-heading-custom">
-                        <span class="glyphicon glyphicon-time"></span> HISTÓRICO DE COMENTÁRIOS
+                        <span class="glyphicon glyphicon-time" style="margin-right: 5px;"></span> HISTÓRICO
                     </div>
                     <div class="panel-body" id="divcomentarios">
                         <?php
@@ -245,7 +310,7 @@
                             }
 
                             if ($comentarios == 0) {
-                                echo '<div class="alert alert-info text-center">SEM COMENTÁRIOS</div>';
+                                echo '<div class="alert alert-info text-center">SEM OBSERVAÇÕES</div>';
                             } else {
                                 $SQL1 = "SELECT DISTINCT(DATE(dt_cadastro)) FROM anexos_lead WHERE nr_seq_lead = $lead ORDER BY DATE(dt_cadastro) DESC";
                                 $RS1 = mysqli_query($conexao, $SQL1);

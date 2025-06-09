@@ -1,18 +1,18 @@
 <body onLoad="document.getElementById('txtfuncao').focus();">
-<input type="hidden" name="cd_funcao" id="cd_funcao" value="">
-<div class="form-group col-md-12">
-    <div class="row">
-        <?php include "inc/botao_novo.php"; ?>
-        <?php include "inc/botao_salvar.php"; ?>
-        <?php include "inc/botao_excluir.php"; ?>
+    <input type="hidden" name="cd_funcao" id="cd_funcao" value="">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <?php include "inc/botao_novo.php"; ?>
+            <?php include "inc/botao_salvar.php"; ?>
+            <?php include "inc/botao_excluir.php"; ?>
+        </div>
     </div>
-</div>
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <label>FUNÇÃO:</label>
             <input type="text" name="txtfuncao" id="txtfuncao" size="10" maxlength="100" style="background:#E6FFE0;" class="form-control">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="txtstatus">STATUS:</label>
             <select class="form-control" name="txtstatus" id="txtstatus" style="background:#E0FFFF;">
                 <option value="A">ATIVO</option>
@@ -20,7 +20,6 @@
             </select>
         </div>
     </div>
-
 </body>
 
 <script type="text/javascript">

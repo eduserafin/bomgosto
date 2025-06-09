@@ -30,7 +30,7 @@ if ($empresa !== "") {
 
 ?>
 
-<table width="100%" class="table table-bordered table-striped">
+<table width="100%" class="table table-bordered table-striped modern-table">
     <thead>
         <tr>
             <th style="vertical-align:middle;">ANEXOS</th>

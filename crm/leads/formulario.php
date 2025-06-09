@@ -9,11 +9,11 @@
     </div>
 </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label>NOME:</label>
             <input type="text" name="txtnome" id="txtnome" size="10" maxlength="100" style="background:#E6FFE0;" class="form-control">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="txtmunicipio">CIDADE:</label>
             <select name="txtmunicipio" id="txtmunicipio" class="form-control" style="background:#E0FFFF;">
                 <option value="0">Selecione</option>
@@ -33,7 +33,7 @@
                 ?>
             </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="txtsegmento">SEGMENTO:</label>
             <select name="txtsegmento" id="txtsegmento" class="form-control" style="background:#E0FFFF;">
                 <option value="0">Selecione</option>

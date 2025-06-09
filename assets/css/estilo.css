@@ -1,0 +1,289 @@
+/* Reset e fonte padrão */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1f2937;
+    font-size: 15px;
+    padding: 20px;
+}
+
+/* Layout container padrão */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+}
+
+/* Navegação por abas */
+.nav-tabs {
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.nav-tabs > li > a {
+    color: #555;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px 4px 0 0;
+    background-color: #f3f4f6;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li > a:hover {
+    background-color: #fff;
+    color: #0d6efd;
+    border-bottom: 2px solid transparent;
+}
+
+/* Títulos e labels */
+h1, h2, h3, label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+/* Inputs e selects */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: border-color 0.2s;
+}
+
+input.form-control,
+select.form-control {
+    border-radius: 6px; /* ajuste o valor conforme desejar */
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #0d6efd;
+    outline: none;
+}
+
+/* Botões */
+.btn-success {
+    background-color: #5cb85c !important;
+    border-color: #4cae4c !important;
+    color: #fff !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-success:hover {
+    background-color: #449d44 !important;
+    border-color: #398439 !important;
+    transform: scale(1.03);
+}
+
+.btn-danger {
+    background-color: #d9534f !important;
+    border-color: #d43f3a !important;
+    color: #fff !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-danger:hover {
+    background-color: #c9302c !important;
+    border-color: #ac2925 !important;
+    transform: scale(1.03);
+}
+
+.btn-info {
+    background-color: #5bc0de !important;
+    border-color: #46b8da !important;
+    color: #fff !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-info:hover {
+    background-color: #31b0d5 !important;
+    border-color: #269abc !important;
+    transform: scale(1.03);
+}
+
+.btn-warning {
+    background-color: #f0ad4e !important;  /* Cor do btn-warning padrão */
+    border-color: #eea236 !important;
+    color: #fff !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-warning:hover {
+    background-color: #ec971f !important;
+    transform: scale(1.03);
+}
+
+/* Label */
+label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #4A4A4A;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+label:hover {
+    color: #007BFF; /* cor azul moderna ao passar o mouse */
+}
+
+
+/* Tabela */
+.modern-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.modern-table th {
+    background-color: #5bc0de;
+    color: white;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: bold;
+}
+
+.modern-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modern-table tr:hover td {
+    background-color: #f0f8ff;
+}
+
+.modern-table tr:last-child td {
+    border-bottom: none;
+}
+
+.modern-table td:nth-child(3), .modern-table td:nth-child(4) {
+    text-align: center;
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+/* Espaçamento e responsividade */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.col-md-12,
+.col-md-9,
+.col-md-3 {
+    padding: 0 10px;
+}
+
+.col-md-12 {
+    flex: 0 0 100%;
+}
+.col-md-9 {
+    flex: 0 0 75%;
+}
+.col-md-3 {
+    flex: 0 0 25%;
+}
+
+/* Table responsive */
+.table-responsive {
+    overflow-x: auto;
+}
+
+fieldset {
+    border: 1px solid #d1d5db;
+    padding: 0px;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+/* Margens específicas */
+.row-100 {
+    margin-top: 20px;
+}
+
+
+/* Paginação */
+.paginacao-centro {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.pager {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.pager li a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #5bc0de;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pager li a:hover {
+    background-color: #31b0d5; /* tom um pouco mais escuro */
+    color: #fff; /* mantém o texto branco */
+}
+  
+  

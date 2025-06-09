@@ -4,8 +4,7 @@
     }
 ?>
 
-<div class="row-100">
-    <legend>Pesquisar por</legend>
+<div class="col-md-12">
     <div class="row">
         <div class="col-md-2" hidden>
             <label for="pesquisacredito">VALOR CRÉDITO:</label>                  
@@ -18,7 +17,7 @@
         <div class="col-md-3">    
             <label for="pesquisacidade">CIDADE:</label>        
             <select id="pesquisacidade" class="form-control">
-                <option value='0'>Selecione ...</option>
+                <option value='0'>Selecione</option>
                 <?php
                     $sel = "SELECT c.nr_sequencial, c.ds_municipio, e.sg_estado
                             FROM cidades c
@@ -35,10 +34,10 @@
                 ?>
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="pesquisastatus">STATUS:</label>
             <select class="form-control" name="pesquisastatus" id="pesquisastatus">
-            <option value='0'>Selecione ...</option>
+            <option value='0'>Selecione</option>
             <?php
                 $sel = "SELECT nr_sequencial, ds_situacao 
                         FROM situacoes 
@@ -54,7 +53,6 @@
             ?>
             </select>
         </div>
-
         <div class="col-md-3">
             <label for="pesquisasegmento">SEGMENTO:</label>
             <select name="pesquisasegmento" id="pesquisasegmento" class="form-control">
@@ -75,27 +73,26 @@
             </select>
         </div>
     </div>
-    <div class="row">
 
-        <div class="col-md-5 form-inline"><br>
+    <div class="row">
+        <div class="col-md-4 form-inline"><br>
             <label for="pesquisadataagenda">DATA AGENDA:</label>
             <input type="date" class="form-control" id="pesquisadataagenda1" size="10" maxlength="10">
             <input type="date" class="form-control" id="pesquisadataagenda2" size="10" maxlength="10">
         </div>
-        <div class="col-md-6 form-inline"><br>
+        <div class="col-md-5 form-inline"><br>
             <label for="pesquisadata">DATA LEAD:</label>
             <input type="date" class="form-control" id="pesquisadata1" size="10" maxlength="10">
             <input type="date" class="form-control" id="pesquisadata2" size="10" maxlength="10">
             <?php include "inc/botao_consultar.php"; ?>
         </div>
     </div>
-</div>
 
-<br>
+    <?php include "inc/aguarde.php"; ?>
 
-<?php include "inc/aguarde.php"; ?>
-<div class="row table-responsive" id="rslista">
-    <?php include "crm/leads/listadados.php";?>
+    <div class="row table-responsive" id="rslista">
+        <?php include "crm/leads/listadados.php";?>
+    </div>
 </div>
 
 <script language="JavaScript">

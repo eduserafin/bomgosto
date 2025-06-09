@@ -24,6 +24,16 @@
             <label>RG: <font color='red'>*</font></label>
             <input type="text" name="txtrg" id="txtrg" size="10" maxlength="25" style="background:#E6FFE0;" value="<?php echo $txtrg; ?>" class="form-control">
         </div>
+        <div class="col-md-2">
+            <label for="txtstatus">STATUS: <font color='red'>*</font></label>
+            <select class="form-control" name="txtstatus" id="txtstatus" style="background:#E0FFFF;">
+                <option value="A">ATIVO</option>
+                <option value="I">INATIVO</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-3">
             <label>FUNÇÃO: <font color='red'>*</font></label>
             <select size="1" name="selfuncao" id="selfuncao" class="form-control" style="background:#E0FFFF;">
@@ -43,11 +53,7 @@
                 ?>
             </select>
         </div>
-    </div>
-
-    <div class="row">
-
-    <div class="col-md-2">
+        <div class="col-md-2">
             <label>DATA ADMISSÃO: <font color='red'>*</font></label>
             <input type="date" name="txtdataadm" id="txtdataadm" value="<?php echo $txtdataadm; ?>" style="background:#E0FFFF;" class="form-control">
         </div>
@@ -55,19 +61,13 @@
             <label>DATA DEMISSÃO:</label>
             <input type="date" name="txtdatadem" id="txtdatadem" value="<?php echo $txtdatadem; ?>" class="form-control">
         </div>
-       
-        <div class="col-md-2">
-            <label for="txtstatus">STATUS: <font color='red'>*</font></label>
-            <select class="form-control" name="txtstatus" id="txtstatus" style="background:#E0FFFF;">
-                <option value="A">ATIVO</option>
-                <option value="I">INATIVO</option>
-            </select>
-        </div>
-       
         <div class="col-md-2">
             <label>TELEFONE: <font color='red'>*</font></label> 
             <input type="text" name="txttelefone" id="txttelefone" maxlength="20" value="<?php echo $txttelefone; ?>" class="form-control" style="background:#E6FFE0;">
         </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-4">
             <label>E-MAIL: <font color='red'>*</font></label>
             <input type="text" name="txtemail" id="txtemail" size="40" maxlength="60" value="<?php echo $txtemail; ?>" class="form-control" style="background:#E6FFE0;">
@@ -89,15 +89,18 @@
             <label>N. END:</label>
             <input type="text" name="txtnrendereco" id="txtnrendereco" maxlength="10" value="<?php echo $txtnrendereco; ?>" class="form-control">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label>BAIRRO:</label>
             <input type="text" name="txtbairro" id="txtbairro" maxlength="60" value="<?php echo $txtbairro; ?>" class="form-control">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label>COMPLEMENTO:</label>
             <input type="text" name="txtdscomplemento" id="txtdscomplemento" maxlength="60" value="<?php echo $txtdscomplemento; ?>" class="form-control">
         </div>
-        <div class="col-md-1">
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
             <label>UF:</label>
             <select size="1" name="seluf" id="seluf" class="form-control" onChange="javascript: BuscarCidades(document.getElementById('seluf').value, '');">
                 <option selected value=0>Selecione...</option>
@@ -114,13 +117,11 @@
                 ?>
             </select>
         </div>
-
         <div class="col-md-3">
             <div class="row" id="rscidades">
                 <?php include "cidades.php"; ?>
             </div>
         </div>
-
         <div class="col-md-2">
             <label>CEP:</label>
             <input type="text" name="txtcep" id="txtcep" maxlength="8" value="<?php echo $txtcep; ?>" class="form-control">
@@ -130,9 +131,9 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function() {
+    /* $(document).ready(function() {
         $('#selfuncao').select2();
-    });
+    }); */
 
     function limparTexto(texto) {
         return texto.replace(/[^\p{L}\p{N}\s]/gu, '');
@@ -172,7 +173,7 @@
             var datadem = document.getElementById('txtdatadem').value;
             var status = document.getElementById('txtstatus').value;
             var telefone = limparTexto(document.getElementById('txttelefone').value);
-            var email = limparTexto(document.getElementById('txtemail').value);
+            var email = document.getElementById('txtemail').value;
             var endereco = limparTexto(document.getElementById('txtendereco').value);
             var nrendereco = limparTexto(document.getElementById('txtnrendereco').value);
             var bairro = limparTexto(document.getElementById('txtbairro').value);

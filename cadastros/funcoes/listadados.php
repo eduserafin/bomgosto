@@ -36,39 +36,40 @@ if ($descricao !== "") {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
-    <table width="100%" class="table table-bordered table-striped">
-        <tr>
-            <th><strong>FUNÇÃO</strong></th>
-            <th><strong>STATUS</strong></th>
-            <th colspan=2><strong>AÇÕES</strong></th>
-        </tr>
-        <?php
+        <table width="100%" class="table table-bordered table-striped modern-table">
+            <tr>
+                <th><strong>FUNÇÃO</strong></th>
+                <th><strong>STATUS</strong></th>
+                <th colspan="2" style="text-align: center;"><strong>AÇÕES</strong></th>
+            </tr>
+            <?php
+            
+                $SQL = "SELECT nr_sequencial, ds_funcao,
+                        CASE WHEN st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
+                        FROM funcoes
+                        WHERE 1 = 1 $pesquisanome 
+                        AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
+                        ORDER BY ds_funcao ASC limit $porpagina offset $inicio";
+                //echo $SQL;
+                $RSS = mysqli_query($conexao, $SQL);
+                while ($linha = mysqli_fetch_row($RSS)) {
+                    $nr_sequencial = $linha[0];
+                    $ds_funcao = $linha[1];
+                    $st_status = $linha[2];
+                    ?>
+                    <tr>
+                        <td><?php echo $ds_funcao; ?></td>
+                        <td><?php echo $st_status; ?></td>
+                        <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
+                        <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
+                    </tr>
+                    <?php
+                }
+            ?>
+        </table>
+    
+        <?php include $ant."inc/paginacao.php";?>
         
-            $SQL = "SELECT nr_sequencial, ds_funcao,
-                    CASE WHEN st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
-                    FROM funcoes
-                    WHERE 1 = 1 $pesquisanome 
-                    AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
-                    ORDER BY ds_funcao ASC limit $porpagina offset $inicio";
-            //echo $SQL;
-            $RSS = mysqli_query($conexao, $SQL);
-            while ($linha = mysqli_fetch_row($RSS)) {
-                $nr_sequencial = $linha[0];
-                $ds_funcao = $linha[1];
-                $st_status = $linha[2];
-                ?>
-                <tr>
-                    <td><?php echo $ds_funcao; ?></td>
-                    <td><?php echo $st_status; ?></td>
-                    <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
-                    <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
-                </tr>
-                <?php
-            }
-        ?>
-    </table>
-    <br>
-    <?php include $ant."inc/paginacao.php";?>
   </body>
 </html>   
 

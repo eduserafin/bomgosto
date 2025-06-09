@@ -30,7 +30,7 @@
 
 ?>
 
-<table width="100%" class="table table-bordered table-striped">
+<table width="100%" class="table table-bordered table-striped modern-table">
     <tr>
         <th><strong>PARCELAS</strong></th>
         <th><strong>COMISSÕES</strong></th>

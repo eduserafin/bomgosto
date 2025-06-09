@@ -76,7 +76,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
-      <table width="100%" class="table table-bordered table-striped">
+      <table width="100%" class="table table-bordered table-striped modern-table">
         <tr>
           <th style="vertical-align:middle;">NOME</th>
           <th style="vertical-align:middle;">VALOR</th>
@@ -138,7 +138,7 @@
 
       </table>
   
-      <br><?php include $ant."inc/paginacao.php";?>
+      <?php include $ant."inc/paginacao.php";?>
 
   </body>
 </html> 

@@ -8,65 +8,67 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <label>COLABORADOR:</label>
-            <select size="1" name="selcolaborador" id="selcolaborador" class="form-control" style="background:#E6FFE0;">
-                <option selected value=0>Selecione...</option>
-                <?php
-                    $SQL = "SELECT nr_sequencial, ds_colaborador
-                            FROM colaboradores
-                            WHERE st_status = 'A'
-                            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
-                            ORDER BY ds_colaborador";
-                    $RES = mysqli_query($conexao, $SQL);
-                    while($lin=mysqli_fetch_row($RES)){
-                        $nr_cdgo = $lin[0];
-                        $ds_desc = $lin[1];
-                        echo "<option value=$nr_cdgo>$ds_desc</option>";
-                    }
-                ?>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label>COMISSÃO:</label>
-            <input type="number" name="txtcomissao" id="txtcomissao" maxlength="10" class="form-control" style="background:#E6FFE0;">
-        </div>
+        <div class="col-md-12">
+            <div class="col-md-3">
+                <label>COLABORADOR:</label>
+                <select size="1" name="selcolaborador" id="selcolaborador" class="form-control" style="background:#E6FFE0;">
+                    <option selected value=0>Selecione</option>
+                    <?php
+                        $SQL = "SELECT nr_sequencial, ds_colaborador
+                                FROM colaboradores
+                                WHERE st_status = 'A'
+                                AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
+                                ORDER BY ds_colaborador";
+                        $RES = mysqli_query($conexao, $SQL);
+                        while($lin=mysqli_fetch_row($RES)){
+                            $nr_cdgo = $lin[0];
+                            $ds_desc = $lin[1];
+                            echo "<option value=$nr_cdgo>$ds_desc</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label>COMISSÃO:</label>
+                <input type="number" name="txtcomissao" id="txtcomissao" maxlength="10" class="form-control" style="background:#E6FFE0;">
+            </div>
 
-        <div class="col-md-2">
-            <label>PARCELAS:</label>
-            <input type="number" name="txtparcelas" id="txtparcelas" maxlength="10" class="form-control" style="background:#E6FFE0;" onChange="javascript: BuscarComissao(this.value, '');">
-        </div>
+            <div class="col-md-2">
+                <label>PARCELAS:</label>
+                <input type="number" name="txtparcelas" id="txtparcelas" maxlength="10" class="form-control" style="background:#E6FFE0;" onChange="javascript: BuscarComissao(this.value, '');">
+            </div>
 
-        <div class="col-md-4">
-            <label>ADMINISTRADORA:</label>
-            <select size="1" name="seladministradora" id="seladministradora" class="form-control" style="background:#E6FFE0;">
-                <option selected value=0>Selecione...</option>
-                <?php
-                    $SQL = "SELECT nr_sequencial, ds_administradora
-                            FROM administradoras
-                            WHERE st_status = 'A'
-                            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
-                            ORDER BY ds_administradora";
-                    $RES = mysqli_query($conexao, $SQL);
-                    while($lin=mysqli_fetch_row($RES)){
-                        $nr_cdgo = $lin[0];
-                        $ds_desc = $lin[1];
-                        echo "<option value=$nr_cdgo>$ds_desc</option>";
-                    }
-                ?>
-            </select>
+            <div class="col-md-3">
+                <label>ADMINISTRADORA:</label>
+                <select size="1" name="seladministradora" id="seladministradora" class="form-control" style="background:#E6FFE0;">
+                    <option selected value=0>Selecione</option>
+                    <?php
+                        $SQL = "SELECT nr_sequencial, ds_administradora
+                                FROM administradoras
+                                WHERE st_status = 'A'
+                                AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
+                                ORDER BY ds_administradora";
+                        $RES = mysqli_query($conexao, $SQL);
+                        while($lin=mysqli_fetch_row($RES)){
+                            $nr_cdgo = $lin[0];
+                            $ds_desc = $lin[1];
+                            echo "<option value=$nr_cdgo>$ds_desc</option>";
+                        }
+                    ?>
+                </select>
+            </div>
         </div>
-    </div>
-
-    <div class="row-100"><br>
-        <div class="col-md-4" id="rscomissoes">
-            <?php include "comissao.php"; ?>
+        <div class="row"><br>
+            <div class="col-md-6" id="rscomissoes">
+                <?php include "comissao.php"; ?>
+            </div>
         </div>
     </div>
 </body>
 
 <script type="text/javascript">
 
+    /*
     $(document).ready(function() {
         $('#selcolaborador').select2();
     });
@@ -74,7 +76,7 @@
     $(document).ready(function() {
         $('#seladministradora').select2();
     });
-
+    */
     function executafuncao(id){
 
         if (id=='new'){

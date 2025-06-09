@@ -23,16 +23,17 @@
         var url = 'crm/leads/crm.php?consulta=sim&lead=' + id;
         $.get(url, function (dataReturn) {
             $('#comercial').html(dataReturn);
+            $('#tabcomercial').tab('show');
         });
     }
 
 </script>
-
+<link rel="stylesheet" href="/csimulador/assets/css/estilo.css">
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">CADASTRO</a></li>
-    <li><a id="tabformulario" href="#comercial" data-toggle="tab">CRM</a></li>
     <li><a id="tablista" href="#lista" data-toggle="tab">LISTA</a></li>
+    <li><a id="tabcomercial" href="#comercial" data-toggle="tab">CRM</a></li>
 </ul> 
 
 <div class="tab-content">

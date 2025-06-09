@@ -1,230 +1,136 @@
 <?php 
-
     require_once('config/servers.php'); 
-
-    //SE O USUÁRIO JÁ ESTÁ LOGADO REDIRECIONA PARA A DASHBOARD
     if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && isset($_SESSION['ALIAS_EMPRESA']) && strlen($_SESSION['ALIAS_EMPRESA']) > 0) {
         header('location: dashboard.php');
     }
-
 ?>
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Csimulador | Login</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="plugins/sweetalert/sweetalert2.all.min.js"></script>
-    <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Fontes e Estilos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-</head>
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<body class="hold-transition login-page vsc-initialized">
-    <div class="row fundo-login">
-        <div class="row form-login">
-            <div class="col-12 col-sm-6 login-esquerda">
-                <div class="cabecalho-esquerda" style="justify-content: center; display: flex; margin-bottom: -80px;">
-                    <img class="logo" src="img/logo1.png" alt="" height="350" width="350">
-                </div>
-                <p class="conteudo-esquerda">
-                    <br>Pense grande, mire alto, trabalhe duro e nunca desista!<b style="font-size: 12px;
-                    font-weight: 400;
-                    display: flex;
-                    justify-content: left;"></b></p>
-
-            </div>
-            <div class="col-12 col-sm-6 login-direita">
-                <form action="conecta.php" method="post">
-                    <!-- <h6 class="titulo-h6">ENTRE COM SEU USUARIO</h6> -->
-                    <!-- <h3 class="titulo-h3">Login Ginfo</h3> -->
-                    <h6 class="titulo-h6">&nbsp;</h6>
-                    <h3 class="titulo-h3">&nbsp;</h3>
-                    <div class="pt-5">
-                        <div class="inputBox">
-                            <input type="text" name="nomeempresa" id="nomeempresa" class="inputUser" required>
-                            <label for="nome" class="labelInput">Empresa</label>
-                        </div>
-                        <div class="inputBox">
-                            <input type="text" name="usuario" id="usuario" class="inputUser" required>
-                            <label for="email" class="labelInput">Usuário</label>
-                        </div>
-
-                        <div class="inputBox">
-                            <input type="password" name="senha" id="senha" class="inputUser" required>
-                            <label for="nome" class="labelInput">Senha</label>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-login">Entrar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-     <style>
         body {
-            overflow: hidden;
-        }
-
-        @media screen and (max-width: 940px) {
-            .cabecalho-esquerda {
-                margin-top: -33px;
-                margin-bottom: -60px !important;
-            }
-
-            .logo {
-                width: 171px;
-                height: 173px;
-            }
-
-            .login-direita {
-                margin-top: -82px;
-                padding: 7%;
-            }
-
-            .login-esquerda {
-
-                margin-left: 0px !important;
-            }
-
-            .form-login {
-                padding: 0;
-                height: 89%!important;
-                width: 79%!important;
-            }
-        }
-
-        .fundo-login {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: linear-gradient(to right, #0000001f, #0000001f), url(img/fundo3.jpg);
-            background-size: cover;
-            background-position: bottom;
             height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/fundo3.jpg') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .form-login {
-            height: 75%;
-            width: 65%;
-            background-color: #fff;
-            border-radius: 32px;
-        }
-
-        .login-esquerda {
-
-            border-radius: 32px;
-            margin-left: -16px;
-            background-image: linear-gradient(to right, #6570c0, #612db5), url(img/fundo2.jpg);
-            background-size: cover;
-            background-position: top;
-            display: grid;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-direita {
-            padding: 4%;
-            display: grid;
-            align-items: center;
-        }
-
-        .titulo-h6 {
-            font-family: poppins;
-            color: #6dc065;
-            font-size: 11px;
-        }
-
-        .titulo-h3 {
-            font-family: 'Poppins';
-            font-size: 28px;
-        }
-
-        .conteudo-esquerda {
-            color: #ffffff;
-            font-size: 14px;
-            font-family: poppins;
-            padding: 10%;
-        }
-
-        .btn-login {
-            background: #612db5;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 40px;
             width: 100%;
-            border: none;
-            margin-top: 5%;
-            color: #fff;
-            font-family: 'poppins';
-            font-size: 15px;
-            padding: 10px;
-            border-radius: 18px;
+            max-width: 400px;
         }
 
-        .btn-login:hover {
-            background: #197374;
-        }
-    </style>
-    <style>
-        .nav {
-            display: block;
-        }
-
-        .nav-link {
-            color: #010000 !important;
-        }
-
-        .box {
-            display: flex;
-            justify-content: center;
-        }
-
-        .inputUser {
-            background: none;
-            border: none;
-            border-bottom: 1px solid #adadad;
-            outline: none;
-            color: #212529;
-            margin-bottom: 10%;
-            width: 100%;
-            padding: 5px;
-            font-family: 'poppins';
-            font-size: 14px;
-            /* letter-spacing: 1px; */
-        }
-
-        .page-section {
-            padding-top: 20px !important;
+        .form-login h3 {
+            text-align: center;
+            font-weight: 600;
+            font-size: 26px;
+            margin-bottom: 30px;
         }
 
         .inputBox {
             position: relative;
+            margin-bottom: 30px;
+        }
+
+        .inputUser {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #ccc;
+            outline: none;
+            font-size: 15px;
+            padding: 10px 5px;
+            background: transparent;
+            transition: border-color 0.3s;
+        }
+
+        .inputUser:focus {
+            border-color: #612db5;
         }
 
         .labelInput {
             position: absolute;
-            top: 0px;
-            left: 0px;
-            pointer-events: none;
-            transition: .5s;
-            font-weight: 300;
-            font-family: 'poppins';
+            top: 10px;
+            left: 5px;
             font-size: 14px;
+            color: #777;
+            pointer-events: none;
+            transition: 0.3s ease;
         }
-        .inputUser:focus~.labelInput,
-        .inputUser:valid~.labelInput {
-            top: -20px;
-            font-size: 11px;
-            color: #197374;
+
+        .inputUser:focus ~ .labelInput,
+        .inputUser:valid ~ .labelInput {
+            top: -12px;
+            font-size: 12px;
+            color: #612db5;
+        }
+
+        .btn-login {
+            background: #612db5;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-weight: 500;
+            font-size: 15px;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: #4e2391;
+        }
+
+        @media (max-width: 480px) {
+            .form-login {
+                padding: 30px 20px;
+            }
         }
     </style>
+</head>
+<body>
+
+    <div class="form-login">
+        <form action="conecta.php" method="post">
+            <h3>Login</h3>
+
+            <div class="inputBox">
+                <input type="text" name="nomeempresa" id="nomeempresa" class="inputUser" required>
+                <label for="nomeempresa" class="labelInput">Empresa</label>
+            </div>
+
+            <div class="inputBox">
+                <input type="text" name="usuario" id="usuario" class="inputUser" required>
+                <label for="usuario" class="labelInput">Usuário</label>
+            </div>
+
+            <div class="inputBox">
+                <input type="password" name="senha" id="senha" class="inputUser" required>
+                <label for="senha" class="labelInput">Senha</label>
+            </div>
+
+            <button type="submit" class="btn-login">Entrar</button>
+        </form>
+    </div>
 
 </body>
-
 </html>

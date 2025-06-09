@@ -3,12 +3,12 @@
         $$key = $value;
     }
 ?>
-<div class="row">
-    <div class="col-md-12">
+<div class="col-md-12">
+    <div class="row">
         <div class="col-md-3">
-            <label>COLABORADOR:</label>
-            <select size="1" name="pesquisacolaborador" id="pesquisacolaborador" class="form-control">
-                <option selected value=0>Selecione...</option>
+            <label for="pesquisacolaborador">COLABORADOR:</label>
+            <select size="10" name="pesquisacolaborador" id="pesquisacolaborador" class="form-control">
+                <option selected value=0>Selecione</option>
                 <?php
                     $SQL = "SELECT nr_sequencial, ds_colaborador
                             FROM colaboradores
@@ -25,9 +25,9 @@
             </select>
         </div>
         <div class="col-md-3">
-            <label>ADMINISTRADORA:</label>
-            <select size="1" name="pesquisaadministradora" id="pesquisaadministradora" class="form-control">
-                <option selected value=0>Selecione...</option>
+            <label for="pesquisaadministradora">ADMINISTRADORA:</label>
+            <select size="10" name="pesquisaadministradora" id="pesquisaadministradora" class="form-control">
+                <option selected value=0>Selecione</option>
                 <?php
                     $SQL = "SELECT nr_sequencial, ds_administradora
                             FROM administradoras
@@ -43,17 +43,16 @@
                 ?>
             </select>
         </div>
-        <div class="col-md-2"><br>
+        <div class="col-md-2">
             <?php include "inc/botao_consultar.php"; ?>
         </div>
     </div>
 
-    <div class="col-md-12"><br>
-        <div class="row table-responsive" id="rslista">
-            <?php include "cadastros/comissoes/listadados.php";?>
-        </div>
+    <div class="row table-responsive" id="rslista">
+        <?php include "cadastros/comissoes/listadados.php";?>
     </div>
 </div>
+
 <script language="JavaScript">
 
     $(document).ready(function() {
