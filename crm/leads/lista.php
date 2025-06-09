@@ -75,15 +75,17 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 form-inline"><br>
+        <div class="col-md-4 form-inline">
             <label for="pesquisadataagenda">DATA AGENDA:</label>
             <input type="date" class="form-control" id="pesquisadataagenda1" size="10" maxlength="10">
             <input type="date" class="form-control" id="pesquisadataagenda2" size="10" maxlength="10">
         </div>
-        <div class="col-md-5 form-inline"><br>
+        <div class="col-md-4 form-inline">
             <label for="pesquisadata">DATA LEAD:</label>
             <input type="date" class="form-control" id="pesquisadata1" size="10" maxlength="10">
             <input type="date" class="form-control" id="pesquisadata2" size="10" maxlength="10">
+        </div>
+        <div class="col-md-1"><br>
             <?php include "inc/botao_consultar.php"; ?>
         </div>
     </div>

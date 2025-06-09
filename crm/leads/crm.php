@@ -23,7 +23,7 @@
         
         $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento, ls.nr_telefone, 
                 CONCAT(c.ds_municipio, ' - ', e.sg_estado) AS municipio_estado, st.ds_situacao, 
-                ls.ds_email, ls.dt_agenda, ls.nr_seq_situacao, ls.nr_seq_administradora, ls.nr_seq_grupo,
+                ls.ds_email, ls.dt_agenda, ls.nr_seq_situacao, ls.nr_seq_administradora, ls.ds_grupo,
                 ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado
                 FROM lead ls
                 INNER JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
@@ -49,8 +49,7 @@
             $nr_seq_situacao = isset($nr_seq_situacao) ? $nr_seq_situacao : 0;
             $nr_seq_administradora = $linha[11];
             $nr_seq_administradora = isset($nr_seq_administradora) ? $nr_seq_administradora : 0;
-            $nr_seq_grupo = $linha[12];
-            $nr_seq_grupo = isset($nr_seq_grupo) ? $nr_seq_grupo : 0;
+            $ds_grupo = $linha[12];
             $nr_cota = $linha[13];
             $pc_reduzido = $linha[14];
             $vl_contratado = $linha[15];
@@ -206,21 +205,7 @@
                         <p><strong>Tipo do Crédito:</strong> <?php echo $ds_segmento; ?></p>
 
                         <label>Grupo: <font color='red'>*</font></label>
-                        <select class="form-control" name="selgrupo" id="selgrupo">
-                            <option value="0">Selecione...</option>
-                            <?php 
-                                $sel = "SELECT nr_sequencial, ds_grupo 
-                                        FROM grupos 
-                                        WHERE st_status = 'A' 
-                                        AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
-                                        ORDER BY ds_grupo";
-                                $res = mysqli_query($conexao, $sel);
-                                while($lin = mysqli_fetch_row($res)){
-                                    $selecionado = $lin[0] == $nr_seq_grupo ? "selected" : "";
-                                    echo "<option $selecionado value=$lin[0]>$lin[1]</option>";
-                                }
-                            ?>
-                        </select>
+                        <input type="text" name="txtgrupo" id="txtgrupo" class="form-control" value="<?php echo $ds_grupo; ?>">
 
                         <label class="mt-2">Cota: <font color='red'>*</font></label>
                         <input type="number" name="txtcota" id="txtcota" class="form-control" value="<?php echo $nr_cota; ?>">
@@ -354,7 +339,7 @@
             function AlteraStatus(selectElement) {
                 const status = selectElement.value;
                 const codigo = document.getElementById("nr_seq_lead").value;
-                const grupo = document.getElementById("selgrupo").value;
+                const grupo = document.getElementById("txtgrupo").value;
                 const cota = document.getElementById("txtcota").value.trim();
                 const valorcontratado = document.getElementById("txtvalorcontratado").value.trim();
                 const percentual = document.getElementById("txtpercentual").value.trim();
@@ -364,7 +349,7 @@
                 // Validação única para status 1 (CONTRATADA)
                 if (status == 1) {
                     const camposInvalidos = (
-                        grupo == 0 ||
+                        grupo == "" ||
                         cota == "" ||
                         valorcontratado == "" ||
                         administratadora == 0
@@ -430,7 +415,7 @@
 
             function Contratar() {
                 var codigo = document.getElementById("nr_seq_lead").value;
-                var grupo = document.getElementById("selgrupo").value;
+                var grupo = document.getElementById("txtgrupo").value;
                 var cota = document.getElementById("txtcota").value;
                 var valorcontratado = document.getElementById("txtvalorcontratado").value;
                 var percentual = document.getElementById("txtpercentual").value;
@@ -451,13 +436,13 @@
                     valorfinal = 0;
                 }
 
-                if (grupo == 0) {
+                if (grupo == "") {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Oops...',
                         text: 'Informe o Grupo!'
                     });
-                    document.getElementById('txtcomentario').focus();
+                    document.getElementById('txtgrupo').focus();
                     return;
                 } 
                 else if (cota == "") {
