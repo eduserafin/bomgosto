@@ -36,7 +36,7 @@ if ($descricao !== "") {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
-    <table width="100%" class="table table-bordered table-striped">
+    <table width="100%" class="table table-bordered table-striped modern-table">
         <tr>
             <th class="bg-info"><strong>NOME</strong></th>
             <th class="bg-info"><strong>LOGIN</strong></th>
@@ -44,7 +44,7 @@ if ($descricao !== "") {
             <th class="bg-info"><strong>AÇÕES</strong></th>
         </tr>
         <?php
-            $SQL = "SELECT u.nr_sequencial, UPPER(c.ds_colaborador), u.ds_login, u.ds_email
+            $SQL = "SELECT u.nr_sequencial, c.ds_colaborador, u.ds_login, u.ds_email
                     FROM usuarios u
                     INNER JOIN colaboradores c ON c.nr_sequencial = u.nr_seq_colaborador
                     WHERE u.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "

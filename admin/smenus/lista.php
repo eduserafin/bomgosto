@@ -8,7 +8,7 @@ foreach($_GET as $key => $value){
         <fieldset>
             <div class="form-group form-inline col-md-12">
                 <br>
-                <input type="text" class="form-control" id="txtpesquisanome" placeholder="Pesquisar" size="35" maxlength="60">
+                <input type="text" class="form-control" id="txtpesquisanome" placeholder="Pesquisar" size="50" maxlength="60">
                 <?php include "inc/botao_consultar.php"; ?>
             </div>
         </fieldset>

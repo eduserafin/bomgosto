@@ -50,8 +50,8 @@ if ($Tipo == "I") {
 
     } else {
 
-        $insert = "INSERT INTO usuarios (ds_login, ds_senha, nr_seq_colaborador, ds_email, st_admin, st_status) 
-                  VALUES (LOWER('" . $login . "'), '" . $senha . "', " . $colaborador . ", '" . $email . "', '" . $admin . "', '" . $status . "') ";
+        $insert = "INSERT INTO usuarios (ds_login, ds_senha, nr_seq_colaborador, ds_email, st_admin, st_status, nr_seq_empresa) 
+                  VALUES (LOWER('" . $login . "'), '" . $senha . "', " . $colaborador . ", '" . $email . "', '" . $admin . "', '" . $status . "', " . $_SESSION["CD_EMPRESA"] . ") ";
         $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
         if ($rss_insert) {
@@ -110,7 +110,9 @@ if ($Tipo == "A") {
                         ds_login = '" . $login . "', 
                         ds_senha = '". $senha ."',
                         st_admin = '". $admin ."',
-                        st_status = '". $status ."'
+                        st_status = '". $status ."',
+                        nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . ",
+                        dt_alterado = CURRENT_TIMESTAMP
                     WHERE nr_sequencial=" . $codigo;
         $rss_update = mysqli_query($conexao, $update);
 

@@ -1,39 +1,76 @@
 <?php
-foreach($_GET as $key => $value){
-	$$key = pg_escape_string($value);
-}
+    foreach($_GET as $key => $value){
+        $$key = pg_escape_string($value);
+    }
 ?>
-<br>
+
+<style>
+    .upload-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+    }
+
+    .upload-label {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .upload-input {
+        width: 100%;
+        border-radius: 6px;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        background-color: #fff;
+    }
+
+    .upload-btn {
+        margin-top: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .upload-btn:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+    #enviandoArquivo {
+        font-weight: 500;
+        margin-left: 15px;
+        display: none;
+    }
+</style>
+
 <div id="msgexibe" class="alert alert-info fade in alert-dismissable" >
     <span class="glyphicon glyphicon-pencil"></span> ANEXOS
 </div>
 
 <div class="col-md-12">
-    <table class="table table-condensed ml-10 mr-10 bg-white" align="center" style="width: calc(100% - 20px)">
-        <tbody>
-            <tr>
-                <td style="padding-left: 15px;">
-                    <label for="selitem_desc">ARQUIVO:</label>
-                    <input type="file" accept="image/*" multiple="true" id="campoAnexo"  style="display: inline-block; width: 50%">
-                    <input type="hidden" id="nr_seq_empresa" value="<?php echo $codigo ?>">
-                    <button class="btn btn-primary" id="btnEnviar" onclick="enviaAnexo(document.getElementById('campoAnexo')); anulacampo(document.getElembentById('campoAnexo'));"><i class="fa fa-upload"></i> Enviar</button>
-                    <span class="hidden" style="width:50%" id="enviandoArquivo">
-                        <i class="fa fa-spinner fa-pulse"></i> Enviando arquivo...
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="w-100" id="listaArquivos">
-                        <?php include 'listaanexos.php'; ?>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <div class="upload-card">
+        <label for="campoAnexo" class="upload-label">ARQUIVO:</label>
+        <input type="file" accept="image/*" multiple id="campoAnexo" class="form-control upload-input">
 
-</form>
+        <input type="hidden" id="nr_seq_empresa" value="<?php echo $codigo ?>">
+
+        <button class="btn btn-primary upload-btn" id="btnEnviar" onclick="
+            enviaAnexo(document.getElementById('campoAnexo'));
+            anulacampo(document.getElementById('campoAnexo'));">
+            <i class="fa fa-upload"></i> Enviar
+        </button>
+
+        <span id="enviandoArquivo">
+            <i class="fa fa-spinner fa-pulse"></i> Enviando arquivo...
+        </span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" id="listaArquivos">
+            <?php include 'listaanexos.php'; ?>
+        </div>
+    </div>
+</div>
 <script>
     function enviaAnexo(campo) {
         var codigo = document.getElementById("nr_seq_empresa").value;

@@ -34,7 +34,7 @@ if ($descricao !== "") {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
-        <table width="100%" class="table table-bordered table-striped">
+        <table width="100%" class="table table-bordered table-striped modern-table">
             <thead>
                 <tr>
                     <th style="vertical-align:middle;">MENU</th>

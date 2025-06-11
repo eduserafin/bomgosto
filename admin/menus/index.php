@@ -15,6 +15,8 @@ foreach($_GET as $key => $value){
     }
 
 </script>
+
+<link rel="stylesheet" href="/csimulador/assets/css/estilo.css">
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">CADASTRO</a></li>
@@ -28,7 +30,7 @@ foreach($_GET as $key => $value){
         </div>
 
     </div>
-    <div class = "tab-pane" id = "lista">
+    <div class="tab-pane" id="lista">
         <div class="row-100">
             <?php include 'lista.php'; ?>        
         </div>

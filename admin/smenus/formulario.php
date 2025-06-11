@@ -15,29 +15,27 @@ foreach($_GET as $key => $value){
 </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-3">
             <label for="menu">MENU:</label>
             <?php include "inc/menus.php"; ?>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <label for="txtnome">DESCRI&Ccedil;&Atilde;O:</label>
             <input type="text" class="form-control" name="txtnome" id="txtnome" size="45" maxlength="60" style="background:#E0FFFF;">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <label for="txtlink">LINK:</label>
             <input type="text" class="form-control" name="txtlink" id="txtlink" size="50" maxlength="50" style="background:#E0FFFF;">
         </div>  
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <label for="txticone">&Iacute;CONE:</label>
             <input type="text" class="form-control" name="txticone" id="txticone" size="15" maxlength="25" style="background:#E0FFFF;">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <label for="modulo">M&Oacute;DULO:</label>
-            <select class="form-control" name="modulo" id="modulo">
+            <select class="form-control" name="modulo" id="modulo" style="background:#E0FFFF;">
                 <option selected value="0">Selecione</option>
                 <option value="1">GERAL</option>
                 <option value="2">MOVIMENTOS</option>

@@ -96,7 +96,7 @@ if ($empresa !== "") {
         ?> 
     </tbody>
 </table>
-<br>
+
 <?php include $ant."inc/paginacao.php";?>
 
 <script language="javascript">

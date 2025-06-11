@@ -24,7 +24,8 @@
 			WHERE u.ds_login = '".$TxUsuario."' 
 			AND u.ds_senha = '".$TxSenha."'
 			AND UPPER(e.ds_empresa) = UPPER('$TxEmpresa')
-			AND u.st_status = 'A'"; echo $SQL;
+			AND u.st_status = 'A'"; 
+	//echo $SQL;
 	$RSS = mysqli_query($conexao, $SQL);
 	$RS = mysqli_fetch_array($RSS);
 

@@ -14,19 +14,17 @@ foreach($_GET as $key => $value){
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-                    <label for="txtnome">Descri&ccedil;&atilde;o:</label>
-                    <input type="text" name="txtnome" id="txtnome" placeholder="Descrição" size="45" maxlength="60" class="form-control" style="background:#E0FFFF;">
+    <div class="col-md-4">
+        <label for="txtnome">DESCRIÇÃO:</label>
+        <input type="text" name="txtnome" id="txtnome" placeholder="Descrição" size="45" maxlength="60" class="form-control" style="background:#E0FFFF;">
     </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-                <td><label for="txtlink">Link:</label>
-                    <input type="text" name="txtlink" id="txtlink"  maxlength="35" class="form-control" style="background:#E0FFFF;">
+    <div class="col-md-4">
+        <label for="txtlink">LINK:</label>
+        <input type="text" name="txtlink" id="txtlink"  maxlength="35" class="form-control" style="background:#E0FFFF;">
     </div>
-    <div class="col-md-6">
-                    <label for="txticone">Icone:</label>
-                    <input type="text" name="txticone" id="txticone" maxlength="25" class="form-control" style="background:#E0FFFF;">
+    <div class="col-md-2">
+        <label for="txticone">ICONE:</label>
+        <input type="text" name="txticone" id="txticone" maxlength="25" class="form-control" style="background:#E0FFFF;">
     </div>
 </div>
 

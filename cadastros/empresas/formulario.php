@@ -25,13 +25,13 @@ foreach($_GET as $key => $value){
                 </div>
             </div>
         </div>
-        <div class="row-100">
+        <div class="col-md-12">
             <div class="row">
                 <div class="col-md-3">
                     <label for="txtcnpj">CNPJ:</label>
                     <input class="form-control" type="text" name="txtcnpj" id="txtcnpj" maxlength="18" style="background:#E0FFFF;" onchange="buscaCNPJ(value)">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <label for="txtnome">NOME:</label>
                     <input class="form-control" type="text" name="txtnome" id="txtnome" maxlength="60" style="background:#E0FFFF;">
                 </div>
@@ -45,7 +45,7 @@ foreach($_GET as $key => $value){
             </div>
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="txtie">IE:</label>
                     <input class="form-control" type="text" name="txtie" id="txtie" maxlength="20">
                 </div>
@@ -64,7 +64,7 @@ foreach($_GET as $key => $value){
             </div>
 
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <label for="txtcomplemento">COMPLEMENTO:</label>
                     <input class="form-control" type="text" name="txtcomplemento" id="txtcomplemento" maxlength="200">
                 </div>
@@ -72,7 +72,7 @@ foreach($_GET as $key => $value){
                     <label for="txtcep">CEP:</label>
                     <input class="form-control" type="text" name="txtcep" id="txtcep" maxlength="9" style="background:#E0FFFF;">
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <label for="txtestado">UF:</label>
                     <select name="txtestado" id="txtestado" class="form-control" style="background:#E0FFFF;">
                         <option value="0">Selecione</option>
@@ -119,12 +119,10 @@ foreach($_GET as $key => $value){
                     <input type="text" id="txtempresa" name="txtempresa" class="form-control" maxlength="200" style="background:#E0FFFF;">
                 </div>
             </div>
-           
-            <div class="row">
-                <div class="col-md-12" id="rsanexos">
-                
-                </div>
-            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12" id="rsanexos"></div>
         </div>
     </body>
 </html>

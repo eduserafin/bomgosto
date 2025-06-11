@@ -78,8 +78,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
         <link href="plugins/select2/select2.min.css" rel="stylesheet" />
-
-
+      
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
         <style>
             .ui-autocomplete {
@@ -89,7 +88,104 @@
 
             .select2 {
                 width: 100% !important
+            }  
+
+            body {
+                background-color: #f4f6f9;
             }
+
+            .main-sidebar {
+                background-color: #1e1e2f;
+                color: #ffffff;
+                min-height: 100vh;
+                width: 250px;
+                position: fixed;
+            }
+
+            .sidebar-menu > li.header {
+                font-size: 14px;
+                color: #bbb;
+                padding: 15px 20px;
+                text-transform: uppercase;
+                border-bottom: 1px solid #333;
+            }
+
+            .sidebar-menu li a {
+                color: #ccc;
+                padding: 12px 20px;
+                display: flex;
+                align-items: center;
+                transition: background-color 0.3s ease;
+                text-decoration: none;
+            }
+
+            .sidebar-menu li a:hover {
+                background-color: #343454;
+                color: #fff;
+            }
+
+            .sidebar-menu li.active > a,
+            .sidebar-menu li.menu-open > a {
+                background-color: #343454;
+                font-weight: bold;
+                color: #fff;
+            }
+
+            .sidebar-menu i {
+                margin-right: 10px;
+                font-size: 16px;
+            }
+
+            .treeview-menu {
+                background-color: #2b2b3d;
+                padding-left: 20px;
+            }
+
+            .treeview-menu li a {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .sidebar-menu li.menu-open > a {
+                border-left: 4px solid #00c0ef;
+            }
+
+            .sidebar-menu li a {
+                transition: all 0.3s ease;
+            }
+
+            .main-sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .sidebar-menu li a {
+                border-radius: 6px;
+            }
+
+            .content-wrapper {
+                margin-left: 250px; /* Mesmo valor da largura da sidebar */
+                padding: 10px; /* Opcional, para dar mais respiro */
+            }
+
+            .main-footer {
+                background-color: #f8f9fa; /* fundo neutro */
+                border-top: 1px solid #dee2e6;
+                color:rgb(91, 96, 100); /* texto cinza moderno */
+                font-size: 1.2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+            }
+
+            @media (max-width: 768px) {
+                .main-footer {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 8px;
+                }
+            }
+
         </style>
 
     </head>
@@ -134,26 +230,11 @@
                 </nav>
             </header>
 
-            <!-- Left side column. contains the logo and sidebar -->
             <aside class="main-sidebar">
-                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="txtmenu" class="form-control" placeholder="Procurar acessos...">
-                        <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
                 <section class="sidebar">
                     <ul class="sidebar-menu">
                         <li class="header">MENUS</li>
                         <li class="treeview" id="m<?php echo $tar; ?>">
-                            <a href="dashboard.php">
-                                <i class="fa fa-dashboard"></i>
-                                <span>RESUMO</span>
-                            </a>
                         </li>
 
                         <?php
@@ -316,157 +397,38 @@
                 <!-- Main content -->
                 <section class="content">
 
-                    <?php
+                    <?php if ($form == "") { ?>
 
-                        if ($form == "") { 
-                            
-                            $leads_novas = 0;
-                            $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'N'";
-                            $RSS = mysqli_query($conexao, $SQL);
-                            while($linha = mysqli_fetch_row($RSS)){
-                                $leads_novas = $linha[0];
-                            }
+                        <div class="col-md-12">
+                            <?php include "kpis.php";?>
+                        </div>
 
-                            $leads_contato = 0;
-                            $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'C'";
-                            $RSS = mysqli_query($conexao, $SQL);
-                            while($linha = mysqli_fetch_row($RSS)){
-                                $leads_contato = $linha[0];
-                            }
+                        <div class="col-md-12">
+                            <?php include "graficos.php";?>
+                        </div>
 
-                            $leads_perdidas = 0;
-                            $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'P'";
-                            $RSS = mysqli_query($conexao, $SQL);
-                            while($linha = mysqli_fetch_row($RSS)){
-                                $leads_perdidas = $linha[0];
-                            }
+                        <?php
+                    } else {
 
-                            $leads_andamento = 0;
-                            $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'E'";
-                            $RSS = mysqli_query($conexao, $SQL);
-                            while($linha = mysqli_fetch_row($RSS)){
-                                $leads_andamento = $linha[0];
-                            }
-
-                            $leads_contratadas = 0;
-                            $SQL = "SELECT COUNT(*) FROM lead_site
-                                    WHERE st_situacao = 'T'";
-                            $RSS = mysqli_query($conexao, $SQL);
-                            while($linha = mysqli_fetch_row($RSS)){
-                                $leads_contratadas = $linha[0];
-                            }
-
-                            $acessos = 0;
-                            $SQL = "SELECT COUNT(*) FROM acessos";
-                            $RSS = mysqli_query($conexao, $SQL);
-                            while($linha = mysqli_fetch_row($RSS)){
-                                $acessos = $linha[0];
-                            }
-
-                            ?>
-                            <div class="row">
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua">
-                                        <div class="inner">
-                                            <h1><?php echo number_format($leads_novas, 0, ",", "."); ?></h1>
-                                            <p>NOVAS LEADS</p>
-                                            <button type="button" class="btn btn-info" onclick="detalhar('N');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="fa fa-group"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua">
-                                        <div class="inner">
-                                            <h1><?php echo number_format($acessos, 0, ",", "."); ?></h1>
-                                            <p>TOTAL DE ACESSOS SITE</p><br><br>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua">
-                                        <div class="inner">
-                                            <h1><?php echo number_format($leads_contato, 0, ",", "."); ?></h1>
-                                            <p>ENTRAR EM CONTATO COM O CLIENTE</p>
-                                            <button type="button" class="btn btn-info" onclick="detalhar('C');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="fa fa-phone"></i>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua">
-                                        <div class="inner">
-                                            <h1><?php echo number_format($leads_perdidas, 0, ",", "."); ?></h1>
-                                            <p>LEADS PERDIDAS</p>
-                                            <button type="button" class="btn btn-info" onclick="detalhar('P');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="fa fa-lock"></i>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua">
-                                        <div class="inner">
-                                            <h1><?php echo number_format($leads_andamento, 0, ",", "."); ?></h1>
-                                            <p>LEADS EM ANDAMENTO</p>
-                                            <button type="button" class="btn btn-info" onclick="detalhar('E');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="fa fa-unlock"></i>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua">
-                                        <div class="inner">
-                                            <h1><?php echo number_format($leads_contratadas, 0, ",", "."); ?></h1>
-                                            <p>LEADS CONTRATADAS</p>
-                                            <button type="button" class="btn btn-info" onclick="detalhar('T');"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="fa fa-check"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-    
-                            <?php
-                        } else {
-
-                            $_SESSION["id_menu"] = $_GET['id_menu'];
-                            @$esta = false;
-                            if (!isset($form) or ( $form == "")) {
-                                $fu->DirecionarTempo(10, "dashboard.php?form=resumo");
-                                echo "P&aacute;gina n&atilde;o encontrada! Verifique com o suporte!";
-                            }
-                            if (file_exists($form)) {
-                                $esta = true;
-                            } else {
-                                $esta = false;
-                            }
-                            if ($esta) {
-                                include $form;
-                            } else {
-                                //  $fu->DirecionarTempo(10, "dashboard.php?form=resumo");
-                                echo "P&aacute;gina n&atilde;o encontrada! Verifique com o suporte!";
-                            }
-
+                        $_SESSION["id_menu"] = $_GET['id_menu'];
+                        @$esta = false;
+                        if (!isset($form) or ( $form == "")) {
+                            $fu->DirecionarTempo(10, "dashboard.php?form=resumo");
+                            echo "P&aacute;gina n&atilde;o encontrada! Verifique com o suporte!";
                         }
+                        if (file_exists($form)) {
+                            $esta = true;
+                        } else {
+                            $esta = false;
+                        }
+                        if ($esta) {
+                            include $form;
+                        } else {
+                            //  $fu->DirecionarTempo(10, "dashboard.php?form=resumo");
+                            echo "P&aacute;gina n&atilde;o encontrada! Verifique com o suporte!";
+                        }
+
+                    }
 
                     ?>
 
@@ -491,6 +453,10 @@
 
             <script language="JavaScript" type="text/javascript">
 
+                document.querySelector('#toggleSidebar').addEventListener('click', function () {
+                    document.querySelector('.main-sidebar').classList.toggle('open');
+                });
+
                 function CarregarLoad(link, local) {
                     $.get(link, function (dataReturn) {
                         $('#' + local).html(dataReturn);  //coloco na div o retorno da requisicao
@@ -509,11 +475,13 @@
 
             </script>
 
-            <footer class="main-footer">
-                <div class="pull-right hidden-xs">
-                <b>Vers&atilde;o</b> 1.0
+            <footer class="main-footer d-flex justify-content-between align-items-center p-2">
+                <div class="text-muted">
+                    <strong>Csimulador</strong>
                 </div>
-                <strong>Csimulador</strong>
+                <div class="text-muted">
+                    <span><strong>Versão:</strong> 1.0</span>
+                </div>
                 <input type="hidden" name="pgatual" id="pgatual" value="2">
             </footer>
             <div class="control-sidebar-bg"></div>

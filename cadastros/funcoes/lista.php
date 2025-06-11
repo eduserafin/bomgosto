@@ -19,7 +19,9 @@ foreach($_GET as $key => $value){
 </div>
 
 <script language="JavaScript">
-function consultar(pg) {
-  Buscar(document.getElementById('txtpesquisafuncao').value, pg);
-}
+
+    function consultar(pg) {
+        Buscar(document.getElementById('txtpesquisafuncao').value, pg);
+    }
+
 </script>

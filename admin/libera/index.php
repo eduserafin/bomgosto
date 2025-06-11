@@ -10,7 +10,7 @@ foreach($_GET as $key => $value){
         document.getElementById('pgatual').value = parseInt(pg) + 1;
         var url = 'admin/libera/listadados.php?consulta=sim&pg=' + pg + '&descricao=' + descricao;
         $.get(url, function (dataReturn) {
-            document.getElementById("rslistavande").innerHTML = dataReturn;
+            document.getElementById("rslista").innerHTML = dataReturn;
         });
     }
     
@@ -23,8 +23,8 @@ foreach($_GET as $key => $value){
 
 </script>
 
+<link rel="stylesheet" href="/csimulador/assets/css/estilo.css">
 <iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
-
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">USU&Aacute;RIO x ACESSO</a></li>
     <li><a id="tablista" href="#lista" data-toggle="tab">LISTA USU&Aacute;RIO</a></li>
@@ -36,14 +36,9 @@ foreach($_GET as $key => $value){
             <?php include "formulario.php"; ?>          
         </div>
     </div>
-    <div class = "tab-pane" id = "lista">
+    <div class="tab-pane" id="lista">
         <div class="row-100">
-            <fieldset>
-                
-                <div id="rslista">
-                    <?php include ("lista.php"); ?>
-                </div>    
-            </fieldset>
+            <?php include 'lista.php'; ?>        
         </div>
     </div>
 </div>

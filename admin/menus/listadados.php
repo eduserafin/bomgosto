@@ -33,11 +33,11 @@ if ($descricao !== "") {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
-        <table width="100%" class="table table-bordered table-striped">
+        <table width="100%" class="table table-bordered table-striped modern-table">
             <thead>
                 <tr>
-                    <th>Menus</th>
-                    <th colspan=2>Ações</th>
+                    <th>MENUS</th>
+                    <th colspan="2" style="text-align: center;"><strong>AÇÕES</strong></th>
                 </tr>
             </thead>
             <?php
