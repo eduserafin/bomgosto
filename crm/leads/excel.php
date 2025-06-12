@@ -75,10 +75,6 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
         $v_sql .= " AND ls.ds_nome like UPPER('%" . $nome . "%')";
     }
 
-    if ($credito != "") {
-        $v_sql .= " AND ls.vl_valor = $credito";
-    }
-
     if ($cidade != 0) {
         $v_sql .= " AND ls.nr_seq_cidade = $cidade";
     }

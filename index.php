@@ -129,6 +129,13 @@
             </div>
 
             <button type="submit" class="btn-login">Entrar</button>
+
+            <!-- link recuperar senha -->
+            <div style="text-align:center; margin-top: 15px;">
+                <a href="recuperar.php" style="color: #612db5; text-decoration: none; font-size: 14px;">
+                    Esqueci minha senha
+                </a>
+            </div>
         </form>
     </div>
 

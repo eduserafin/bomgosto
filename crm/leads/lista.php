@@ -4,12 +4,8 @@
     }
 ?>
 
-<div class="col-md-12">
+<div class="row-100">
     <div class="row">
-        <div class="col-md-2" hidden>
-            <label for="pesquisacredito">VALOR CRÉDITO:</label>                  
-            <input type="number" name="pesquisacredito" id="pesquisacredito" size="15" maxlength="14" class="form-control" Placeholder="">
-        </div>
         <div class="col-md-3">
             <label for="pesquisanome">NOME:</label>                  
             <input type="text" name="pesquisanome" id="pesquisanome" size="15" maxlength="14" class="form-control" Placeholder="Descreva">
@@ -112,7 +108,7 @@
     });
 
     function consultar(pg) {
-        Buscar(document.getElementById('pesquisacredito').value, 
+        Buscar( 
                 document.getElementById('pesquisanome').value,
                 document.getElementById('pesquisacidade').value,
                 document.getElementById('pesquisastatus').value,
@@ -126,7 +122,6 @@
 
     function excel() {
         
-        var valor = window.document.getElementById('pesquisacredito').value;
         var nome = window.document.getElementById('pesquisanome').value;
         var cidade = window.document.getElementById('pesquisacidade').value;
         var status = window.document.getElementById('pesquisastatus').value;
@@ -137,7 +132,7 @@
         var dataagenda2 = window.document.getElementById('pesquisadataagenda2').value;
         
         document.getElementById('dvAguarde').style.display = 'block';
-        window.open('crm/leads/excel.php?valor=' + valor + '&nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&data1=' + data1 + '&data2=' + data2 + '&dataagenda1=' + dataagenda1 + '&dataagenda2=' + dataagenda2 + '&segmento=' + segmento, 'acao');
+        window.open('crm/leads/excel.php?nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&data1=' + data1 + '&data2=' + data2 + '&dataagenda1=' + dataagenda1 + '&dataagenda2=' + dataagenda2 + '&segmento=' + segmento, 'acao');
     } 
 
 </script>

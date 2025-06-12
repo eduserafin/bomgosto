@@ -28,11 +28,6 @@
     $v_sql .= " AND ls.ds_nome like '%" . $nome . "%'";
   }
 
-  $credito = $_GET['credito'];
-  if ($credito != "") {
-    $v_sql .= " AND ls.vl_valor = $credito";
-  }
-
   $cidade = $_GET['cidade'];
   if ($cidade != 0) {
     $v_sql .= " AND ls.nr_seq_cidade = $cidade";
