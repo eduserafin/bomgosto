@@ -29,7 +29,7 @@
 
   $administradora = $_GET['administradora'];
   if ($administradora != 0) {
-    $v_sql .= " AND ls.nr_seq_adminsitradora = $administradora";
+    $v_sql .= " AND ls.nr_seq_administradora = $administradora";
   }
 
   $segmento = $_GET['segmento'];
@@ -43,12 +43,34 @@
 
   $data = "$ano/$mes/$dia";
 
+  if($_SESSION["ST_ADMIN"] == 'G'){
+      $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+      $v_filtro_colaborador = "";
+  } else if ($_SESSION["ST_ADMIN"] == 'C') {
+      $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+      $v_filtro_colaborador = "AND ls.nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
+  } else {
+      $v_filtro_empresa = "";
+      $v_filtro_colaborador = "";
+  }
+
 ?>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
+      
+      <table width="100%" class="table table-bordered table-striped">
+        <thead>
+          <tr style="background-color: RGB(116, 187, 207);">
+              <td align="center">Dispon&iacute;vel Em: 
+                  <a onClick="javascript: Pdf();" title="Exportar para PDF" alt="Exportar para PDF" class="fa fa-file-pdf-o" style="color: green;cursor:pointer; font-size: 16px;"></a>
+              </td>
+          </tr>
+        </thead>
+      </table> 
+
       <table width="100%" class="table table-bordered table-striped modern-table">
         <tr>
           <th style="vertical-align:middle;">VALOR</th>
@@ -74,7 +96,9 @@
                   INNER JOIN pagamentos p ON ls.nr_sequencial = p.nr_seq_lead
                   WHERE ls.nr_seq_situacao = 1
                   AND p.dt_parcela = '$data'
-                  $v_sql
+                  "  . $v_sql . "
+                  "  . $v_filtro_empresa . "
+                  "  . $v_filtro_colaborador . "
                   ORDER BY ls.dt_contratada";
 
           //echo "<pre>$SQL</pre>";

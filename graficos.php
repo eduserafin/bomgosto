@@ -1,29 +1,45 @@
 <?php
-include 'conexao.php';
 
-// Funil de vendas por situação
-$funil = [["Situação", "Quantidade"]];
-$sql1 = "SELECT s.ds_situacao, COUNT(*) AS total 
-        FROM lead l 
-        JOIN situacoes s ON l.nr_seq_situacao = s.nr_sequencial 
-        GROUP BY s.ds_situacao ORDER BY total DESC";
-$res1 = $conexao->query($sql1);
-while ($row = $res1->fetch_assoc()) {
-    $funil[] = [$row['ds_situacao'], (int)$row['total']];
-}
+    if($_SESSION["ST_ADMIN"] == 'G'){
+        $v_filtro_empresa = "AND l.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_colaborador = "";
+    } else if ($_SESSION["ST_ADMIN"] == 'C') {
+        $v_filtro_empresa = "AND l.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_colaborador = "AND l.nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
+    } else {
+        $v_filtro_empresa = "";
+        $v_filtro_colaborador = "";
+    }
+
+    // Funil de vendas por situação
+    $funil = [["Situação", "Quantidade"]];
+    $sql1 = "SELECT s.ds_situacao, COUNT(*) AS total 
+            FROM lead l 
+            JOIN situacoes s ON l.nr_seq_situacao = s.nr_sequencial 
+            WHERE 1 = 1
+            "  . $v_filtro_empresa . "
+            "  . $v_filtro_colaborador . "
+            GROUP BY s.ds_situacao ORDER BY total DESC";
+    $res1 = $conexao->query($sql1);
+    while ($row = $res1->fetch_assoc()) {
+        $funil[] = [$row['ds_situacao'], (int)$row['total']];
+    }
 
 
-// Vendas por segmento
-$segmento = [["Segmento", "Valor"]];
-$sql2 = "SELECT s.ds_segmento, SUM(vl_contratado) AS valor
-        FROM lead l 
-        JOIN segmentos s ON l.nr_seq_segmento = s.nr_sequencial 
-        WHERE l.nr_seq_situacao = 1
-        GROUP BY s.ds_segmento ORDER BY valor DESC";
-$res2 = $conexao->query($sql2);
-while ($row2 = $res2->fetch_assoc()) {
-    $segmento[] = [$row2['ds_segmento'], (int)$row2['valor']];
-}
+    // Vendas por segmento
+    $segmento = [["Segmento", "Valor"]];
+    $sql2 = "SELECT s.ds_segmento, SUM(vl_contratado) AS valor
+            FROM lead l 
+            JOIN segmentos s ON l.nr_seq_segmento = s.nr_sequencial 
+            WHERE l.nr_seq_situacao = 1
+            "  . $v_filtro_empresa . "
+            "  . $v_filtro_colaborador . "
+            GROUP BY s.ds_segmento ORDER BY valor DESC";
+    $res2 = $conexao->query($sql2);
+    while ($row2 = $res2->fetch_assoc()) {
+        $segmento[] = [$row2['ds_segmento'], (int)$row2['valor']];
+    }
+
 ?>
 
 <!-- GRAFICO DE BARRAS FUNIL DE VENDAS -->

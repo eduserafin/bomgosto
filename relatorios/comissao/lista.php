@@ -28,7 +28,7 @@
 
 ?>
 
-<div class="col-md-12">
+<div class="row-100">
     <div class="row">
         <div class="col-md-3">
             <label>COLABORADOR:</label>
@@ -52,7 +52,7 @@
         <div class="col-md-3">    
             <label for="pesquisaadministradora">ADMINISTRADORA:</label>        
             <select class="form-control" name="pesquisaadministradora" id="pesquisaadministradora">
-                <option value="0">Selecione</option>
+                <option value="0">Todas</option>
                 <?php
                     $sel = "SELECT nr_sequencial, ds_administradora 
                             FROM administradoras 
@@ -70,7 +70,7 @@
         <div class="col-md-3">
             <label for="pesquisasegmento">SEGMENTO:</label>
             <select name="pesquisasegmento" id="pesquisasegmento" class="form-control">
-                <option value="0">Selecione</option>
+                <option value="0">Todos</option>
                 <?php
                     $sel = "SELECT nr_sequencial, ds_segmento
                             FROM segmentos
@@ -86,7 +86,7 @@
                 ?>
             </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label for="pesquisadata" class="form-label">MÊS/ANO:</label>
             <div class="form-inline">
                 <select name="pesquisames" id="pesquisames" class="form-control me-2">
@@ -102,13 +102,9 @@
                 </select>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-2">
-                <?php include "inc/botao_consultar.php"; ?>
-            </div>
+        <div class="col-md-2"><br>
+            <?php include "inc/botao_consultar.php"; ?>
         </div>
-
     </div>
 
     <?php include "inc/aguarde.php"; ?>
@@ -142,16 +138,17 @@
                 pg);
     }
 
-    function excel() {
-        
-        var colaborador = window.document.getElementById('pesquisacolaborador').value;
-        var administradora = window.document.getElementById('pesquisaadministradora').value;
-        var segmento = window.document.getElementById('pesquisasegmento').value;
-        var mes = window.document.getElementById('pesquisames').value;
-        var ano = window.document.getElementById('pesquisaano').value;
-        
-        document.getElementById('dvAguarde').style.display = 'block';
-        window.open('crm/leads/excel.php?valor=' + valor + '&nome=' + nome + '&cidade=' + cidade + '&status=' + status + '&data1=' + data1 + '&data2=' + data2 + '&dataagenda1=' + dataagenda1 + '&dataagenda2=' + dataagenda2 + '&segmento=' + segmento, 'acao');
-    } 
+    function Pdf() {
+
+        var colaborador = document.getElementById('pesquisacolaborador').value;
+        var administradora = document.getElementById("pesquisaadministradora").value;
+        var segmento = document.getElementById("pesquisasegmento").value;
+        var mes = document.getElementById("pesquisames").value;
+        var ano = document.getElementById("pesquisaano").value;
+
+        window.open('relatorios/comissao/pdf.php?colaborador=' + colaborador + '&administradora=' + administradora + '&segmento=' + segmento + '&mes=' + mes + '&ano=' + ano, "mensagemrel");
+        document.getElementById("clickModal").click();
+
+    }
 
 </script>

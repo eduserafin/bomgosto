@@ -1,10 +1,23 @@
 
 <?php 
 
+    if($_SESSION["ST_ADMIN"] == 'G'){
+        $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_colaborador = "";
+    } else if ($_SESSION["ST_ADMIN"] == 'C') {
+        $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_colaborador = "AND nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
+    } else {
+        $v_filtro_empresa = "";
+        $v_filtro_colaborador = "";
+    }
+
     //ABERTA
     $leads_novas = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 4";
+            WHERE nr_seq_situacao = 4
+            "  . $v_filtro_empresa . "
+            "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
     while($linha = mysqli_fetch_row($RSS)){
         $leads_novas = $linha[0];
@@ -13,7 +26,9 @@
     //AGENDADA
     $leads_contato = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 6";
+            WHERE nr_seq_situacao = 6
+            "  . $v_filtro_empresa . "
+            "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
     while($linha = mysqli_fetch_row($RSS)){
         $leads_contato = $linha[0];
@@ -22,7 +37,9 @@
     //PERDIDA
     $leads_perdidas = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 5";
+            WHERE nr_seq_situacao = 5
+            "  . $v_filtro_empresa . "
+            "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
     while($linha = mysqli_fetch_row($RSS)){
         $leads_perdidas = $linha[0];
@@ -31,7 +48,9 @@
     //EM ANDAMENTO
     $leads_andamento = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 3";
+            WHERE nr_seq_situacao = 3
+            "  . $v_filtro_empresa . "
+            "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
     while($linha = mysqli_fetch_row($RSS)){
         $leads_andamento = $linha[0];
@@ -40,7 +59,9 @@
     //CONTRATADA
     $leads_contratadas = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 1";
+            WHERE nr_seq_situacao = 1
+            "  . $v_filtro_empresa . "
+            "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
     while($linha = mysqli_fetch_row($RSS)){
         $leads_contratadas = $linha[0];
@@ -180,7 +201,7 @@
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h1><?php echo number_format($leads_andamento, 0, ",", "."); ?></h1>
-                    <p>EM ANDAMENTO</p>
+                    <p>ANDAMENTO</p>
                     <button type="button" class="btn btn-info" onclick="detalhar(3);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
                 </div>
                 <div class="icon">

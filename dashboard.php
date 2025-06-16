@@ -98,12 +98,12 @@
                 background-color: #1e1e2f;
                 color: #ffffff;
                 min-height: 100vh;
-                width: 250px;
+                width: 230px;
                 position: fixed;
             }
 
             .sidebar-menu > li.header {
-                font-size: 14px;
+                font-size: 12px;
                 color: #bbb;
                 padding: 15px 20px;
                 text-transform: uppercase;
@@ -112,6 +112,7 @@
 
             .sidebar-menu li a {
                 color: #ccc;
+                font-size: 12px; /* ou menor, se preferir, ex: 11px */
                 padding: 12px 20px;
                 display: flex;
                 align-items: center;
@@ -133,7 +134,7 @@
 
             .sidebar-menu i {
                 margin-right: 10px;
-                font-size: 16px;
+                font-size: 12px;
             }
 
             .treeview-menu {
@@ -142,7 +143,7 @@
             }
 
             .treeview-menu li a {
-                font-size: 14px;
+                font-size: 12px;
                 padding: 10px 20px;
             }
 
@@ -163,7 +164,7 @@
             }
 
             .content-wrapper {
-                margin-left: 250px; /* Mesmo valor da largura da sidebar */
+                margin-left: 230px; /* Mesmo valor da largura da sidebar */
                 padding: 10px; /* Opcional, para dar mais respiro */
             }
 
@@ -385,6 +386,7 @@
                     </ul>
                 </section>
             </aside>
+
             <div class="content-wrapper">
                 <section class="content-header">
                     <ol class="breadcrumb">
@@ -399,12 +401,17 @@
 
                     <?php if ($form == "") { ?>
 
-                        <div class="col-md-12">
+                        <div class="row">
                             <?php include "kpis.php";?>
                         </div>
-
-                        <div class="col-md-12">
+                        <div class="row">
                             <?php include "graficos.php";?>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?php include "calendario.php";?>
+                            </div>
                         </div>
 
                         <?php
@@ -434,6 +441,27 @@
 
                 </section>
             </div>
+
+            <a href="https://wa.me/5549998080413?text=Olá%20preciso%20de%20suporte"
+                target="_blank"
+                style="position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        width: 60px;
+                        height: 60px;
+                        background-color: #25D366;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+                        z-index: 1000;
+                        text-decoration: none;">
+                    <i class="fa fa-whatsapp" style="font-size: 36px; color: white;"></i>
+            </a>
+
+            <!-- Font Awesome -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
             <link rel="stylesheet" href="dist/css/Modal.css">
             <a href="#ModalRel" id="clickModal"></a>

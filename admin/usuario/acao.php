@@ -34,7 +34,8 @@ if ($Tipo == "I") {
 
   $SQL = "SELECT ds_login 
           FROM usuarios
-          WHERE UPPER(ds_login) = UPPER('" . $login . "') 
+          WHERE UPPER(ds_login) = UPPER('" . $login . "')
+          AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
           LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -50,8 +51,10 @@ if ($Tipo == "I") {
 
     } else {
 
+        $senha_hash = password_hash($senha, PASSWORD_DEFAULT); 
+
         $insert = "INSERT INTO usuarios (ds_login, ds_senha, nr_seq_colaborador, ds_email, st_admin, st_status, nr_seq_empresa) 
-                  VALUES (LOWER('" . $login . "'), '" . $senha . "', " . $colaborador . ", '" . $email . "', '" . $admin . "', '" . $status . "', " . $_SESSION["CD_EMPRESA"] . ") ";
+                  VALUES (LOWER('" . $login . "'), '" . $senha_hash . "', " . $colaborador . ", '" . $email . "', '" . $admin . "', '" . $status . "', " . $_SESSION["CD_EMPRESA"] . ") ";
         $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
         if ($rss_insert) {
@@ -87,7 +90,8 @@ if ($Tipo == "A") {
 
     $SQL = "SELECT ds_login 
             FROM usuarios
-            WHERE UPPER(ds_login) = UPPER('" . $login . "') 
+            WHERE UPPER(ds_login) = UPPER('" . $login . "')
+            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
             AND nr_sequencial <>" . $codigo . "  
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
@@ -104,11 +108,13 @@ if ($Tipo == "A") {
 
     } else {
 
+        $senha_hash = password_hash($senha, PASSWORD_DEFAULT); 
+
         $update = "UPDATE usuarios 
                     SET nr_seq_colaborador = " . $colaborador . ", 
                         ds_email = '" . $email . "',
                         ds_login = '" . $login . "', 
-                        ds_senha = '". $senha ."',
+                        ds_senha = '". $senha_hash ."',
                         st_admin = '". $admin ."',
                         st_status = '". $status ."',
                         nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . ",

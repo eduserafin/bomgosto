@@ -63,6 +63,17 @@
     $v_sql .= " AND ls.dt_agenda <= '$dataagenda2'";
   }
 
+  if($_SESSION["ST_ADMIN"] == 'G'){
+    $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+    $v_filtro_colaborador = "";
+} else if ($_SESSION["ST_ADMIN"] == 'C') {
+    $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+    $v_filtro_colaborador = "AND ls.nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
+} else {
+    $v_filtro_empresa = "";
+    $v_filtro_colaborador = "";
+}
+
   include $ant."inc/exporta_excel.php";
 
 ?>
@@ -95,7 +106,9 @@
                     LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
                     LEFT JOIN situacoes st ON ls.nr_seq_situacao = st.nr_sequencial
                   WHERE 1 = 1  
-                  $v_sql
+                  "  . $v_sql . "
+                  "  . $v_filtro_empresa . "
+                  "  . $v_filtro_colaborador . "
                   ORDER BY ls.nr_sequencial DESC LIMIT $porpagina offset $inicio";
           //echo "<pre>$SQL</pre>";
           $RSS = mysqli_query($conexao, $SQL);
