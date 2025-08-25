@@ -4,11 +4,20 @@ foreach($_GET as $key => $value){
 }
 
 $v_tp_menu = '';
+$v_filtro = '';
 
 if ($codigo != 0 and $codigo != "") {
-  require_once '../../conexao.php';
+    
+    require_once '../../conexao.php';
   
-  if ($cd_modulo != 0){ $v_tp_menu = "AND tp_smenu=$cd_modulo"; }
+    if ($cd_modulo != 0){ $v_tp_menu = "AND tp_smenu = $cd_modulo"; }
+  
+  
+    if($_SESSION["ST_ADMIN"] == 'A'){
+        $v_filtro = "";
+    } else {
+        $v_filtro = "AND tp_perfil = 'N'";
+    }
 
   ?>
 
@@ -24,8 +33,10 @@ if ($codigo != 0 and $codigo != "") {
                     FROM submenus
                     WHERE nr_sequencial NOT IN (SELECT nr_seq_smenu FROM menus_user WHERE nr_seq_user = ".$cd_usuario.") 
                     AND nr_seq_menu=".$codigo."
-                    $v_tp_menu 
+                    " . $v_tp_menu . "
+                    " . $v_filtro . "
                     ORDER BY ds_smenu ASC";
+            //echo "<pre>$SQL</pre>";
             $i = 0;
             $RSS = mysqli_query($conexao, $SQL);
             while($linha = mysqli_fetch_row($RSS)){

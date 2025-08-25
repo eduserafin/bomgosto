@@ -42,13 +42,14 @@ if ($administradora != 0) {
         <tr>
             <th><strong>COLABORADOR</strong></th>
             <th><strong>COMISSÃO</strong></th>
+            <th><strong>ESTORNO</strong></th>
             <th><strong>PARCELAS</strong></th>
             <th><strong>ADMINISTRADORA</strong></th>
             <th colspan="2" style="text-align: center;"><strong>AÇÕES</strong></th>
         </tr>
         <?php
         
-            $SQL = "SELECT m.nr_sequencial, c.ds_colaborador, m.vl_comissao, m.nr_parcelas, a.ds_administradora
+            $SQL = "SELECT m.nr_sequencial, c.ds_colaborador, m.vl_comissao, m.nr_parcelas, a.ds_administradora, m.vl_estorno
                     FROM comissoes m
                     INNER JOIN colaboradores c ON c.nr_sequencial = m.nr_seq_colaborador
                     INNER JOIN administradoras a ON a.nr_sequencial = m.nr_seq_administradora
@@ -64,10 +65,14 @@ if ($administradora != 0) {
                 $vl_comissao = $linha[2];
                 $nr_parcelas = $linha[3];
                 $ds_administradora = $linha[4];
+                $vl_estorno = $linha[5];
+
                 ?>
+                
                 <tr>
                     <td><?php echo $ds_colaborador; ?></td>
                     <td><?php echo $vl_comissao; ?></td>
+                    <td><?php echo $vl_estorno; ?></td>
                     <td><?php echo $nr_parcelas; ?></td>
                     <td><?php echo $ds_administradora; ?></td>
                     <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
@@ -80,7 +85,7 @@ if ($administradora != 0) {
     
     <?php include $ant."inc/paginacao.php";?>
     
-  </body>
+    </body>
 </html>   
 
 <script language="javascript">

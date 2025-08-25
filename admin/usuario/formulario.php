@@ -1,3 +1,14 @@
+<?php 
+
+if($_SESSION["ST_ADMIN"] == 'G'){
+  $v_filtro_empresa = "AND nr_sequencial = " . $_SESSION["CD_EMPRESA"] . "";
+} else if ($_SESSION["ST_ADMIN"] == 'C') {
+  $v_filtro_empresa = "AND nr_sequencial = " . $_SESSION["CD_EMPRESA"] . "";
+} else {
+  $v_filtro_empresa = "";
+}
+
+?>
 <body onLoad="document.getElementById('txtnome').focus();">
 <input type="hidden" name="cd_user" id="cd_user" value="">
 <div class="form-group col-md-12">
@@ -7,25 +18,29 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
-        <label for="txtnome">COLABORADOR:</label>                     
-            <select id="txtnome" class="form-control" style="background:#E0FFFF;">
-                <option value='0'>Selecione um colaborador</option>
+     <div class="col-md-3">
+        <label for="txtempresa">EMPRESA:</label>                     
+            <select id="txtempresa" class="form-control" style="background:#E0FFFF;" onChange="javascript: BuscarColaborador(this.value, '');">
+                <option value='0'>Selecione uma empresa</option>
                 <?php
-                    $sql = "SELECT nr_sequencial, ds_colaborador
-                            FROM colaboradores
+                    $sql = "SELECT nr_sequencial, ds_empresa
+                            FROM empresas
                             WHERE st_status = 'A'
-                            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
-                            ORDER BY ds_colaborador";
+                            $v_filtro_empresa
+                            ORDER BY ds_empresa";
                     $res = mysqli_query($conexao, $sql);
                     while($lin=mysqli_fetch_row($res)){
                         $cdg = $lin[0];
                         $desc = $lin[1];
 
-                        echo "<option value='$cdg'>$desc</option>";
+                        echo "<option value=$cdg>$desc</option>";
+
                     }
                 ?>
             </select>
+    </div>
+    <div class="col-md-3" id="rscolaborador">
+        <?php include "colaborador.php"; ?>
     </div>
     <div class="col-md-3">
         <label for="txtadmin">PERFIL:</label>
@@ -34,7 +49,7 @@
             <option value="C">Colaborador</option>
         </select>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <label for="txtstatus">STATUS:</label>
         <select class="form-control" name="txtstatus" id="txtstatus" style="background:#E0FFFF;">
             <option value="A">ATIVO</option>
@@ -60,12 +75,22 @@
 
 </body>
 <script type="text/javascript">
+    
+function BuscarColaborador(empresa, colaborador) {
+
+    var url = 'admin/usuario/colaborador.php?consulta=sim&empresa=' + empresa + '&colaborador=' + colaborador;
+    $.get(url, function(dataReturn) {
+        $('#rscolaborador').html(dataReturn);
+    });
+
+}
 
 function executafuncao(id){
   if (id=='new'){
     document.getElementById('cd_user').value = "";
+    document.getElementById('txtempresa').value = "0";
     document.getElementById('txtlogin').value = "";
-    document.getElementById('txtnome').value = "";
+    document.getElementById('txtnome').value = "0";
     document.getElementById('txtsenha').value = "";
     document.getElementById('txtemail').value = "";
     document.getElementById('txtadmin').value = "S";
@@ -80,6 +105,7 @@ function executafuncao(id){
     var email = document.getElementById('txtemail').value;
     var admin = document.getElementById('txtadmin').value;
     var status = document.getElementById('txtstatus').value;
+    var empresa = document.getElementById('txtempresa').value;
     
     if (senha != '') {
         senha = senha.replace("'", "");
@@ -87,15 +113,23 @@ function executafuncao(id){
     if (login != '') {
         login = login.replace("'", "");
     }
-
-    if (login == '') {
+    
+    if (empresa == 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Informe uma empresa!'
+        });
+        document.getElementById('txtempresa').focus();
+    }
+    else if (login == '') {
         Swal.fire({
             icon: 'warning',
             title: 'Oops...',
             text: 'Informe o Login!'
         });
         document.getElementById('txtlogin').focus();
-    } else if (senha == '') {
+    } else if (codigo == '' && senha == '') {
         Swal.fire({
             icon: 'warning',
             title: 'Oops...',
@@ -115,7 +149,7 @@ function executafuncao(id){
         } else {
             Tipo = "A";
         }
-        window.open('admin/usuario/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&colaborador=' + colaborador + '&senha=' + senha + '&login=' + login + '&email=' + email + '&admin=' + admin + '&status=' + status, "acao");
+        window.open('admin/usuario/acao.php?Tipo=' + Tipo + '&codigo=' + codigo + '&colaborador=' + colaborador + '&senha=' + senha + '&login=' + login + '&email=' + email + '&admin=' + admin + '&status=' + status + '&empresa=' + empresa, "acao");
     }
   }
 }

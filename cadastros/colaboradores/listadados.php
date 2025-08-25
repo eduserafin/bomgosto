@@ -24,9 +24,19 @@ $inicio = $pg * $porpagina;
 $descricao = $_GET['descricao'];
 $descricao = mb_strtoupper($descricao, 'UTF-8');
 
+$pesquisanome = "";
 if ($descricao !== "") {
     $pesquisanome = " AND c.ds_colaborador like '%$descricao%'";
 }
+
+if($_SESSION["ST_ADMIN"] == 'G'){
+  $v_filtro_empresa = "AND c.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+} else if ($_SESSION["ST_ADMIN"] == 'C') {
+  $v_filtro_empresa = "AND c.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+} else {
+  $v_filtro_empresa = "";
+}
+
 ?>
 <html>
     <head>
@@ -35,6 +45,7 @@ if ($descricao !== "") {
     <body>
     <table width="100%" class="table table-bordered table-striped modern-table">
         <tr>
+            <th><strong>EMPRESA</strong></th>
             <th><strong>NOME</strong></th>
             <th><strong>CPF</strong></th>
             <th><strong>RG</strong></th>
@@ -45,10 +56,13 @@ if ($descricao !== "") {
         <?php
         
             $SQL = "SELECT c.nr_sequencial, c.ds_colaborador, c.nr_cpf, c.nr_rg, f.ds_funcao,
-                    CASE WHEN c.st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status
+                    CASE WHEN c.st_status = 'A' THEN 'ATIVO' ELSE 'INATIVO' END AS st_status,
+                    e.ds_empresa
                     FROM colaboradores c
                     INNER JOIN funcoes f ON c.nr_seq_funcao = f.nr_sequencial
-                    WHERE c.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
+                    INNER JOIN empresas e ON c.nr_seq_empresa = e.nr_sequencial
+                    WHERE 1 = 1
+                    $v_filtro_empresa
                     $pesquisanome 
                     ORDER BY c.ds_colaborador ASC limit $porpagina offset $inicio";
             //echo $SQL;
@@ -60,8 +74,10 @@ if ($descricao !== "") {
                 $nr_rg = $linha[3];
                 $ds_funcao = $linha[4];
                 $st_status = $linha[5];
+                $ds_empresa = $linha[6];
                 ?>
                 <tr>
+                    <td><?php echo $ds_empresa; ?></td>
                     <td><?php echo $ds_nome; ?></td>
                     <td><?php echo $nr_cpf; ?></td>
                     <td><?php echo $nr_rg; ?></td>

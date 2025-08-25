@@ -19,11 +19,23 @@
         '12' => 'Dezembro'
     ];
 
-    // Define os anos (3 últimos até o atual)
+    // Define os anos: 3 anteriores, atual e 3 seguintes
     $anoAtual = date('Y');
     $anos = [];
-    for ($i = 2; $i >= 0; $i--) {
-        $anos[] = $anoAtual - $i;
+    
+    for ($i = -3; $i <= 3; $i++) {
+        $anos[] = $anoAtual + $i;
+    }
+    
+    if($_SESSION["ST_ADMIN"] == 'G'){
+        $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_colaborador = "";
+    } else if ($_SESSION["ST_ADMIN"] == 'C') {
+        $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_colaborador = "AND nr_sequencial in (SELECT nr_seq_colaborador FROM usuarios WHERE nr_sequencial = " . $_SESSION["CD_USUARIO"] . ")";
+    } else {
+        $v_filtro_empresa = "";
+        $v_filtro_colaborador = "";
     }
 
 ?>
@@ -38,7 +50,8 @@
                     $SQL = "SELECT nr_sequencial, ds_colaborador
                             FROM colaboradores
                             WHERE st_status = 'A'
-                            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . " 
+                            " . $v_filtro_empresa . "
+                            " . $v_filtro_colaborador . "
                             ORDER BY ds_colaborador";
                     $RES = mysqli_query($conexao, $SQL);
                     while($lin=mysqli_fetch_row($RES)){
@@ -86,6 +99,17 @@
                 ?>
             </select>
         </div>
+        <div class="col-md-2">
+            <label for="pesquisastatus">STATUS:</label>
+            <select name="pesquisastatus" id="pesquisastatus" class="form-control">
+                <option value="0">Todos</option>
+                <option value="">AGUARDANDO</option>
+                <option value="T">PENDENTE CLIENTE</option>
+                <option value="P">PAGO AO VENDEDOR</option>
+                <option value="E">ESTORNO</option>
+                <option value="C">CANCELADO</option>
+            </select>
+        </div>
         <div class="col-md-3">
             <label for="pesquisadata" class="form-label">MÊS/ANO:</label>
             <div class="form-inline">
@@ -102,7 +126,15 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-2"><br>
+        <div class="col-md-2">
+            <label for="pesquisagrupo">GRUPO:</label>                  
+            <input type="text" name="pesquisagrupo" id="pesquisagrupo" size="15" maxlength="20" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label for="pesquisacota">COTA:</label>                  
+            <input type="text" name="pesquisacota" id="pesquisacota" size="15" maxlength="20" class="form-control">
+        </div>
+        <div class="col-md-1"><br>
             <?php include "inc/botao_consultar.php"; ?>
         </div>
     </div>
@@ -135,6 +167,9 @@
                 document.getElementById('pesquisasegmento').value,
                 document.getElementById('pesquisames').value,
                 document.getElementById('pesquisaano').value,
+                document.getElementById('pesquisastatus').value,
+                document.getElementById('pesquisagrupo').value,
+                document.getElementById('pesquisacota').value,
                 pg);
     }
 
@@ -145,8 +180,11 @@
         var segmento = document.getElementById("pesquisasegmento").value;
         var mes = document.getElementById("pesquisames").value;
         var ano = document.getElementById("pesquisaano").value;
+        var status = document.getElementById("pesquisastatus").value;
+        var grupo = document.getElementById("pesquisagrupo").value;
+        var cota = document.getElementById("pesquisacota").value;
 
-        window.open('relatorios/comissao/pdf.php?colaborador=' + colaborador + '&administradora=' + administradora + '&segmento=' + segmento + '&mes=' + mes + '&ano=' + ano, "mensagemrel");
+        window.open('relatorios/comissao/pdf.php?colaborador=' + colaborador + '&administradora=' + administradora + '&segmento=' + segmento + '&mes=' + mes + '&ano=' + ano + '&status=' + status + '&grupo=' + grupo + '&cota=' + cota, "mensagemrel");
         document.getElementById("clickModal").click();
 
     }

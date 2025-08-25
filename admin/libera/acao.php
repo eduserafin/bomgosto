@@ -16,7 +16,7 @@ if ($Tipo == "D") {
     $RS = mysqli_fetch_assoc($RSS);
     if ($RS["nr_sequencial"] == $Codigo) {
         echo "<script language='javascript'>window.parent.document.getElementById('cd_usuario').value='" . $RS["nr_sequencial"] . "';</script>";
-        echo "<script language='javascript'>window.parent.document.getElementById('txtusuario').value='" . strtoupper($RS["ds_login"]) . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtusuario').value='" . $RS["ds_login"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["nr_seq_colaborador"] . "';</script>";
         echo "<script language='javascript'>window.parent.carrega_menus2();</script>";
     }
@@ -31,9 +31,10 @@ if ($Tipo == "1") {
       $cd_submenu = substr($texto, 0, strpos($texto, ","));
       $texto = substr($texto, strpos($texto, ",") + 1, strlen($texto));
 
-      $insert = "INSERT INTO menus_user (nr_seq_smenu, nr_seq_user, st_liberado) 
-                  VALUES ($cd_submenu, $cd_usuario, 'S')";
+      $insert = "INSERT INTO menus_user (nr_seq_smenu, nr_seq_user, st_liberado, nr_seq_usercadastro) 
+                  VALUES ($cd_submenu, $cd_usuario, 'S', " . $_SESSION["CD_USUARIO"] . ")";
       mysqli_query($conexao, $insert);
+      echo "<pre> $insert<pre>";
 
     }
 
@@ -92,8 +93,8 @@ if ($Tipo == "3") {
     while ($linha = mysqli_fetch_row($RSS)) {
         $cd_submenu = $linha[0];
 
-        $insert = "INSERT INTO menus_user (nr_seq_smenu, nr_seq_user, st_liberado) 
-                    VALUES ($cd_submenu, $cd_usuario, 'S')";
+        $insert = "INSERT INTO menus_user (nr_seq_smenu, nr_seq_user, st_liberado, nr_seq_usercadastro) 
+                    VALUES ($cd_submenu, $cd_usuario, 'S', " . $_SESSION["CD_USUARIO"] . ")";
         mysqli_query($conexao, $insert);
 
     }
@@ -140,8 +141,8 @@ if ($Tipo == "11") {
         $cd_usuario = substr($texto, 0, strpos($texto, ","));
         $texto = substr($texto, strpos($texto, ",") + 1, strlen($texto));
 
-        $insert = "INSERT INTO menus_user (nr_seq_smenu, nr_seq_user, st_liberado) 
-                    VALUES ($cd_smenu, $cd_usuario, 'S')";
+        $insert = "INSERT INTO menus_user (nr_seq_smenu, nr_seq_user, st_liberado, nr_seq_usercadastro) 
+                    VALUES ($cd_smenu, $cd_usuario, 'S', " . $_SESSION["CD_USUARIO"] . ")";
         mysqli_query($conexao, $insert);
 
     }

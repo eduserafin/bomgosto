@@ -1,6 +1,6 @@
 <?php
-    foreach($_GET as $key => $value){
-        $$key = pg_escape_string($value);
+  foreach($_GET as $key => $value){
+    	$$key = $value;
     }
 ?>
 
@@ -55,8 +55,7 @@
         <input type="hidden" id="nr_seq_empresa" value="<?php echo $codigo ?>">
 
         <button class="btn btn-primary upload-btn" id="btnEnviar" onclick="
-            enviaAnexo(document.getElementById('campoAnexo'));
-            anulacampo(document.getElementById('campoAnexo'));">
+            enviaAnexo(document.getElementById('campoAnexo'));">
             <i class="fa fa-upload"></i> Enviar
         </button>
 
@@ -99,51 +98,67 @@
             url: url,
             type: 'POST',
             data: formData,
+            dataType: 'json',
             success: function(data) {
-                carregarAnexos()
-            },
-            error: function (response) {
-                if(response.responseJSON && response.responseJSON.message){
-                    alert(response.responseJSON.message)
-                }else{
-                    alert('Oops! Falha ao enviar os arquivos.');
+                console.log(data);
+        
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Show...',
+                        text: data.mensagem
+                    });
+                    carregarAnexos();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.mensagem
+                    });
                 }
-                
-                return false;
+            },
+            error: function (xhr) {
+                console.log("Erro AJAX: ", xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Falha ao enviar os arquivos.'
+                });
             },
             complete: function () {
                 campo.value = '';
                 document.getElementById('enviandoArquivo').classList.add('hidden');
-                document.getElementById('btnEnviar').removeAttribute('disabled');
             },
             cache: false,
             contentType: false,
             processData: false,
         });
+
     }
 
-function carregarAnexos(){
-    var codigo = document.getElementById("nr_seq_empresa").value;
-
-    var url = `cadastros/empresas/listaanexos.php?consultaAnexos=sim&codigo=${codigo}`;
-    document.getElementById('listaArquivos').innerHTML = 'Aguarde, carregando...';
-    $.get(url, function (htmlRetorno) {
-        document.getElementById('listaArquivos').innerHTML = htmlRetorno;
-    })
-}
-
-function removerArquivo(arquivo, nr_sequencial){
-    if(!confirm('Deseja realmente excluir o arquivo?')){
-        return false;
+    function carregarAnexos(){
+        var codigo = document.getElementById("nr_seq_empresa").value;
+    
+        var url = `cadastros/empresas/listaanexos.php?consultaAnexos=sim&codigo=${codigo}`;
+        document.getElementById('listaArquivos').innerHTML = 'Aguarde, carregando...';
+        $.get(url, function (htmlRetorno) {
+            document.getElementById('listaArquivos').innerHTML = htmlRetorno;
+        })
     }
-
-    var url = `cadastros/empresas/acao.php?Tipo=removerArquivo&arquivo=${arquivo}&nr_sequencial=${nr_sequencial}`;
-    document.getElementById('excluindo'+nr_sequencial).classList.remove('hidden')
-    $.get(url, function (htmlRetorno) {
-        carregarAnexos()
-        $(".tooltip").tooltip("hide");
-    })
-
-    document.getElementById('btnEnviar').removeAttribute('disabled');
-}
+    
+    function removerArquivo(arquivo, nr_sequencial){
+        if(!confirm('Deseja realmente excluir o arquivo?')){
+            return false;
+        }
+    
+        var url = `cadastros/empresas/acao.php?Tipo=removerArquivo&arquivo=${arquivo}&nr_sequencial=${nr_sequencial}`;
+        document.getElementById('excluindo'+nr_sequencial).classList.remove('hidden')
+        $.get(url, function (htmlRetorno) {
+            carregarAnexos()
+            $(".tooltip").tooltip("hide");
+        })
+    
+        document.getElementById('btnEnviar').removeAttribute('disabled');
+    }
+    
 </script>

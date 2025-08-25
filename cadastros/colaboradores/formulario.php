@@ -1,39 +1,56 @@
+<?php
+    if($_SESSION["ST_ADMIN"] == 'G'){
+      $v_filtro_empresa = "AND nr_sequencial = " . $_SESSION["CD_EMPRESA"] . "";
+    } else if ($_SESSION["ST_ADMIN"] == 'C') {
+      $v_filtro_empresa = "AND nr_sequencial = " . $_SESSION["CD_EMPRESA"] . "";
+    } else {
+      $v_filtro_empresa = "";
+    }
+?>
+
 <body onLoad="document.getElementById('txtnome').focus();">
-<input type="hidden" name="cd_colab" id="cd_colab" value="">
-<div class="form-group col-md-12">
-    <div class="row">
-        <?php include "inc/botao_novo.php"; ?>
-        <?php include "inc/botao_salvar.php"; ?>
-        <?php include "inc/botao_excluir.php"; ?>
+    <input type="hidden" name="cd_colab" id="cd_colab" value="">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <?php include "inc/botao_novo.php"; ?>
+            <?php include "inc/botao_salvar.php"; ?>
+            <?php include "inc/botao_excluir.php"; ?>
+        </div>
     </div>
-</div>
     <div class="row">
-        <div class="col-md-3">
+         <div class="col-md-3">
             <label>NOME: <font color='red'>*</font></label>
             <input type="text" name="txtnome" id="txtnome" size="10" maxlength="25" style="background:#E6FFE0;" value="<?php echo $txtrg; ?>" class="form-control">
         </div>
-        <div class="col-md-2">
-            <label>SEXO: <font color='red'>*</font></label>
-            <?php include $ant . "inc/sexo.php"; ?>
-        </div>
-        <div class="col-md-2">
-            <label>CPF: <font color='red'>*</font></label>
-            <input type="text" name="txcpf" id="txcpf" size="10" maxlength="25" style="background:#E6FFE0;" value="<?php echo $txtrg; ?>" class="form-control">
-        </div>
-        <div class="col-md-2">
-            <label>RG: <font color='red'>*</font></label>
-            <input type="text" name="txtrg" id="txtrg" size="10" maxlength="25" style="background:#E6FFE0;" value="<?php echo $txtrg; ?>" class="form-control">
-        </div>
-        <div class="col-md-2">
-            <label for="txtstatus">STATUS: <font color='red'>*</font></label>
-            <select class="form-control" name="txtstatus" id="txtstatus" style="background:#E0FFFF;">
-                <option value="A">ATIVO</option>
-                <option value="I">INATIVO</option>
+        <div class="col-md-3">
+            <label for="txtempresa">EMPRESA: <font color='red'>*</font></label>                     
+            <select id="txtempresa" class="form-control" style="background:#E0FFFF;">
+                <option value='0'>Selecione uma empresa</option>
+                <?php
+                    $sql = "SELECT nr_sequencial, ds_empresa
+                            FROM empresas
+                            WHERE st_status = 'A'
+                            $v_filtro_empresa
+                            ORDER BY ds_empresa";
+                    $res = mysqli_query($conexao, $sql);
+                    while($lin=mysqli_fetch_row($res)){
+                        $cdg = $lin[0];
+                        $desc = $lin[1];
+
+                        echo "<option value=$cdg>$desc</option>";
+
+                    }
+                ?>
             </select>
         </div>
-    </div>
-
-    <div class="row">
+        <div class="col-md-2">
+            <label>SEXO: <font color='red'>*</font></label>
+            <select size="1" name="sexo" id="sexo" class="form-control" style="background:#E0FFFF;">
+                <option selected value=0>Selecione...</option>
+            	<option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+            </select>
+        </div>
         <div class="col-md-3">
             <label>FUNÇÃO: <font color='red'>*</font></label>
             <select size="1" name="selfuncao" id="selfuncao" class="form-control" style="background:#E0FFFF;">
@@ -53,6 +70,29 @@
                 ?>
             </select>
         </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-2">
+            <label>CPF: <font color='red'>*</font></label>
+            <input type="text" name="txcpf" id="txcpf" size="10" maxlength="25" style="background:#E6FFE0;" value="<?php echo $txtrg; ?>" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label>RG: <font color='red'>*</font></label>
+            <input type="text" name="txtrg" id="txtrg" size="10" maxlength="25" style="background:#E6FFE0;" value="<?php echo $txtrg; ?>" class="form-control">
+        </div>
+         <div class="col-md-2">
+            <label>TELEFONE: <font color='red'>*</font></label> 
+            <input type="text" name="txttelefone" id="txttelefone" maxlength="20" value="<?php echo $txttelefone; ?>" class="form-control" style="background:#E6FFE0;">
+        </div>
+         <div class="col-md-4">
+            <label>E-MAIL: <font color='red'>*</font></label>
+            <input type="text" name="txtemail" id="txtemail" size="40" maxlength="60" value="<?php echo $txtemail; ?>" class="form-control" style="background:#E6FFE0;">
+        </div>
+     </div>
+
+    <div class="row">
+        
         <div class="col-md-2">
             <label>DATA ADMISSÃO: <font color='red'>*</font></label>
             <input type="date" name="txtdataadm" id="txtdataadm" value="<?php echo $txtdataadm; ?>" style="background:#E0FFFF;" class="form-control">
@@ -62,15 +102,11 @@
             <input type="date" name="txtdatadem" id="txtdatadem" value="<?php echo $txtdatadem; ?>" class="form-control">
         </div>
         <div class="col-md-2">
-            <label>TELEFONE: <font color='red'>*</font></label> 
-            <input type="text" name="txttelefone" id="txttelefone" maxlength="20" value="<?php echo $txttelefone; ?>" class="form-control" style="background:#E6FFE0;">
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <label>E-MAIL: <font color='red'>*</font></label>
-            <input type="text" name="txtemail" id="txtemail" size="40" maxlength="60" value="<?php echo $txtemail; ?>" class="form-control" style="background:#E6FFE0;">
+            <label for="txtstatus">STATUS: <font color='red'>*</font></label>
+            <select class="form-control" name="txtstatus" id="txtstatus" style="background:#E0FFFF;">
+                <option value="A">ATIVO</option>
+                <option value="I">INATIVO</option>
+            </select>
         </div>
     </div>
 
@@ -85,7 +121,7 @@
             <label>ENDEREÇO:</label>
             <input type="text" name="txtendereco" id="txtendereco" maxlength="200" value="<?php echo $txtendereco; ?>" class="form-control">
         </div>
-        <div class="col-md-1">
+        <div class="col-md-2">
             <label>N. END:</label>
             <input type="text" name="txtnrendereco" id="txtnrendereco" maxlength="10" value="<?php echo $txtnrendereco; ?>" class="form-control">
         </div>
@@ -117,10 +153,8 @@
                 ?>
             </select>
         </div>
-        <div class="col-md-3">
-            <div class="row" id="rscidades">
-                <?php include "cidades.php"; ?>
-            </div>
+        <div class="col-md-3" id="rscidades">
+            <?php include "cidades.php"; ?>
         </div>
         <div class="col-md-2">
             <label>CEP:</label>
@@ -143,8 +177,9 @@
 
         if (id=='new'){
             document.getElementById('cd_colab').value = "";
+            document.getElementById('txtempresa').value = "0";
             document.getElementById('txtnome').value = "";
-            document.getElementById('sexo').value = "M";
+            document.getElementById('sexo').value = "0";
             document.getElementById('txcpf').value = "";
             document.getElementById('txtrg').value = "";
             document.getElementById('selfuncao').value = "0";
@@ -164,6 +199,7 @@
         }
         else if (id=="save"){  
             var codigo = document.getElementById('cd_colab').value;
+            var empresa = document.getElementById('txtempresa').value;
             var nome = limparTexto(document.getElementById('txtnome').value);
             var sexo = document.getElementById('sexo').value;
             var cpf = limparTexto(document.getElementById('txcpf').value);
@@ -182,7 +218,15 @@
             var cidade = document.getElementById('selcidade').value;
             var cep = limparTexto(document.getElementById('txtcep').value);
             
-            if (nome == "") {
+             if (empresa == 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Informe uma empresa!'
+                });
+                document.getElementById('txtempresa').focus();
+            } 
+            else if (nome == "") {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Oops...',
@@ -190,7 +234,7 @@
                 });
                 document.getElementById('txtnome').focus();
             } 
-            else if (sexo == "") {
+            else if (sexo == 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Oops...',
@@ -253,7 +297,7 @@
                     Tipo = "A";
                 }
 
-                window.open('cadastros/colaboradores/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&cpf=' + cpf + '&rg=' + rg + '&funcao=' + funcao + '&dataadm=' + dataadm + '&datadem=' + datadem + '&status=' + status + '&telefone=' + telefone + '&email=' + email + '&endereco=' + endereco + '&nrendereco=' + nrendereco + '&bairro=' + bairro + '&complemento=' + complemento + '&estado=' + estado + '&cidade=' + cidade + '&cep=' + cep, "acao");
+                window.open('cadastros/colaboradores/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&cpf=' + cpf + '&rg=' + rg + '&funcao=' + funcao + '&dataadm=' + dataadm + '&datadem=' + datadem + '&status=' + status + '&telefone=' + telefone + '&email=' + email + '&endereco=' + endereco + '&nrendereco=' + nrendereco + '&bairro=' + bairro + '&complemento=' + complemento + '&estado=' + estado + '&cidade=' + cidade + '&cep=' + cep + '&empresa=' + empresa + '&sexo=' + sexo, "acao");
 
             }
         } else if (id == "delete") {

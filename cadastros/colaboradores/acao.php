@@ -15,6 +15,7 @@ if ($Tipo == "D") {
     $RS = mysqli_fetch_assoc($RSS);
     if ($RS["nr_sequencial"] == $Codigo) {
         echo "<script language='javascript'>window.parent.document.getElementById('cd_colab').value='" . $RS["nr_sequencial"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtempresa').value='" . $RS["nr_seq_empresa"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').value='" . $RS["ds_colaborador"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('sexo').value='" . $RS["tp_sexo"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txcpf').value='" . $RS["nr_cpf"] . "';</script>";
@@ -31,6 +32,7 @@ if ($Tipo == "D") {
         echo "<script language='javascript'>window.parent.document.getElementById('txtdscomplemento').value='" . $RS["ds_complemento"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('seluf').value='" . $RS["nr_seq_estado"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('selcidade').value='" . $RS["nr_seq_cidade"] . "';</script>";
+        echo "<script language='javascript'>window.parent.buscaComercial('".$RS["nr_seq_estado"]."', '".$RS["nr_seq_cidade"]."');</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtcep').value='" . $RS["nr_cep"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtnome').focus();</script>";
     }
@@ -44,7 +46,7 @@ if ($Tipo == "I") {
     $SQL = "SELECT nr_sequencial 
             FROM colaboradores
             WHERE nr_cpf = '" . $cpf . "'  
-            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
+            AND nr_seq_empresa = " . $empresa . "
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
@@ -61,7 +63,7 @@ if ($Tipo == "I") {
     } else {
 
       $insert = "INSERT INTO colaboradores (ds_colaborador, tp_sexo, nr_cpf, nr_rg, nr_seq_funcao, dt_admissao, dt_demissao, st_status, nr_telefone, ds_email, ds_endereco, nr_endereco, ds_bairro, ds_complemento, nr_seq_estado, nr_seq_cidade, nr_cep, nr_seq_usercadastro, nr_seq_empresa) 
-                  VALUES ('" . $nome . "', '" . $sexo . "', '" . $cpf . "', '" . $rg . "', " . $funcao . ", '" . $dataadm . "' ,'" . $datadem . "', '" . $status . "', '" . $telefone . "', '" . $email . "', '" . $endereco . "', '" . $nrendereco . "', '" . $bairro . "', '" . $complemento . "', " . $estado . ", " . $cidade . ", '" . $cep . "' , " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
+                  VALUES ('" . $nome . "', '" . $sexo . "', '" . $cpf . "', '" . $rg . "', " . $funcao . ", '" . $dataadm . "' ,'" . $datadem . "', '" . $status . "', '" . $telefone . "', '" . $email . "', '" . $endereco . "', '" . $nrendereco . "', '" . $bairro . "', '" . $complemento . "', " . $estado . ", " . $cidade . ", '" . $cep . "' , " . $_SESSION["CD_USUARIO"] . ", " . $empresa . ")";
       $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
 
       // Valida se deu certo
@@ -99,7 +101,7 @@ if ($Tipo == "A") {
     $SQL = "SELECT nr_sequencial 
             FROM colaboradores
             WHERE nr_cpf = '" . $cpf . "'
-            AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
+            AND nr_seq_empresa = " . $empresa . "
             AND nr_sequencial <> " . $codigo . "  
             LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
@@ -134,6 +136,7 @@ if ($Tipo == "A") {
                     nr_seq_estado = '" . $estado . "', 
                     nr_seq_cidade = '" . $cidade . "', 
                     nr_cep = '" . $cep . "',
+                    nr_seq_empresa = " . $empresa . ",
                     nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
                     dt_alterado = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;

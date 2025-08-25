@@ -21,6 +21,7 @@
 
   $porpagina = 15;
   $inicio = $pg * $porpagina;
+  $v_sql = "";
 
   $nome = $_GET['nome'];
   $nome = mb_strtoupper($nome, 'UTF-8');
@@ -37,6 +38,11 @@
   if ($status != 0) {
     $v_sql .= " AND ls.nr_seq_situacao = $status";
   }
+  
+  $codigo = $_GET['codigo'];
+  if ($codigo != 0) {
+    $v_sql .= " AND ls.nr_sequencial = $codigo";
+  }
 
   $segmento = $_GET['segmento'];
   if ($segmento != 0) {
@@ -45,12 +51,12 @@
 
   $data1 = $_GET['data1'];
   if ($data1 != "") {
-    $v_sql .= " AND ls.dt_cadastro >= '$data1'";
+    $v_sql .= " AND DATE(ls.dt_cadastro) >= '$data1'";
   }
 
   $data2 = $_GET['data2'];
   if ($data2 != "") {
-    $v_sql .= " AND ls.dt_cadastro <= '$data2'";
+    $v_sql .= " AND DATE(ls.dt_cadastro) <= '$data2'";
   }
 
   $dataagenda1 = $_GET['dataagenda1'];
@@ -66,15 +72,58 @@
   if($_SESSION["ST_ADMIN"] == 'G'){
     $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
     $v_filtro_colaborador = "";
-} else if ($_SESSION["ST_ADMIN"] == 'C') {
+  } else if ($_SESSION["ST_ADMIN"] == 'C') {
     $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
     $v_filtro_colaborador = "AND ls.nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
-} else {
+  } else {
     $v_filtro_empresa = "";
     $v_filtro_colaborador = "";
-}
+  }
 
   include $ant."inc/exporta_excel.php";
+  
+  function formatarTelefone($numero) {
+    // Remove tudo que não é número
+    $numero = preg_replace('/\D/', '', $numero);
+
+    // Remove o 55 do início se existir
+    if (substr($numero, 0, 2) === '55') {
+        $numero = substr($numero, 2);
+    }
+
+    // Se tiver 11 dígitos: 9 dígitos + DDD
+    if (strlen($numero) === 11) {
+        return sprintf("(%s) %s-%s",
+            substr($numero, 0, 2),
+            substr($numero, 2, 5),
+            substr($numero, 7, 4)
+        );
+    }
+    // Se tiver 10 dígitos: 8 dígitos + DDD
+    elseif (strlen($numero) === 10) {
+        return sprintf("(%s) %s-%s",
+            substr($numero, 0, 2),
+            substr($numero, 2, 4),
+            substr($numero, 6, 4)
+        );
+    }
+    // Se tiver 9 dígitos (sem DDD): celular
+    elseif (strlen($numero) === 9) {
+        return sprintf("%s-%s",
+            substr($numero, 0, 5),
+            substr($numero, 5, 4)
+        );
+    }
+    // Se tiver 8 dígitos (sem DDD): fixo
+    elseif (strlen($numero) === 8) {
+        return sprintf("%s-%s",
+            substr($numero, 0, 4),
+            substr($numero, 4, 4)
+        );
+    }
+    // Caso não caiba em nenhum caso acima, retorna como está
+    return $numero;
+}
 
 ?>
 <html>
@@ -101,8 +150,8 @@
                     ls.nr_telefone AS contato, CONCAT(c.ds_municipio, ' - ', e.sg_estado) AS municipio_estado,
                     st.ds_situacao, ls.dt_agenda
                     FROM lead ls
-                    INNER JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
-                    INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+                    LEFT JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
+                    LEFT JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
                     LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
                     LEFT JOIN situacoes st ON ls.nr_seq_situacao = st.nr_sequencial
                   WHERE 1 = 1  
@@ -119,7 +168,7 @@
             $valor = number_format($vl_valor, 2, ',', '.');
             $dt_cadastro = date('d/m/Y', strtotime($linha[3]));
             $ds_segmento = $linha[4];
-            $contato = $linha[5];
+            $contato = formatarTelefone($linha[5]);
             $municipio_estado = $linha[6];
             $ds_situacao = $linha[7];
             $dt_agenda = $linha[8];
@@ -137,7 +186,9 @@
               <td><?php echo $ds_segmento; ?></td>
               <td><?php echo $ds_situacao; ?></td>
               <td width="3%" align="center"><?php include $ant."inc/btn_editar.php";?></td>
-              <!--<td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>-->
+              <?php if($_SESSION["ST_ADMIN"] != 'C'){ ?>
+                <td width="3%" align="center"><?php include $ant."inc/btn_excluir.php";?></td>
+              <?php } ?>
             </tr>
 
             <?php

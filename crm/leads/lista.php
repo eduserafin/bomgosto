@@ -2,13 +2,18 @@
     foreach($_GET as $key => $value){
         $$key = $value;
     }
+  
+    $dataFinal = date('Y-m-d');
+    
+    $dataInicial = date('Y-m-d', strtotime('-6 days'));
+
 ?>
 
 <div class="row-100">
     <div class="row">
         <div class="col-md-3">
             <label for="pesquisanome">NOME:</label>                  
-            <input type="text" name="pesquisanome" id="pesquisanome" size="15" maxlength="14" class="form-control" Placeholder="Descreva">
+            <input type="text" name="pesquisanome" id="pesquisanome" size="15" maxlength="50" class="form-control" Placeholder="Descreva">
         </div>
         <div class="col-md-3">    
             <label for="pesquisacidade">CIDADE:</label>        
@@ -71,6 +76,13 @@
     </div>
 
     <div class="row">
+         <div class="col-md-2">
+            <label for="pesquisavisual">VISUALIZAÇÃO:</label>
+            <select name="pesquisavisual" id="pesquisavisual" class="form-control">
+                <option value="L">Lista tradicional</option>
+                <option value="Q">Quadro Kanban</option>
+            </select>
+        </div>
         <div class="col-md-4 form-inline">
             <label for="pesquisadataagenda">DATA AGENDA:</label>
             <input type="date" class="form-control" id="pesquisadataagenda1" size="10" maxlength="10">
@@ -78,8 +90,8 @@
         </div>
         <div class="col-md-4 form-inline">
             <label for="pesquisadata">DATA LEAD:</label>
-            <input type="date" class="form-control" id="pesquisadata1" size="10" maxlength="10">
-            <input type="date" class="form-control" id="pesquisadata2" size="10" maxlength="10">
+            <input type="date" class="form-control" id="pesquisadata1" name="pesquisadata1" value="<?php echo $dataInicial; ?>" size="10" maxlength="10">
+            <input type="date" class="form-control" id="pesquisadata2" name="pesquisadata2" value="<?php echo $dataFinal; ?>" size="10" maxlength="10">
         </div>
         <div class="col-md-1"><br>
             <?php include "inc/botao_consultar.php"; ?>
@@ -117,6 +129,7 @@
                 document.getElementById('pesquisadata2').value,
                 document.getElementById('pesquisadataagenda1').value,
                 document.getElementById('pesquisadataagenda2').value,
+                document.getElementById('pesquisavisual').value,
                 pg);
     }
 

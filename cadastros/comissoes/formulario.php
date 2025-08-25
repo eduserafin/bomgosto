@@ -34,6 +34,11 @@
             </div>
 
             <div class="col-md-2">
+                <label>ESTORNO:</label>
+                <input type="number" name="txtestorno" id="txtestorno" maxlength="10" class="form-control" style="background:#E6FFE0;">
+            </div>
+
+            <div class="col-md-2">
                 <label>PARCELAS:</label>
                 <input type="number" name="txtparcelas" id="txtparcelas" maxlength="10" class="form-control" style="background:#E6FFE0;" onChange="javascript: BuscarComissao(this.value, '');">
             </div>
@@ -88,6 +93,7 @@
             var codigo = document.getElementById('cd_parametro').value;
             var colaborador = document.getElementById('selcolaborador').value;
             var comissao = document.getElementById('txtcomissao').value;
+            var estorno = document.getElementById('txtestorno').value;
             var parcelas = document.getElementById('txtparcelas').value;
             var administradora = document.getElementById('seladministradora').value;
             var comissoes = "";
@@ -95,14 +101,17 @@
             var somaComissoes = 0;
 
             for (var i = 1; i <= parcelas; i++) {
-                var valor = document.getElementById('txtcomissaoparcela' + i).value.replace(',', '.'); // tratar vírgulas
-                var numero = parseFloat(valor) || 0;
+                var valorCampo = document.getElementById('txtcomissaoparcela' + i).value.trim().replace(',', '.');
+                if (valorCampo === "" || isNaN(parseFloat(valorCampo))) {
+                    valorCampo = "0";
+                }
+                var numero = parseFloat(valorCampo);
                 somaComissoes += numero;
-                comissoesPorParcela.push(valor);
+                comissoesPorParcela.push(valorCampo);
             }
 
             comissoes = comissoesPorParcela.join(',');
-           
+
             if (colaborador == "") {
                 Swal.fire({
                     icon: 'warning',
@@ -118,6 +127,14 @@
                     text: 'Informe a comissão total!'
                 });
                 document.getElementById('txtcomissao').focus();
+            } 
+            else if (estorno == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Informe o percentual de estorno!'
+                });
+                document.getElementById('txtestorno').focus();
             } 
             else if (parcelas == "") {
                 Swal.fire({
@@ -149,7 +166,7 @@
                     Tipo = "A";
                 }
 
-                window.open('cadastros/comissoes/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&colaborador=' + colaborador + '&comissao=' + comissao + '&parcelas=' + parcelas + '&administradora=' + administradora + '&comissoes=' + encodeURIComponent(comissoes), "acao");
+                window.open('cadastros/comissoes/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&colaborador=' + colaborador + '&comissao=' + comissao + '&parcelas=' + parcelas + '&administradora=' + administradora + '&estorno=' + estorno + '&comissoes=' + encodeURIComponent(comissoes), "acao");
 
             }
         } else if (id == "delete") {

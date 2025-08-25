@@ -55,7 +55,7 @@ if ($Tipo == "I") {
           		WHERE nr_cnpj='" . $cnpj . "'  
           		LIMIT 1";
     $RSS = mysqli_query($conexao, $SQL);
-    if (pg_num_rows($RSS) > 0) {
+    if (mysqli_num_rows($RSS) > 0) {
 
         echo "<script language='javascript'>
                 window.parent.Swal.fire({
@@ -67,8 +67,8 @@ if ($Tipo == "I") {
 
     } else {
 
-        $insert = "INSERT INTO empresas (ds_nome, ds_empresa, nr_cnpj, nr_ie, ds_logradouro, ds_bairro, nr_endereco, ds_complemento, nr_cep, nr_seq_cidade, nr_seq_estado, nr_seq_usercadastro, ds_email, nr_telefone, st_status) 
-                        VALUES ('" . $nome . "', '" . $empresa . "', '$cnpj', '$ie', '" . $logradouro . "', '" . $bairro . "', '$numero', '" . $complemento . "', '$cep', $municipio, $estado, " . $_SESSION["CD_USUARIO"] . ", '$email', '$telefone', '$status')";
+        $insert = "INSERT INTO empresas (ds_nome, ds_empresa, nr_cnpj, nr_ie, ds_logradouro, ds_bairro, nr_endereco, ds_complemento, nr_cep, nr_seq_cidade, nr_seq_estado, ds_email, nr_telefone, st_status) 
+                        VALUES ('" . $nome . "', '" . $empresa . "', '$cnpj', '$ie', '" . $logradouro . "', '" . $bairro . "', '$numero', '" . $complemento . "', '$cep', $municipio, $estado,  '$email', '$telefone', '$status')";
         $rss_insert = mysqli_query($conexao, $insert); //echo $insert;
 
         // Valida se deu certo
@@ -110,7 +110,7 @@ if ($Tipo == "A") {
                AND nr_sequencial <> " . $codigo . " 
              LIMIT 1";
     $RSS = mysqli_query($conexao, $SQL);
-    if (pg_num_rows($RSS) > 0) {
+    if (mysqli_num_rows($RSS) > 0) {
 
         echo "<script language='javascript'>
                 window.parent.Swal.fire({
@@ -134,13 +134,12 @@ if ($Tipo == "A") {
                         nr_cep = '$cep', 
                         nr_seq_cidade = $municipio, 
                         nr_seq_estado = $estado, 
-                        nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ", 
                         dt_alterado = CURRENT_TIMESTAMP,
                         nr_telefone = '$telefone',
                         ds_email = '$email',
                         st_status = '$status'
                     WHERE nr_sequencial = " . $codigo;
-        //echo"<pre> $update</pre>";
+        echo"<pre> $update</pre>";
         $rss_update = mysqli_query($conexao, $update);
 
         // Valida se deu certo
@@ -174,8 +173,15 @@ if ($Tipo == "A") {
 
 if ($Tipo == 'enviarArquivo') {
 
-    if (!$_FILES) {
-        response_json('400', array('message' => 'Nenhum arquivo enviado'));
+    header('Content-Type: application/json');
+    ob_clean();  // limpa qualquer saída antes do JSON
+
+    if (empty($_FILES)) {
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Nenhum arquivo enviado!'
+        ]);
+        exit;
     }
 
     include '../../inc/upload_helper.php';
@@ -183,41 +189,80 @@ if ($Tipo == 'enviarArquivo') {
     $values = [];
     foreach ($_FILES as $file) {
         $resultadoUpload = fileUpload($file, './arquivos/');
-        if ($resultadoUpload['error'] == true) {
+        if ($resultadoUpload['error'] === true) {
             continue;
         }
 
         $arquivo = $resultadoUpload['filename'];
-
-        $values[] = "($codigo, '$arquivo', NOW(), $_SESSION[CD_USUARIO])";
+        $values[] = "($codigo, '$arquivo', NOW())";
     }
 
-    $sql = "INSERT INTO anexos_empresa (nr_seq_empresa, ds_arquivo, dt_cadastro, nr_seq_usercadastro)
-        VALUES " . join(', ', $values);
+    if (empty($values)) {
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Nenhum arquivo válido enviado!'
+        ]);
+        exit;
+    }
 
+    $sql = "INSERT INTO anexos_empresa (nr_seq_empresa, ds_arquivo, dt_cadastro)
+            VALUES " . join(', ', $values);
     $rss = mysqli_query($conexao, $sql);
 
-    $response = [];
-    $response['mensagem'] = sizeof($values) . " arquivos enviados";
+    if ($rss) {
+        echo json_encode([
+            'status' => 'success',
+            'mensagem' => sizeof($values) . " arquivo(s) enviado(s) com sucesso!"
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Problemas ao gravar no banco: ' . mysqli_error($conexao)
+        ]);
+    }
 
-    response_json('200', $resultadoUpload);
+    exit;
 }
 
 //==================================-EXCLUI ANEXOS-======================================================
 
 elseif ($Tipo == 'removerArquivo') {
 
+    header('Content-Type: application/json');
+    ob_clean(); // limpa qualquer saída anterior
+
     if (!isset($arquivo)) {
-        response_json('400', '');
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Arquivo não informado!'
+        ]);
+        exit;
     }
 
     if (unlink("./arquivos/$arquivo")) {
         $sql = "DELETE FROM anexos_empresa WHERE nr_sequencial = $nr_sequencial";
-        mysqli_query($conexao, $sql);
-        response_json('200', '');
+        $rss = mysqli_query($conexao, $sql);
+
+        if ($rss) {
+            echo json_encode([
+                'status' => 'success',
+                'mensagem' => 'Arquivo removido com sucesso!'
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'mensagem' => 'Arquivo removido, mas erro ao excluir do banco: ' . mysqli_error($conexao)
+            ]);
+        }
     } else {
-        response_json('500', array('message' => 'falha ao apagar o arquivo'));
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Falha ao apagar o arquivo!'
+        ]);
     }
+
+    exit;
 }
+
 
 ?>

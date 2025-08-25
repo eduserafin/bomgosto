@@ -17,6 +17,7 @@ if ($Tipo == "D") {
         echo "<script language='javascript'>window.parent.document.getElementById('cd_parametro').value='" . $RS["nr_sequencial"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('selcolaborador').value='" . $RS["nr_seq_colaborador"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtcomissao').value='" . $RS["vl_comissao"] . "';</script>";
+        echo "<script language='javascript'>window.parent.document.getElementById('txtestorno').value='" . $RS["vl_estorno"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('txtparcelas').value='" . $RS["nr_parcelas"] . "';</script>";
         echo "<script language='javascript'>window.parent.document.getElementById('seladministradora').value='" . $RS["nr_seq_administradora"] . "';</script>";
         echo "<script language='javascript'>window.parent.BuscarComissao('".$RS["nr_parcelas"]."', '".$RS["nr_sequencial"]."');</script>";
@@ -31,7 +32,7 @@ if ($Tipo == "I") {
             FROM comissoes
             WHERE nr_seq_administradora = $administradora
             AND nr_seq_colaborador = $colaborador
-            LIMIT 1"; echo  $SQL;
+            LIMIT 1"; //echo  $SQL;
     $RSS = mysqli_query($conexao, $SQL);
     $RS = mysqli_fetch_assoc($RSS);
     if ($RS["nr_sequencial"] !='') {
@@ -47,10 +48,11 @@ if ($Tipo == "I") {
     } else {
 
       $comissao = floatval(str_replace(',', '.', $_GET['comissao']));
-     
-      $insert = "INSERT INTO comissoes (nr_seq_colaborador, nr_seq_administradora, vl_comissao, nr_parcelas) 
-                  VALUES (" . $colaborador . ", " . $administradora . ", " . $comissao . ", " . $parcelas . ")";
-      $rss_insert = mysqli_query($conexao, $insert); //echo  $insert;
+      $estorno = floatval(str_replace(',', '.', $_GET['estorno']));
+
+      $insert = "INSERT INTO comissoes (nr_seq_colaborador, nr_seq_administradora, vl_comissao, vl_estorno, nr_parcelas, nr_seq_usercadastro) 
+                  VALUES (" . $colaborador . ", " . $administradora . ", " . $comissao . ", " . $estorno . ", " . $parcelas . ", " . $_SESSION["CD_USUARIO"] . ")";
+      $rss_insert = mysqli_query($conexao, $insert); echo  $insert;
 
       // Valida se deu certo
       if ($rss_insert) {
@@ -119,12 +121,14 @@ if ($Tipo == "A") {
     } else {
 
       $comissao = floatval(str_replace(',', '.', $_GET['comissao']));
+      $estorno = floatval(str_replace(',', '.', $_GET['estorno']));
 
       $update = "UPDATE comissoes 
                 SET nr_seq_colaborador = " . $colaborador . ", 
                     nr_seq_administradora = " . $administradora . ", 
                     nr_parcelas = " . $parcelas . ", 
                     vl_comissao = " . $comissao . ", 
+                    vl_estorno = " . $estorno . ", 
                     nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
                     dt_alterado = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;

@@ -24,6 +24,7 @@ if ($Tipo == "D"){
             window.parent.document.getElementById('txtlink').value='".$RS["lk_smenu"]."';
             window.parent.document.getElementById('modulo').value='".$RS["tp_smenu"]."';
             window.parent.document.getElementById('txticone').value='".$RS["ic_smenu"]."';
+            window.parent.document.getElementById('perfil').value='".$RS["tp_perfil"]."';
             window.parent.document.getElementById('menu').focus();
           </script>";
 	}
@@ -54,8 +55,8 @@ if ($Tipo == "I"){
   
     } else {
 
-      $insert = "INSERT INTO submenus (ds_smenu, lk_smenu, ic_smenu, nr_seq_menu, nr_seq_usercadastro, tp_smenu) 
-                VALUES ('".$nome."', '".$link."', '".$icone."', ".$menu.", ".$_SESSION["CD_USUARIO"].", ".$modulo.")";
+      $insert = "INSERT INTO submenus (ds_smenu, lk_smenu, ic_smenu, nr_seq_menu, nr_seq_usercadastro, tp_smenu, tp_perfil) 
+                VALUES ('".$nome."', '".$link."', '".$icone."', ".$menu.", ".$_SESSION["CD_USUARIO"].", ".$modulo.", '$perfil')";
       $rss_insert = mysqli_query($conexao, $insert);
       
       if ($rss_insert) {
@@ -117,7 +118,8 @@ if ($Tipo == "A"){
                       nr_seq_menu=".$menu.", 
                       nr_seq_useralterado=".$_SESSION["CD_USUARIO"].", 
                       dt_alterado=CURRENT_TIMESTAMP, 
-                      tp_smenu=".$modulo." 
+                      tp_smenu=".$modulo.",
+                      tp_perfil='$perfil'
                   WHERE nr_sequencial=".$codigo;
       $rss_update = mysqli_query($conexao, $update);
 

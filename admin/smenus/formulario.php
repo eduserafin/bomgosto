@@ -42,6 +42,15 @@ foreach($_GET as $key => $value){
                 <option value="3">RELATÓRIOS</option>
             </select>
         </div>
+        
+        <div class="col-md-3">
+            <label for="perfil">PERFIL:</label>
+            <select class="form-control" name="perfil" id="perfil" style="background:#E0FFFF;">
+                <option selected value="">Selecione</option>
+                <option value="A">ADMINISTRATIVO</option>
+                <option value="N">NORMAL</option>
+            </select>
+        </div>
     </div>
 
 </body>
@@ -56,6 +65,7 @@ foreach($_GET as $key => $value){
             document.getElementById("txticone").value = "";
             document.getElementById("modulo").value = 0;
             document.getElementById("menu").value = 0;
+            document.getElementById("perfil").value = "";
             document.getElementById('menu').focus();
         } 
         else if (id == 'save') {
@@ -68,6 +78,7 @@ foreach($_GET as $key => $value){
             icone = icone.replace("'", "");
             var modulo = document.getElementById("modulo").value;
             var menu = document.getElementById("menu").value;
+            var perfil = document.getElementById("perfil").value;
 
             if (menu == 0) {
                 Swal.fire({
@@ -97,6 +108,13 @@ foreach($_GET as $key => $value){
                     text: 'Informe o icone do sub-menu!'
                 });
                 document.getElementById("txticone").focus();
+            } else if (perfil == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Informe o perfil!'
+                });
+                document.getElementById("txticone").focus();
             } else {
                 if (codigo == "") {
                     Tipo = "I"
@@ -104,7 +122,7 @@ foreach($_GET as $key => $value){
                     Tipo = "A";
                 }
 
-                window.open("admin/smenus/acao.php?Tipo=" + Tipo + "&codigo=" + codigo + "&nome=" + nome + "&link=" + link + "&icone=" + icone + "&menu=" + menu + "&modulo=" + modulo, "acao");
+                window.open("admin/smenus/acao.php?Tipo=" + Tipo + "&codigo=" + codigo + "&nome=" + nome + "&link=" + link + "&icone=" + icone + "&menu=" + menu + "&modulo=" + modulo + "&perfil=" + perfil, "acao");
             }
         }
         else if (id=="delete"){

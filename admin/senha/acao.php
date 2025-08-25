@@ -1,42 +1,64 @@
 <?php
-foreach($_GET as $key => $value){
-	$$key = $value;
-}
-?>
-<?php
+
 session_start(); 
 include "../../conexao.php";
-?>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</head>
-<body>
-<?php
 
-//=======================		CARREGA DADOS NO FORMULARIO
-if($Alterar == "OK"){
-	$TxSenhaA = str_replace("'","",$TxSenhaA);
-	$TxSenhaN = str_replace("'","",$TxSenhaN);
-	
-	$SQL = "SELECT COUNT(nr_sequencial) AS nrusuario
-		FROM usuarios 
-		WHERE nr_sequencial=".$_SESSION["CD_USUARIO"]." 
-			AND senha=md5('".$TxSenhaA."') 
-		LIMIT 1";
-	$RSS = mysqli_query($conexao, $SQL);
-	$RS = mysqli_fetch_assoc($RSS);
-	if($RS["nrusuario"] <= 0){
-		echo "<script language='JavaScript'>alert('A Senha Atual informada nao confere. Tente Novamente!'); document.getElementById('txtsenhaa').focus();</script>";
-	} else {
-		$update = "UPDATE usuarios 
-			SET senha=md5('".$TxSenhaN."') 
-			WHERE nr_sequencial=".$_SESSION["CD_USUARIO"];
-		
-		mysqli_query($conexao, $update);
-		echo "<script language='javascript'>alert('Senha alterada com sucesso!');</script>";
-	}
+foreach ($_GET as $key => $value) {
+    $$key = htmlspecialchars(trim($value));
+}
+
+// Verifica se o usuário está logado
+if (!isset($_SESSION["CD_USUARIO"])) {
+    exit("<script>parent.Swal.fire('Erro', 'Sessão expirada. Faça login novamente.', 'error');</script>");
+}
+
+if ($Alterar == "OK") {
+    $senhaAtual = mysqli_real_escape_string($conexao, $TxSenhaA);
+    $senhaNova  = mysqli_real_escape_string($conexao, $TxSenhaN);
+
+    // Busca a senha atual hash no banco
+    $sql = "SELECT ds_senha FROM usuarios WHERE nr_sequencial = {$_SESSION['CD_USUARIO']} LIMIT 1";
+    $result = mysqli_query($conexao, $sql);
+
+    if (!$result || mysqli_num_rows($result) === 0) {
+        echo "<script>
+            parent.Swal.fire('Erro', 'Usuário não encontrado.', 'error');
+        </script>";
+        exit;
+    }
+
+    $dados = mysqli_fetch_assoc($result);
+    $senhaHashAtual = $dados['ds_senha'];
+
+    // Verifica se a senha informada bate com a hash
+    if (!password_verify($senhaAtual, $senhaHashAtual)) {
+        echo "<script>
+            parent.Swal.fire('Erro', 'A senha atual está incorreta.', 'error');
+        </script>";
+        exit;
+    }
+
+    // Cria o novo hash seguro da nova senha
+    $novaHash = password_hash($senhaNova, PASSWORD_DEFAULT);
+
+    // Atualiza no banco
+    $sqlUpdate = "UPDATE usuarios SET ds_senha = '{$novaHash}' WHERE nr_sequencial = {$_SESSION['CD_USUARIO']}";
+
+    if (mysqli_query($conexao, $sqlUpdate)) {
+        echo "<script>
+            parent.Swal.fire({
+                title: 'Sucesso',
+                text: 'Senha alterada com sucesso!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                parent.location.reload();
+            });
+        </script>";
+    } else {
+        echo "<script>
+            parent.Swal.fire('Erro', 'Erro ao atualizar a senha. Tente novamente.', 'error');
+        </script>";
+    }
 }
 ?>
-</body>
-</html>

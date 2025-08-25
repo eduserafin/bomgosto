@@ -17,7 +17,7 @@ foreach($_GET as $key => $value){
 
 </script>
 
-<link rel="stylesheet" href="/csimulador/assets/css/estilo.css">
+<link rel="stylesheet" href="assets/css/estilo.css">
 <iframe name="acao" width="0%" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">CADASTRO</a></li>

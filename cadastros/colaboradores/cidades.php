@@ -5,11 +5,14 @@ foreach($_GET as $key => $value){
 ?>
 <?php
 
+$consulta = isset($_GET['consulta']) ? $_GET['consulta'] : '';
+$estado = isset($_GET['estado']) ? (int)$_GET['estado'] : 0;
+$cidade = isset($_GET['cidade']) ? (int)$_GET['cidade'] : 0;
+
 if ($consulta == 'sim') { 
   include "../../conexao.php"; 
 }
 
-$estado = $_GET['estado'];
 
 ?>
 
@@ -23,9 +26,14 @@ $estado = $_GET['estado'];
             ORDER BY ds_municipio";
     $RES = mysqli_query($conexao, $SQL);
     while($lin=mysqli_fetch_row($RES)){
-      $nr_cdgo = $lin[0];
-      $ds_munic = $lin[1];
-      echo "<option value=$nr_cdgo>$ds_munic</option>";
+        $nr_cdgo = $lin[0];
+        $ds_munic = $lin[1];
+      
+        if($nr_cdgo == $cidade){ $sel = "selected"; }
+        else { $sel = ""; }
+
+        echo "<option value=$nr_cdgo $sel>$ds_munic</option>";
+                
     }
   ?> 
 </select>

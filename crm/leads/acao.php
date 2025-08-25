@@ -6,7 +6,7 @@
 
   session_start(); 
   include "../../conexao.php";
-
+  
 ?>
 
 <?php
@@ -62,34 +62,50 @@ if ($Tipo == "I") {
         </script>";
 
     } else {
+        
+        $usuario = $_SESSION["CD_USUARIO"];
+        $empresa = $_SESSION["CD_EMPRESA"];
+        $situacao = 2; //Quando insere um novo registro grava situacao 2 (NOVA)
+        $nome = mysqli_real_escape_string($conexao, $nome);
+        $contato = mysqli_real_escape_string($conexao, $contato);
+        $email = mysqli_real_escape_string($conexao, $email);
+        if ($cidade == 0 || $cidade === "" || $cidade === null) {
+            $cidade = "NULL";
+        }
+        if ($valor == 0 || $valor === "" || $valor === null) {
+            $valor = "NULL";
+        }
+        if ($segmento == 0 || $segmento === "" || $segmento === null) {
+            $segmento = "NULL";
+        }
 
-      $insert = "INSERT INTO lead (ds_nome, nr_telefone, nr_seq_cidade, vl_valor, nr_seq_segmento, ds_email, nr_seq_usercadastro, nr_seq_empresa) 
-                  VALUES (UPPER('" . $nome . "'), '" . $contato . "', " . $cidade . ", " . $valor . ", " . $segmento . ", '" . $email . "', " . $_SESSION["CD_USUARIO"] . ", " . $_SESSION["CD_EMPRESA"] . ")";
-      $rss_insert = mysqli_query($conexao, $insert); echo  $insert;
-
-      // Valida se deu certo
-      if ($rss_insert) {
-
-        echo "<script language='JavaScript'>
-                window.parent.Swal.fire({
-                    icon: 'success',
-                    title: 'Show...',
-                    text: 'Lead cadastrada com sucesso!'
-                });
-                window.parent.executafuncao('new');
-                window.parent.consultar(0);
-            </script>";
-
-      } else {
-
-        echo "<script language='JavaScript'>
-                window.parent.Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Problemas ao gravar!'
-                });
-            </script>";
-      }
+          $insert = "INSERT INTO lead (nr_seq_situacao, ds_nome, nr_telefone, nr_seq_cidade, vl_valor, nr_seq_segmento, ds_email, nr_seq_usercadastro, nr_seq_empresa) 
+                      VALUES (" .  $situacao . ", UPPER('" . $nome . "'), '" . $contato . "', " . $cidade . ", " . $valor . ", " . $segmento . ", '" . $email . "', " . $usuario . ", " . $empresa . ")";
+          $rss_insert = mysqli_query($conexao, $insert); echo  $insert;
+    
+          // Valida se deu certo
+          if ($rss_insert) {
+    
+            echo "<script language='JavaScript'>
+                    window.parent.Swal.fire({
+                        icon: 'success',
+                        title: 'Show...',
+                        text: 'Lead cadastrada com sucesso!'
+                    });
+                    window.parent.executafuncao('new');
+                    window.parent.consultar(0);
+                </script>";
+    
+          } else {
+    
+            echo "<script language='JavaScript'>
+                    window.parent.Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Problemas ao gravar!'
+                    });
+                </script>";
+          }
 
     }
 }
@@ -120,20 +136,35 @@ if ($Tipo == "A") {
         </script>";
 
     } else {
+        
+        $usuario = $_SESSION["CD_USUARIO"];
+        $empresa = $_SESSION["CD_EMPRESA"];
+        $nome = mysqli_real_escape_string($conexao, $nome);
+        $contato = mysqli_real_escape_string($conexao, $contato);
+        $email = mysqli_real_escape_string($conexao, $email);
+        if ($cidade == 0 || $cidade === "" || $cidade === null) {
+            $cidade = "NULL";
+        }
+        if ($valor == 0 || $valor === "" || $valor === null) {
+            $valor = "NULL";
+        }
+        if ($segmento == 0 || $segmento === "" || $segmento === null) {
+            $segmento = "NULL";
+        }
 
-      $update = "UPDATE lead 
+        $update = "UPDATE lead 
                     SET ds_nome = '" . $nome . "', 
                         nr_telefone = '" . $contato . "',
                         nr_seq_cidade = " . $cidade . ",
                         vl_valor = " . $valor . ",
                         nr_seq_segmento = " . $segmento . ",
                         ds_email = '" . $email . "',
-                        nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . ",
-                        nr_seq_useralterado = " . $_SESSION["CD_USUARIO"] . ",
+                        nr_seq_empresa = " . $empresa . ",
+                        nr_seq_useralterado = " . $usuario . ",
                         dt_alterado = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;
-      //echo"<pre> $update</pre>";
-      $rss_update = mysqli_query($conexao, $update);
+        //echo"<pre> $update</pre>";
+        $rss_update = mysqli_query($conexao, $update);
 
       // Valida se deu certo
       if ($rss_update) {
@@ -166,6 +197,9 @@ if ($Tipo == "A") {
 //==================================-EXCLUSÃO DOS DADOS-===============================================
 
 if ($Tipo == "E") {
+    
+    $delete1 = "DELETE FROM anexos_lead WHERE nr_seq_lead=" . $codigo;
+    $result1 = mysqli_query($conexao, $delete1);
 
     $delete = "DELETE FROM lead WHERE nr_sequencial=" . $codigo;
     $result = mysqli_query($conexao, $delete);
@@ -238,7 +272,8 @@ if ($Tipo == "E") {
       $status = 1; //Altera o status para CONTRATADO
 
       $update = "UPDATE lead 
-                  SET nr_seq_situacao = " . $status . ",
+                  SET nr_seq_segmento = " . $segmento . ",
+                      nr_seq_situacao = " . $status . ",
                       ds_grupo = '" . $grupo . "', 
                       nr_seq_administradora = " . $administratadora . ",
                       nr_cota = " . $cota . ",
@@ -249,7 +284,7 @@ if ($Tipo == "E") {
                       dt_alterado = CURRENT_TIMESTAMP, 
                       dt_contratada = CURRENT_TIMESTAMP
                 WHERE nr_sequencial = " . $codigo;
-      //echo"<pre> $update</pre>";
+      echo"<pre> $update</pre>";
       $rss_update = mysqli_query($conexao, $update);
 
       if ($rss_update) {
@@ -277,7 +312,7 @@ if ($Tipo == "E") {
                 WHERE c.nr_seq_colaborador = $nr_seq_colaborador
                 AND c.nr_seq_administradora = $administratadora
                 ORDER BY pc.nr_parcela ASC";
-        //echo "<pre>$SQLC</pre>";
+        echo "<pre>$SQLC</pre>";
         $RSSC = mysqli_query($conexao, $SQLC);
         while ($linhac = mysqli_fetch_row($RSSC)) {
             $nr_parcela = $linhac[0];
@@ -295,7 +330,7 @@ if ($Tipo == "E") {
 
             $insert = "INSERT INTO pagamentos (nr_seq_lead, nr_parcela, vl_comissao, vl_parcela, dt_parcela) 
                         VALUES (" . $codigo . ", " . $nr_parcela . ", " . $vl_comissao . ", " . $vl_parcela . ", '" . $dt_parcela . "')";
-            $rss_insert = mysqli_query($conexao, $insert); //echo $insert;
+            $rss_insert = mysqli_query($conexao, $insert); echo $insert;
 
         }
 
@@ -330,7 +365,7 @@ if ($Tipo == "E") {
     if($data=="") { $data = "NULL"; }
     else { $data = "'$data'"; } 
 
-    $update = "UPDATE lead SET dt_agenda = $data WHERE nr_sequencial = $codigo";
+    $update = "UPDATE lead SET dt_agenda = $data, nr_seq_situacao = 3 WHERE nr_sequencial = $codigo";
     $rss_update = mysqli_query($conexao, $update); 
 
     if ($rss_update) {
@@ -358,8 +393,46 @@ if ($Tipo == "E") {
     }
 
  }
+ 
+//==================================-ATUALIZA OS STATUS NO FORMATO KAMBAM-======================================================
+  
+ if ($_GET['Tipo'] == 'Q') {
+     
+    $id = intval($_POST['id']);
+    $status = intval($_POST['status']);
+    $data_agenda = isset($_POST['data_agenda']) ? trim($_POST['data_agenda']) : '';
+    
+    if ($data_agenda === '') {
+        $data_agenda = "NULL";
+    } else {
+        $data_agenda = "'$data_agenda)'";
+    }
+    
+    // Se quiser, valide se a lead pertence ao usuário ou empresa antes
+    $sql = "UPDATE lead SET nr_seq_situacao = $status, dt_agenda = $data_agenda WHERE nr_sequencial = $id";
+    echo "<pre>$sql</pre>";
 
-  //==================================-GRAVAR COMENTÁRIOS-======================================================
+    if (mysqli_query($conexao, $sql)) {
+        
+        echo "<script language='JavaScript'>
+              window.parent.consultar(0);
+          </script>";
+          
+    } else {
+        
+        echo "<script language='JavaScript'>
+            window.parent.Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Problemas ao alterar o status!'
+            });
+        </script>";
+    }
+    
+    exit;
+}
+
+//==================================-GRAVAR COMENTÁRIOS-======================================================
 
 if($Tipo == 'enviaComentario'){
 
@@ -397,36 +470,58 @@ if($Tipo == 'enviaComentario'){
 
 //==================================-CARREGAR ANEXOS-======================================================
 
-if($Tipo == 'enviarArquivo'){
+if ($Tipo == 'enviarArquivo') {
 
-   
-  if(!$_FILES){
-      response_json('400', array('message' => 'Nenhum arquivo enviado'));
-  }
+    header('Content-Type: application/json');
+    ob_clean();  // limpa qualquer saída antes do JSON
 
-  include '../../inc/upload_helper.php';
-  
-  $values = [];
-  foreach($_FILES as $file){
-      $resultadoUpload = fileUpload($file, './arquivos/');
-      if($resultadoUpload['error'] == true){
-          continue;
-      }
+    if (empty($_FILES)) {
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Nenhum arquivo enviado!'
+        ]);
+        exit;
+    }
 
-      $arquivo = $resultadoUpload['filename'];
-  
-      $values[] = "($codigo, '', '$arquivo', NOW())";
-  }
+    include '../../inc/upload_helper.php';
 
-  $sql = "INSERT INTO anexos_lead (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro)
-      VALUES " . join(', ', $values);
-  $rss =  mysqli_query($conexao, $sql);
+    $values = [];
+    foreach ($_FILES as $file) {
+        $resultadoUpload = fileUpload($file, './arquivos/');
+        if ($resultadoUpload['error'] === true) {
+            continue;
+        }
 
-  $response = [];
-  $response['mensagem'] = sizeof($values) . " arquivos enviados";
+        $arquivo = $resultadoUpload['filename'];
+        $values[] = "($codigo, '', '$arquivo', NOW())";
+    }
 
-  response_json('200', $resultadoUpload);
+    if (empty($values)) {
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Nenhum arquivo válido enviado!'
+        ]);
+        exit;
+    }
 
+    $sql = "INSERT INTO anexos_lead (nr_seq_lead, ds_comentario, ds_arquivo, dt_cadastro)
+            VALUES " . join(', ', $values);
+    $rss = mysqli_query($conexao, $sql);
+
+    if ($rss) {
+        echo json_encode([
+            'status' => 'success',
+            'mensagem' => sizeof($values) . " arquivo(s) enviado(s) com sucesso!",
+            'codigo' => $codigo
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'mensagem' => 'Problemas ao gravar no banco: ' . mysqli_error($conexao)
+        ]);
+    }
+
+    exit;
 }
 
 

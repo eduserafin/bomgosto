@@ -35,7 +35,7 @@
         </div>
         <div class="col-md-3">
             <label for="txtsegmento">SEGMENTO:</label>
-            <select name="txtsegmento" id="txtsegmento" class="form-control" style="background:#E0FFFF;">
+            <select name="txtsegmento" id="txtsegmento" class="form-control">
                 <option value="0">Selecione</option>
                 <?php
                     $sel = "SELECT nr_sequencial, ds_segmento
@@ -57,11 +57,11 @@
     <div class="row">
         <div class="col-md-2">
             <label>VALOR:</label>
-            <input type="text" class="form-control" name="txtvalor" id="txtvalor" size="10" maxlength="20" style="background:#E0FFFF;text-align:right;" onkeypress="return formatar_moeda(this,'.',',',event);">
+            <input type="text" class="form-control" name="txtvalor" id="txtvalor" size="10" maxlength="20" style="text-align:right;" onkeypress="return formatar_moeda(this,'.',',',event);">
         </div>
         <div class="col-md-2">
             <label>CONTATO:</label>
-            <input type="text" name="txtcontato" id="txtcontato" size="10" maxlength="15" style="background:#E6FFE0;" class="form-control">
+            <input type="text" name="txtcontato" id="txtcontato" size="10" maxlength="15" class="form-control">
         </div>
         <div class="col-md-4">
             <label>E-MAIL:</label>
@@ -167,27 +167,6 @@
                     text: 'Informe o nome!'
                 });
                 document.getElementById('txtnome').focus();
-            } else if (contato == "") {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Informe um contato!'
-                });
-                document.getElementById('txtcontato').focus();
-            } else if (cidade == 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Informe uma cidade!'
-                });
-                document.getElementById('txtmunicipio').focus();
-            } else if (valor == "") {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Informe o valor!'
-                });
-                document.getElementById('txtvalor').focus();
             } else {
                 if (codigo == '') {
                     Tipo = "I"
@@ -196,7 +175,6 @@
                 }
 
                 window.open('crm/leads/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&contato=' + contato + '&cidade=' + cidade + '&valor=' + valor + '&segmento=' + segmento + '&email=' + email, "acao");
-
             }
         } else if (id == "delete") {
 

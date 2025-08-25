@@ -104,32 +104,31 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
     }
 
     if($_SESSION["ST_ADMIN"] == 'G'){
-        $v_filtro_empresa = "AND l.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
         $v_filtro_colaborador = "";
     } else if ($_SESSION["ST_ADMIN"] == 'C') {
-        $v_filtro_empresa = "AND l.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
-        $v_filtro_colaborador = "AND l.nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
+        $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $v_filtro_colaborador = "AND ls.nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
     } else {
         $v_filtro_empresa = "";
         $v_filtro_colaborador = "";
     }
 
     $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento, ls.nr_telefone, 
-            c.ds_municipio, e.sg_estado, st.ds_situacao, ls.ds_email, ls.dt_agenda, a.ds_administradora, g.ds_grupo,
+            c.ds_municipio, e.sg_estado, st.ds_situacao, ls.ds_email, ls.dt_agenda, a.ds_administradora, ls.ds_grupo,
             ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado
             FROM lead ls
-            INNER JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
-            INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+            LEFT JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
+            LEFT JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
             LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
             LEFT JOIN situacoes st ON ls.nr_seq_situacao = s.nr_sequencial
-            LEFT JOIN grupos g ON ls.nr_seq_grupo = g.nr_sequencial
             LEFT JOIN administradoras a ON ls.nr_seq_administradora = a.nr_sequencial
             WHERE 1 = 1 
             "  . $v_sql . "
             "  . $v_filtro_empresa . "
             "  . $v_filtro_colaborador . "
             ORDER BY ls.nr_sequencial DESC";
-    //echo "<pre>$SQL</pre>";
+    echo "<pre>$SQL</pre>";
     $RSS = mysqli_query($conexao, $SQL);
     while ($lin = mysqli_fetch_row($RSS)) {
         $nr_sequencial = $lin[0];

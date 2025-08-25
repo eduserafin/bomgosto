@@ -1,31 +1,32 @@
 <?php
-foreach($_GET as $key => $value){
-	$$key = $value;
-}
-
-if ($consulta == "sim") {
-    require_once '../../conexao.php';
-    $ant = "../../";
-}
-
-if ($_GET['pg'] < 0){
-    $pg = 0;
-    echo "<script language='javascript'>document.getElementById('pgatual').value=1;</script>";
-}
-else if ($_GET['pg'] !== 0) {
-    $pg = $_GET['pg'];
-} else {
-    $pg = 0;
-}
-
-$porpagina = 15;
-$inicio = $pg * $porpagina;
-
-$busca = $_GET['descricao'];
-$descricao = $busca;
-if ($descricao !== "") {
-    $pesquisanome = $descricao;
-}
+    
+    foreach($_GET as $key => $value){
+	    $$key = $value;
+    }
+    
+    if ($consulta == "sim") {
+        require_once '../../conexao.php';
+        $ant = "../../";
+    }
+    
+    if ($_GET['pg'] < 0){
+        $pg = 0;
+        echo "<script language='javascript'>document.getElementById('pgatual').value=1;</script>";
+    }
+    else if ($_GET['pg'] !== 0) {
+        $pg = $_GET['pg'];
+    } else {
+        $pg = 0;
+    }
+    
+    $porpagina = 15;
+    $inicio = $pg * $porpagina;
+    
+    $busca = $_GET['descricao'];
+    $descricao = $busca;
+    if ($descricao !== "") {
+        $pesquisanome = $descricao;
+    }
 
 ?>
 

@@ -24,10 +24,10 @@
         $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento, ls.nr_telefone, 
                 CONCAT(c.ds_municipio, ' - ', e.sg_estado) AS municipio_estado, st.ds_situacao, 
                 ls.ds_email, ls.dt_agenda, ls.nr_seq_situacao, ls.nr_seq_administradora, ls.ds_grupo,
-                ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado
+                ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado, ls.nr_seq_segmento
                 FROM lead ls
-                INNER JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
-                INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+                LEFT JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
+                LEFT JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
                 LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
                 LEFT JOIN situacoes st ON ls.nr_seq_situacao = s.nr_sequencial
                 WHERE ls.nr_sequencial = $lead";
@@ -56,7 +56,33 @@
             $valor_contratado = number_format($vl_contratado, 2, ',', '.');
             $vl_considerado = $linha[16];
             $valor_considerado = number_format($vl_considerado, 2, ',', '.');
-
+            $nr_seq_segmento = $linha[17];
+            
+            // Se não estiver vazio, ajustar o formato
+            if (!empty($dt_agenda)) {
+                // Se vier no formato 'DD/MM/YYYY'
+                if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $dt_agenda)) {
+                    $dateObj = DateTime::createFromFormat('d/m/Y', $dt_agenda);
+                    $dt_agenda = $dateObj ? $dateObj->format('Y-m-d') : '';
+                }
+                // Se vier no formato 'DD-MM-YYYY'
+                elseif (preg_match('/^\d{2}-\d{2}-\d{4}$/', $dt_agenda)) {
+                    $dateObj = DateTime::createFromFormat('d-m-Y', $dt_agenda);
+                    $dt_agenda = $dateObj ? $dateObj->format('Y-m-d') : '';
+                }
+                // Se vier no formato correto, mantém
+                elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dt_agenda)) {
+                    // ok
+                }
+                else {
+                    $dt_agenda = ''; // limpa caso seja inválido
+                }
+            }
+            
+            $disabled = "";
+            if($nr_seq_situacao == 1){
+                $disabled = 'disabled';
+            }
 
         }
         
@@ -175,7 +201,7 @@
                     </div>
                     <div class="panel-body">
                         <label>Status:</label>
-                        <select class="form-control" name="selstatus" id="selstatus" onchange="AlteraStatus(this);">
+                        <select class="form-control" name="selstatus" id="selstatus" onchange="AlteraStatus(this);" <?php echo $disabled; ?>>
                             <option value="0">Selecione...</option>
                             <?php
                             $sel = "SELECT nr_sequencial, ds_situacao 
@@ -191,18 +217,36 @@
                         </select>
 
                         <label class="mt-2">Agendar Conversa:</label>
-                        <input type="date" id="dataagenda" name="dataagenda" class="form-control" onchange="AlteraAgenda(this.value);" value="<?php echo $dt_agenda; ?>">
+                        <input type="date" id="dataagenda" name="dataagenda" class="form-control" onchange="AlteraAgenda(this.value);" value="<?php echo $dt_agenda; ?>" <?php echo $disabled; ?>>
                     </div>
                 </div>
 
                 <!-- Valor do Crédito -->
                 <div class="panel panel-primary">
-                    <div class="panel-heading panel-heading-custom text-center">
+                     <div class="panel-heading panel-heading-custom text-center" style="cursor: pointer;" onclick="togglePanelBody(this)">
                         <span class="glyphicon glyphicon-usd" style="margin-right: 5px;"></span> CRÉDITO CONTRATADO
+                        <span class="pull-right glyphicon glyphicon-chevron-down" style="margin-top: 3px;"></span>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" style="display: none;">
                         <p><strong>Valor Solicitado:</strong> <?php echo $valor; ?></p>
                         <p><strong>Tipo do Crédito:</strong> <?php echo $ds_segmento; ?></p>
+                        
+                        <label class="mt-2">Segmento: <font color='red'>*</font></label>
+                        <select class="form-control" name="selsegmentocrm" id="selsegmentocrm">
+                            <option value="0">Selecione...</option>
+                            <?php
+                                $sel = "SELECT nr_sequencial, ds_segmento
+                                        FROM segmentos
+                                        WHERE st_status = 'A'
+                                        AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "
+                                        ORDER BY ds_segmento";
+                                $res = mysqli_query($conexao, $sel);
+                                while($lin = mysqli_fetch_row($res)){
+                                    $selecionado = $lin[0] == $nr_seq_segmento ? "selected" : "";
+                                    echo "<option $selecionado value=$lin[0]>$lin[1]</option>";
+                                }
+                            ?>
+                        </select>
 
                         <label>Grupo: <font color='red'>*</font></label>
                         <input type="text" name="txtgrupo" id="txtgrupo" class="form-control" value="<?php echo $ds_grupo; ?>">
@@ -236,7 +280,7 @@
                         <label class="mt-2">Valor Final:</label>
                         <input type="text" class="form-control" name="txtvalorfinal" id="txtvalorfinal" readonly style="text-align:right;" value="<?php echo $valor_considerado; ?>">
 
-                        <button class="btn btn-primary btn-sm pull-right" style="margin-top:10px;" onclick="Contratar();">
+                        <button class="btn btn-primary btn-sm pull-right" style="margin-top:10px;" onclick="Contratar();" <?php echo $disabled; ?>>
                             <span class="glyphicon glyphicon-ok" style="margin-right: 5px;"></span> Salvar
                         </button>
 
@@ -345,6 +389,7 @@
                 const percentual = document.getElementById("txtpercentual").value.trim();
                 const administratadora = document.getElementById("seladministradora").value;
                 const valorfinal = document.getElementById("txtvalorfinal").value.trim();
+                const segmento = document.getElementById("selsegmentocrm").value.trim();
 
                 // Validação única para status 1 (CONTRATADA)
                 if (status == 1) {
@@ -352,7 +397,8 @@
                         grupo == "" ||
                         cota == "" ||
                         valorcontratado == "" ||
-                        administratadora == 0
+                        administratadora == 0 ||
+                        segmento == 0
                     );
 
                     if (camposInvalidos) {
@@ -373,6 +419,15 @@
             }
 
             function AlteraAgenda(data) {
+                if (!data || !/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe a data correta!'
+                    });
+                    document.getElementById('dataagenda').focus();
+                    return;
+                }
                 var codigo = document.getElementById("nr_seq_lead").value;
                 window.open('crm/leads/acao.php?Tipo=AGENDA&codigo=' + codigo + '&data=' + data, "acao");
             }
@@ -421,6 +476,7 @@
                 var percentual = document.getElementById("txtpercentual").value;
                 var administratadora = document.getElementById("seladministradora").value;
                 var valorfinal = document.getElementById("txtvalorfinal").value;
+                var segmento = document.getElementById("selsegmentocrm").value;
 
                 if (valorcontratado != '') {
                     valorcontratado = valorcontratado.replace(/\./g, '');     // remove todos os pontos
@@ -436,7 +492,16 @@
                     valorfinal = 0;
                 }
 
-                if (grupo == "") {
+                if (segmento == 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe o Segmento!'
+                    });
+                    document.getElementById('selsegmentocrm').focus();
+                    return;
+                } 
+                else if (grupo == "") {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Oops...',
@@ -474,7 +539,7 @@
                 } 
                 else{
 
-                    window.open('crm/leads/acao.php?Tipo=CONTRATAR&codigo=' + codigo + '&grupo=' + grupo + '&cota=' + cota + '&valorcontratado=' + valorcontratado + '&percentual=' + percentual + '&administratadora=' + administratadora + '&valorfinal=' + valorfinal, "acao");
+                    window.open('crm/leads/acao.php?Tipo=CONTRATAR&codigo=' + codigo + '&grupo=' + grupo + '&cota=' + cota + '&valorcontratado=' + valorcontratado + '&percentual=' + percentual + '&administratadora=' + administratadora + '&valorfinal=' + valorfinal + '&segmento=' + segmento, "acao");
 
                 }
             }
@@ -528,19 +593,32 @@
                     url: url,
                     type: 'POST',
                     data: formData,
+                    dataType: 'json',
                     success: function(data) {
                         console.log(data);
-                        buscaComercial(codigo);
-                    },
-                    error: function (response) {
-                        console.log(response.responseJSON);
-                        if(response.responseJSON && response.responseJSON.message){
-                            alert(response.responseJSON.message)
-                        }else{
-                            alert('Oops! Falha ao enviar os arquivos.');
+                
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Show...',
+                                text: data.mensagem
+                            });
+                            buscaComercial(data.codigo);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: data.mensagem
+                            });
                         }
-                        
-                        return false;
+                    },
+                    error: function (xhr) {
+                        console.log("Erro AJAX: ", xhr.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Falha ao enviar os arquivos.'
+                        });
                     },
                     complete: function () {
                         campo.value = '';
@@ -549,9 +627,10 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                }); 
+                });
 
             }
+
 
             function removerArquivo(arquivo, nr_sequencial, codigo){
                 if(!confirm('Deseja realmente excluir o arquivo?')){
@@ -599,6 +678,19 @@
                 document.getElementById('campoAnexoComercial').value = "";
                 } else {
                     enviaAnexo($input)
+                }
+            }
+            
+            function togglePanelBody(header) {
+                const panelBody = $(header).next(".panel-body");
+                const icon = $(header).find(".glyphicon-chevron-down, .glyphicon-chevron-up");
+            
+                panelBody.slideToggle(200);
+            
+                if (icon.hasClass("glyphicon-chevron-down")) {
+                    icon.removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+                } else {
+                    icon.removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
                 }
             }
 
