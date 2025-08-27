@@ -68,7 +68,7 @@
         }
 
         .linha-destaque {
-            background-color: #f0f8ff !important; /* azul bem fraquinho */
+            background-color: #dbefff !important; /* azul bem fraquinho */
             font-weight: bold;
         }
 
@@ -107,7 +107,7 @@
         <!-- Parcelas Normais -->
         <table class="pag-table">
             <tr>
-                <th colspan=6>Parcelas Normais</th>
+                <th colspan=7>Parcelas Normais</th>
             </tr>
             <tr>
                 <th>Parcela</th>
@@ -116,6 +116,7 @@
                 <th>Data Parcela</th>
                 <th>Data Status</th>
                 <th>Status</th>
+                <th>Importação</th>
             </tr>
 
             <?php
@@ -124,10 +125,10 @@
                 $total_cancelamneto = 0;
                 $primeira_parcela_status = null;
                 $primeiro_T_liberado = false;
-                $tem_estorno = false;
+                $tem_estorno = "";
                 $tem_cancelamento = false;
 
-                $SQL = "SELECT nr_sequencial, nr_parcela, vl_comissao, vl_parcela, dt_status, dt_parcela, st_status
+                $SQL = "SELECT nr_sequencial, nr_parcela, vl_comissao, vl_parcela, dt_status, dt_parcela, st_status, st_importacao
                         FROM pagamentos
                         WHERE nr_seq_lead = $lead
                         AND tp_tipo = 'N'
@@ -141,6 +142,15 @@
                     $dt_status = $linha[4];
                     $dt_parcela = $linha[5];
                     $st_status  = $linha[6];
+                    $st_importacao  = $linha[7];
+
+                    if ($st_importacao == 'N') {
+                        $icone = '<span style="color: red;">&#10006;</span>'; // ícone de X vermelho
+                    } elseif ($st_importacao == 'S') {
+                        $icone = '<span style="color: green;">&#10004;</span>'; // ícone de check verde
+                    } else {
+                        $icone = '<span style="color: gray;">?</span>'; // caso seja outro valor
+                    }
 
                     if ($dt_status != "") {
                         $dt_status = date('d/m/Y', strtotime($dt_status));
@@ -152,6 +162,7 @@
                     if ($st_status == "E") {
                         $vl_comissao_fmt = number_format(0, 2, ',', '.');
                         $vl_parcela_fmt  = number_format(0, 2, ',', '.');
+                        $tem_estorno = "S";
                     } else {
                         $total_comissao += $vl_comissao;
                         $total_parcela  += $vl_parcela;
@@ -192,17 +203,21 @@
                         <td><?php echo $dt_parcela; ?></td>
                         <td><?php echo $dt_status; ?></td>
                         <td style="text-align: center; vertical-align: middle;">
-                            <select class="form-control <?php echo $select_class; ?>" name="selemdia" style="width: 200px; margin: 0 auto; display: block;"
-                            onchange="AlterarStatus(this.value, <?php echo $nr_seq_pagamento; ?>, '<?php echo $st_status; ?>', <?php echo $lead; ?>, <?php echo $parcela; ?>, '<?php echo $dt_parcela; ?>');"
+                            <select class="form-control <?php echo $select_class; ?>" name="selstatus" style="width: 200px; margin: 0 auto; display: block;"
+                            onchange="AlterarStatus(this.value, <?php echo $nr_parcela; ?>, '<?php echo $st_status; ?>', <?php echo $lead; ?>, <?php echo $parcela; ?>, '<?php echo $dt_parcela; ?>');"
                             <?php echo $disabled; ?>>
                                 <option value="" <?php if($st_status == '') echo 'selected'; ?>>AGUARDANDO</option>
+                                <option value="P" <?php if($st_status == 'P') echo 'selected'; ?>
+                                    <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
+                                    PAGO AO VENDEDOR <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
+                                </option>
                                 <option value="T" <?php if($st_status == 'T') echo 'selected'; ?>
                                     <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
                                     PENDENTE CLIENTE <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
                                 </option>
-                                <option value="P" <?php if($st_status == 'P') echo 'selected'; ?>
+                                <option value="A" <?php if($st_status == 'A') echo 'selected'; ?>
                                     <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
-                                    PAGO AO VENDEDOR <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
+                                    RATEIO <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
                                 </option>
                                 <option value="E" <?php if($st_status == 'E') echo 'selected'; ?>
                                     <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
@@ -214,82 +229,86 @@
                                 </option>
                             </select>
                         </td>
+                        <td><?php echo $icone; ?></td>
                     </tr>
                 <?php } ?>
+
+                <?php if($tem_estorno == "S") { ?>
+                    <tr>
+                        <th colspan=7>Parcelas Estorno</th>
+                    </tr>
+                    <tr>
+                        <th>Parcela</th>
+                        <th>Percentual %</th>
+                        <th>Valor Estorno</th>
+                        <th>Data Parcela</th>
+                        <th>Data Status</th>
+                        <th colspan="2">Status</th>
+                    </tr>
+                        <?php
+
+                            $total_estorno = 0;
+                            $total_percentual = 0;
+                            $SQL = "SELECT nr_sequencial, nr_parcela, vl_percentual, vl_estorno, dt_status, dt_parcela, st_status
+                                    FROM pagamentos
+                                    WHERE nr_seq_lead = $lead
+                                    AND tp_tipo = 'E'
+                                    ORDER BY dt_parcela, nr_parcela";
+                            $RSS = mysqli_query($conexao, $SQL);
+                            while ($linha = mysqli_fetch_row($RSS)) {
+                                $nr_seq_estorno = $linha[0];
+                                $nr_parcela_estorno = $linha[1];
+                                $vl_percentual = $linha[2];
+                                $vl_estorno  = $linha[3];
+                                $dt_status_estorno = $linha[4];
+                                $dt_parcela_estorno = $linha[5];
+                                $st_status_estorno  = $linha[6];
+
+                                $total_percentual += $vl_percentual;
+                                $total_estorno  += $vl_estorno;
+
+                                $vl_percentual_fmt = number_format($vl_percentual, 2, ',', '.');
+                                $vl_estorno_fmt  = number_format($vl_estorno, 2, ',', '.');
+
+                                if ($dt_status_estorno != "") {
+                                    $dt_status_estorno = date('d/m/Y', strtotime($dt_status_estorno));
+                                }
+                                if ($dt_parcela_estorno != "") {
+                                    $dt_parcela_estorno = date('d/m/Y', strtotime($dt_parcela_estorno));
+                                }
+
+                                ?>
+                                <tr>
+                                    <td><?php echo $nr_parcela_estorno; ?></td>
+                                    <td><?php echo $vl_percentual_fmt; ?></td>
+                                    <td><?php echo $vl_estorno_fmt; ?></td>
+                                    <td><?php echo $dt_parcela_estorno; ?></td>
+                                    <td><?php echo $dt_status_estorno; ?></td>
+                                    <td colspan="2" style="text-align: center; vertical-align: middle;">
+                                        <select class="form-control" name="selstatusestorno" style="width: 200px; margin: 0 auto; display: block;"
+                                        onchange="AlterarStatusEstorno(this.value, <?php echo $nr_seq_estorno; ?>, <?php echo $lead; ?>, <?php echo $parcela; ?>);">
+                                            <option value="" <?php if($st_status_estorno == '') echo 'selected'; ?>>AGUARDANDO</option>
+                                            <option value="R" <?php if($st_status_estorno == 'R') echo 'selected'; ?>>RECEBIDO</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                    <?php } ?>       
                 <tr>
-                    <th colspan=6>Parcelas Estorno</th>
-                </tr>
-                <tr>
-                    <th>Parcela</th>
-                    <th>Percentual %</th>
-                    <th>Valor Estorno</th>
-                    <th>Data Parcela</th>
-                    <th>Data Status</th>
-                    <th>Status</th>
-                </tr>
-                    <?php //Parcelas de Estorno
-
-                        $total_estorno = 0;
-                        $total_percentual = 0;
-                        $SQL = "SELECT nr_sequencial, nr_parcela, vl_percentual, vl_estorno, dt_status, dt_parcela, st_status
-                                FROM pagamentos
-                                WHERE nr_seq_lead = $lead
-                                AND tp_tipo = 'E'
-                                ORDER BY dt_parcela, nr_parcela";
-                        $RSS = mysqli_query($conexao, $SQL);
-                        while ($linha = mysqli_fetch_row($RSS)) {
-                            $nr_seq_pagamento = $linha[0];
-                            $nr_parcela = $linha[1];
-                            $vl_percentual = $linha[2];
-                            $vl_estorno  = $linha[3];
-                            $dt_status = $linha[4];
-                            $dt_parcela = $linha[5];
-                            $st_status  = $linha[6];
-
-                            $total_percentual += $vl_percentual;
-                            $total_estorno  += $vl_estorno;
-
-                            $vl_percentual_fmt = number_format($vl_percentual, 2, ',', '.');
-                            $vl_estorno_fmt  = number_format($vl_estorno, 2, ',', '.');
-
-                            if ($dt_status != "") {
-                                $dt_status = date('d/m/Y', strtotime($dt_status));
-                            }
-                            if ($dt_parcela != "") {
-                                $dt_parcela = date('d/m/Y', strtotime($dt_parcela));
-                            }
-
-                            ?>
-                            <tr <?php if ($parcela == $nr_parcela) echo "class='linha-destaque'"; ?>>
-                                <td><?php echo $nr_parcela; ?></td>
-                                <td><?php echo $vl_percentual_fmt; ?></td>
-                                <td><?php echo $vl_estorno_fmt; ?></td>
-                                <td><?php echo $dt_parcela; ?></td>
-                                <td><?php echo $dt_status; ?></td>
-                                <td style="text-align: center; vertical-align: middle;">
-                                    <select class="form-control <?php echo $select_class; ?>" name="selemdia" style="width: 200px; margin: 0 auto; display: block;"
-                                    onchange="AlterarStatus(this.value, <?php echo $nr_seq_pagamento; ?>, '<?php echo $st_status; ?>', <?php echo $lead; ?>, <?php echo $parcela; ?>, '<?php echo $dt_parcela; ?>');">
-                                        <option value="" <?php if($st_status == '') echo 'selected'; ?>>AGUARDANDO</option>
-                                        <option value="T" <?php if($st_status == 'R') echo 'selected'; ?>>RECEBIDO</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                <tr>
-                    <th colspan=6>Totais</th>
+                    <th colspan=7>Totais</th>
                 </tr>
                 <tr class="pag-totais">
-                    <td colspan=2>Total Normal</td>
+                    <td colspan=3>Total Comissão</td>
                     <td colspan=2><?php echo number_format($total_comissao, 2, ',', '.'); ?></td>
                     <td colspan=2><?php echo number_format($total_parcela, 2, ',', '.'); ?></td>
                 </tr>
                 <tr class="pag-totais">
-                    <td colspan=2>Total Estorno</td>
+                    <td colspan=3>Total Estorno</td>
                     <td colspan=2><?php echo number_format($total_percentual, 2, ',', '.'); ?></td>
                     <td colspan=2><?php echo number_format($total_estorno, 2, ',', '.'); ?></td>
                 </tr>
                 <tr class="pag-totais">
-                    <td colspan=2>Total Liquido</td>
+                    <td colspan=3>Total líquido</td>
                     <td colspan=2><?php echo number_format($total_comissao - $total_percentual, 2, ',', '.'); ?></td>
                     <td colspan=2><?php echo number_format($total_parcela - $total_estorno, 2, ',', '.'); ?></td>
                 </tr>
@@ -298,7 +317,11 @@
 
     <script language="javascript">
 
-        function AlterarStatus(status, id, ultimo, lead, parcela, data) {
+        function AlterarStatusEstorno(status, id, lead, parcela) {
+            window.open('relatorios/comissao/acao.php?Tipo=ESTORNO'+ '&status=' + status + '&id=' + id + '&lead=' + lead + '&parcela=' + parcela, "acao");
+        }
+
+        function AlterarStatus(status, nrparcela, ultimo, lead, parcela, data) {
 
             function recarregarModal() {
                 AbrirModal('relatorios/comissao/parcelas.php?lead=' + lead + '&parcela=' + parcela);
@@ -360,7 +383,7 @@
                             + '&status=' + encodeURIComponent(status)
                             + '&lead=' + encodeURIComponent(lead)
                             + '&ano_mes=' + encodeURIComponent(ano_mes)
-                            + '&id=' + encodeURIComponent(id)
+                            + '&nrparcela=' + encodeURIComponent(nrparcela)
                             + '&parcela=' + encodeURIComponent(parcela),
                             "acao"
                         );
@@ -426,7 +449,7 @@
                             'relatorios/comissao/acao.php?Tipo=STATUS'
                             + '&status=' + encodeURIComponent(status)
                             + '&lead=' + encodeURIComponent(lead)
-                            + '&id=' + encodeURIComponent(id)
+                            + '&nrparcela=' + encodeURIComponent(nrparcela)
                             + '&parcela=' + encodeURIComponent(parcela)
                             + '&qtd_parcelas=' + encodeURIComponent(dados.qtd_parcelas)
                             + '&ano_mes=' + encodeURIComponent(dados.ano_mes),
@@ -448,7 +471,7 @@
                     'relatorios/comissao/acao.php?Tipo=STATUS'
                     + '&status=' + encodeURIComponent(status)
                     + '&lead=' + encodeURIComponent(lead)
-                    + '&id=' + encodeURIComponent(id)
+                    + '&nrparcela=' + encodeURIComponent(nrparcela)
                     + '&parcela=' + encodeURIComponent(parcela),
                     "acao"
                 );

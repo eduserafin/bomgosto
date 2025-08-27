@@ -123,7 +123,7 @@
     // Função para abrir o link em uma nova aba
     function abrirLink() {
       // Substitua "SEU_LINK_AQUI" pelo link desejado
-      var link = "http://localhost/csimulador/site/index.php?";
+      var link = "http://localhost/ConectaSys/site/index.php?";
       window.open(link, "_blank");
     }
 

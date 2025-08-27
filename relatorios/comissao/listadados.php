@@ -58,8 +58,10 @@
     $v_sql .= " AND p.st_status = 'E'"; //ESTORNO
   } else if($status == ''){
     $v_sql .= " AND p.st_status = ''"; //AGUARDANDO
+  } else if($status == 'A'){
+    $v_sql .= " AND p.st_status = 'A'"; //RATEIO
   } else {
-    $v_sql .= " AND p.st_status != 'C'"; //NÃO EXIBE CANCELADOR
+    $v_sql .= " AND p.st_status != 'C'"; //NÃO EXIBE CANCELADOS
   }
 
   $mes = $_GET['mes'];
@@ -109,13 +111,12 @@
           <th style="vertical-align:middle;">SEGMENTO</th>
           <th style="vertical-align:middle;">GRUPO</th>
           <th style="vertical-align:middle;">COTA</th>
-          <th style="vertical-align:middle;">DATA CONTRATADA</th>
+          <th style="vertical-align:middle;">REALIZADO</th>
           <th style="vertical-align:middle;">PARCELAS</th>
+          <th style="vertical-align:middle;">CONTRATADO</th>
+          <th style="vertical-align:middle;">COMISSÃO</th>
           <th style="vertical-align:middle;">VALOR</th>
-          <th style="vertical-align:middle;">COMISSÃO PARCELA</th>
-          <th style="vertical-align:middle;">VALOR PARCELA</th>
-          <th style="vertical-align:middle;">VALOR ESTORNO</th>
-          <th style="vertical-align:middle;">DATA STATUS</th>
+          <th style="vertical-align:middle;">DATA</th>
           <th style="vertical-align:middle;">STATUS</th></th>
           <th style="vertical-align:middle;">AÇÃO</th></th>
         </tr>
@@ -126,16 +127,19 @@
           $total_comissao = 0;
           $total_parcela = 0;
           $total_estorno = 0;
-      
+          $total_percentual = 0;
+          
           $SQL = "SELECT ls.nr_sequencial, ls.vl_considerado, ls.dt_contratada, s.ds_segmento, ls.ds_grupo, ls.nr_cota,
                   p.nr_parcela, p.vl_comissao, p.vl_parcela, p.dt_status, p.nr_sequencial, a.ds_administradora,
-                  (SELECT COUNT(*) FROM pagamentos p2 WHERE p2.nr_seq_lead = ls.nr_sequencial) AS total_parcelas,
-                  p.st_status, c.ds_colaborador, p.vl_estorno, c.nr_sequencial, a.nr_sequencial,
+                  (SELECT COUNT(*) FROM pagamentos p2 WHERE p2.nr_seq_lead = ls.nr_sequencial AND p2.tp_tipo = 'N') AS total_parcelas,
+                  (SELECT COUNT(*) FROM pagamentos p3 WHERE p3.nr_seq_lead = ls.nr_sequencial AND p3.tp_tipo = 'N' AND p3.nr_parcela <= p.nr_parcela) AS ordem_parcela,
+                  p.st_status, c.ds_colaborador, c.nr_sequencial, a.nr_sequencial,
                   CASE 
                       WHEN p.st_status = 'T' THEN 'PENDENTE CLIENTE'
                       WHEN p.st_status = 'P' THEN 'PAGO AO VENDEDOR'
                       WHEN p.st_status = 'E' THEN 'ESTORNO'
                       WHEN p.st_status = 'C' THEN 'CANCELADO'
+                      WHEN p.st_status = 'A' THEN 'RATEIO'
                       ELSE 'AGUARDANDO'
                   END AS ds_status
                   FROM lead ls
@@ -145,6 +149,7 @@
                   INNER JOIN pagamentos p ON ls.nr_sequencial = p.nr_seq_lead
                   INNER JOIN administradoras a ON ls.nr_seq_administradora = a.nr_sequencial
                   WHERE ls.nr_seq_situacao = 1
+                  AND p.tp_tipo = 'N'
                   AND p.dt_parcela = '$data'
                   "  . $v_sql . "
                   "  . $v_filtro_empresa . "
@@ -172,23 +177,24 @@
             $nr_seq_pagamento = $linha[10];
             $ds_administradora = $linha[11];
             $total_parcelas = $linha[12];
-            $st_status = $linha[13];
-            $ds_colaborador = $linha[14];
-            $vl_estorno = $linha[15];
-            $total_estorno += $vl_estorno;
+            $ordem_parcela = $linha[13];
+            $st_status = $linha[14];
+            $ds_colaborador = $linha[15];
             $nr_seq_colaborador = $linha[16];
             $nr_seq_administradora = $linha[17];
             $ds_status = $linha[18];
-            $descricao_parcela = "Parcela $nr_parcela de $total_parcelas";
+            $descricao_parcela = "Parcela $ordem_parcela de $total_parcelas";
             
-            $v_tachado = "";
-            $v_tachado2 = "";
             if($st_status == 'T' OR $st_status == 'C' OR $st_status == 'E'){
               $v_tachado = "<s>";
               $v_tachado2 = "</s>";
             } else {
               $v_tachado = "";
               $v_tachado2 = "";
+            }
+
+            if($st_status == 'E'){
+              $total_desconsiderado += $vl_considerado;
             }
 
             // Acumulando os totais
@@ -224,11 +230,6 @@
               <td><?php echo $v_tachado . $valor_considerado . $v_tachado2; ?></td>
               <td align="center"><?php echo  $v_tachado . $vl_comissao . $v_tachado2; ?></td>
               <td align="center"><?php echo  $v_tachado . $valor_parcela . $v_tachado2; ?></td>
-              <td align="center" style="color: <?php echo ($vl_estorno > 0) ? 'red' : 'black'; ?>;">
-                <?php 
-                    echo $v_tachado . (($vl_estorno > 0) ? "-" . $vl_estorno : $vl_estorno) . $v_tachado2; 
-                ?>
-            </td>
               <td align="center"><?php echo  $v_tachado . $dt_status . $v_tachado2; ?></td>
               <td align="center"><?php echo  $v_tachado . $ds_status . $v_tachado2; ?></td>
               <td align="center">
@@ -238,37 +239,85 @@
               </td>
             </tr>
 
+            <!-- Busca parcelas de estorno para exibir-->
+            <?php
+
+              $SQLE = "SELECT nr_sequencial, nr_parcela, vl_percentual, vl_estorno, dt_status, dt_parcela, 
+                        CASE WHEN st_status = 'R' THEN 'RECEBIDO' ELSE 'AGUARDANDO' END AS ds_status,
+                        (SELECT COUNT(*) FROM pagamentos p2 WHERE p2.nr_seq_lead = $nr_seq_lead AND p2.tp_tipo = 'E') AS total_parcelas
+                        FROM pagamentos
+                        WHERE nr_seq_lead = $nr_seq_lead
+                        AND dt_parcela = '$data'
+                        AND tp_tipo = 'E'
+                        ORDER BY dt_parcela";
+              //echo "<pre>$SQLE</pre>";
+              $RSSE = mysqli_query($conexao, $SQLE);
+              while ($linhae = mysqli_fetch_row($RSSE)) {
+                $nr_seq_estorno = $linhae[0];
+                $nr_parcela_estorno = $linhae[1];
+                $vl_percentual = $linhae[2];
+                $valor_percentual = number_format($vl_percentual, 2, ',', '.');
+                $vl_estorno  = $linhae[3];
+                $valor_estorno = number_format($vl_estorno, 2, ',', '.');
+                $dt_estorno = $linhae[4];
+                if($dt_status_estorno != ""){ $dt_status_estorno = date('d/m/Y', strtotime($dt_estorno[5]));}
+                $dt_parcela_estorno = date('d/m/Y', strtotime($linhae[5]));
+                $ds_status_estorno  = $linhae[6];
+                $total_parcelas_estorno  = $linhae[7];
+                $ds_parcela_estorno = "Parcela $nr_parcela_estorno de $total_parcelas_estorno";
+                $total_percentual += $vl_percentual;
+                $total_estorno += $vl_estorno;
+
+                ?>
+
+                <tr style="color: red;">
+                  <td></td>
+                  <td></td>
+                  <td></td> 
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><?php echo $ds_parcela_estorno; ?></td>
+                  <td></td>
+                  <td align="center">-<?php echo $valor_percentual; ?></td>
+                  <td align="center">-<?php echo  $valor_estorno; ?></td>
+                  <td align="center"><?php echo  $dt_status_estorno; ?></td>
+                  <td align="center" style="color: black;"><?php echo  $ds_status_estorno; ?></td>
+                  <td></td>
+                </tr>
+                <?php
+
+              }
+
+            ?>
+
+
             <?php
           }
         ?>
 
-        <tr style="font-weight:bold; background-color:#f2f2f2;">
-          <td colspan="7" style="text-align:center;">TOTAIS</td>
-          <td><?php echo number_format($total_considerado, 2, ',', '.'); ?></td>
-          <td><?php echo number_format($total_comissao, 2, ',', '.'); ?></td>
-          <td><?php echo number_format($total_parcela, 2, ',', '.'); ?></td>
-          <td align="center" style="color: <?php echo ($total_estorno > 0) ? 'red' : 'black'; ?>;">
-            <?php echo ($total_estorno > 0) ? number_format($total_estorno, 2, ',', '.') : '0,00'; ?>
-          </td>
+        <tr style="font-weight:bold; background-color: #f2f2f2;">
+          <td colspan="7" style="text-align:left;">Total Comissões</td>
+          <td style="color: black;"><?php echo number_format($total_considerado, 2, ',', '.'); ?></td>
+          <td style="color: black;"><?php echo number_format($total_comissao, 2, ',', '.'); ?></td>
+          <td style="color: black;"><?php echo number_format($total_parcela, 2, ',', '.'); ?></td>
           <td></td>
           <td></td>
           <td></td>
         </tr>
-        <?php 
-          $valor_a_pagar = $total_parcela - $total_estorno;
-
-          // Define a cor
-          $cor = ($valor_a_pagar > 0) ? 'green' : (($valor_a_pagar < 0) ? 'red' : 'black');
-
-          // Define o texto
-          $texto = ($valor_a_pagar < 0) ? 'Valor a Receber:' : 'Valor a Pagar:';
-        ?>
-        <tr style="font-weight: bold; background-color: #f2f2f2;">
-          <td colspan="9" align="right"><?php echo $texto; ?></td>
-          <td align="center" style="color: <?php echo $cor; ?>;">
-            <?php echo number_format($valor_a_pagar, 2, ',', '.'); ?>
-          </td>
+        <tr style="font-weight:bold; background-color: #f2f2f2;">
+          <td colspan="7" style="text-align:left;">Total Estornos</td>
+          <td style="color: black;"><?php echo number_format($total_desconsiderado, 2, ',', '.'); ?></td>
+          <td style="color: black;"><?php echo number_format($total_percentual, 2, ',', '.'); ?></td>
+          <td style="color: black;"><?php echo number_format($total_estorno, 2, ',', '.'); ?></td>
           <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr style="font-weight: bold; background-color: #f2f2f2;">
+          <td colspan="7" style="text-align:left;">Total Líquido</td>
+          <td></td>
+          <td colspan="2" align="center"><?php echo number_format($total_parcela - $total_estorno, 2, ',', '.'); ?></td>
           <td></td>
           <td></td>
           <td></td>

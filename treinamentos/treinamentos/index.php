@@ -1,0 +1,32 @@
+<?php
+foreach($_GET as $key => $value){
+	$$key = $value;
+}
+?>
+<script type="text/javascript">
+
+    function Buscar(nome, pg) {
+        document.getElementById('pgatual').value = '';
+        document.getElementById('pgatual').value = parseInt(pg)+1;
+        var url = 'treinamentos/cadastros/listadados.php?consulta=sim&pg=' + pg + '&nome=' + nome;
+        $.get(url, function (dataReturn) {
+            $('#rslista').html(dataReturn);
+        });
+    }
+
+</script>
+
+<link rel="stylesheet" href="assets/css/estilo.css">
+<iframe name="acao" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
+<ul class="nav nav-tabs" id="myTab">
+    <li class="active"><a id="tabgeral" href="#geral" data-toggle="tab">TREINAMENTOS</a></li>
+</ul> 
+
+<div class="tab-content">
+    <div class="tab-pane active" id="geral">
+        <div class="row-100">          
+            <?php include "formulario.php"; ?>          
+        </div>
+    </div>
+</div>
+

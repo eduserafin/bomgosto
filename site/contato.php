@@ -42,7 +42,7 @@
     }
 
     if($ds_arquivo1 == ""){
-      $caminho1 = "img/Csimulador.png";
+      $caminho1 = "img/ConectaSys.png";
     } else {
       $caminho1 = "../gerenciador/site/imagens/$ds_arquivo1";
     }
@@ -298,7 +298,7 @@
                 <li class="list-inline-item"><a href="<?php echo $ds_link; ?>" target="_blank" class="social-link"><i class="<?php echo $ds_icone; ?>" style="font-size: 50px;"></i></a></li>
             <?php } ?>
           </ul>
-          <p class="copyrights-text mb-0">Copyright © 2024 Csimulador. Todos os direitos reservados.</p>
+          <p class="copyrights-text mb-0">Copyright © 2024 ConectaSys. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

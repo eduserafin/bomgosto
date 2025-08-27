@@ -11,23 +11,23 @@
 
 <?php
 
-   //=====================================-GRAVA o STUTUS DO PAGAMENTO-=========================================
+   //================================================-GRAVA STUTUS DAS PARCELAS NORMAIS-=========================================
 
     if ($Tipo == "STATUS") {
 
-        if ($status == "") { // AGUARDANDO
+        if ($status == "") { // =====================================================AGUARDANDO=======================================================================================
 
-            if($ano_mes != ""){
+            if($ano_mes != "") {
 
-                // Monta data como dia 10
-                $data = $ano_mes . '-10';
-                $data_base = new DateTime($data);
+                // Monta a data inicial como dia 10
+                $data_base = new DateTime($ano_mes . '-10');
 
                 // Buscar a data da parcela anterior
                 $busca_anterior = "SELECT dt_parcela 
                                 FROM pagamentos 
                                 WHERE nr_seq_lead = $lead 
-                                AND nr_parcela < (SELECT nr_parcela FROM pagamentos WHERE nr_sequencial = $id)
+                                AND nr_parcela < $nrparcela
+                                AND tp_tipo = 'N'
                                 ORDER BY nr_parcela DESC
                                 LIMIT 1";
                 $res_anterior = mysqli_query($conexao, $busca_anterior);
@@ -35,8 +35,6 @@
 
                 if ($row_anterior) {
                     $dt_anterior = new DateTime($row_anterior['dt_parcela']);
-                    
-                    // Não pode ser igual ou anterior à parcela anterior
                     if ($data_base <= $dt_anterior) {
                         echo "<script language='JavaScript'>
                                 window.parent.Swal.fire({
@@ -51,30 +49,35 @@
                     }
                 }
 
-                 // Atualiza a parcela informada
-                $update = "UPDATE pagamentos SET st_status = '', dt_status = NULL, dt_parcela = '$data', vl_estorno = 0 WHERE nr_sequencial = $id";
-                $rss_update = mysqli_query($conexao, $update);
-                echo $update . "<br>";
-
-                // Pega a quantidade de parcelas seguintes para atualizar
-                $busca_parcelas = "SELECT nr_parcela FROM pagamentos WHERE nr_seq_lead = $lead AND nr_sequencial > $id ORDER BY nr_parcela ASC";
+                // Buscar todas as parcelas a partir da escolhida
+                $busca_parcelas = "SELECT nr_parcela 
+                                FROM pagamentos 
+                                WHERE nr_seq_lead = $lead 
+                                AND nr_parcela >= $nrparcela 
+                                AND tp_tipo = 'N' 
+                                ORDER BY nr_parcela ASC";
                 $rss_parcelas = mysqli_query($conexao, $busca_parcelas);
+
                 while ($linha = mysqli_fetch_assoc($rss_parcelas)) {
                     $nr_parcela_atual = $linha['nr_parcela'];
-
-                    $data_base->modify('+1 month');
                     $data_proxima = $data_base->format('Y-m-10');
-    
-                    $update_prox = "UPDATE pagamentos SET st_status = '', dt_status = NULL, dt_parcela = '$data_proxima', vl_estorno = 0 WHERE nr_seq_lead = $lead AND nr_parcela = $nr_parcela_atual";
-                    $rss_update_prox = mysqli_query($conexao, $update_prox);
-                    echo $update_prox . "<br>";
+
+                    $update = "UPDATE pagamentos 
+                            SET st_status = '', dt_status = NULL, dt_parcela = '$data_proxima' 
+                            WHERE nr_seq_lead = $lead 
+                            AND nr_parcela = $nr_parcela_atual 
+                            AND tp_tipo = 'N'";
+                    $rss_update = mysqli_query($conexao, $update);
+                    echo $update . "<br>";
+
+                    // Incrementa 1 mês para a próxima parcela
+                    $data_base->modify('+1 month');
                 }
-
-
+            
             } else {
 
-                // Atualiza a parcela informada
-                $update = "UPDATE pagamentos SET st_status = '', dt_status = NULL, vl_estorno = 0 WHERE nr_sequencial = $id";
+                // Atualiza apenas a parcela informada
+                $update = "UPDATE pagamentos SET st_status = '', dt_status = NULL WHERE nr_seq_lead = $lead AND nr_parcela = $nrparcela AND tp_tipo = 'N'";
                 $rss_update = mysqli_query($conexao, $update);
                 echo $update . "<br>";
 
@@ -82,25 +85,62 @@
 
         }
 
-        if($status == "P"){ //PAGO VENDEDOR
+        if($status == "P"){ //=====================================================PAGO VENDEDOR================================================================================
 
             // Atualiza a parcela informada
-            $update = "UPDATE pagamentos SET st_status = 'P', dt_status = CURDATE(), vl_estorno = 0 WHERE nr_sequencial = $id";
+            $update = "UPDATE pagamentos SET st_status = 'P', dt_status = CURDATE() WHERE nr_seq_lead = $lead AND nr_parcela = $nrparcela AND tp_tipo = 'N'";
             $rss_update = mysqli_query($conexao, $update);
             echo $update . "<br>";
 
         }
 
-        if($status == "C"){ //CANCELADO
+        if($status == "C"){ //======================================================CANCELADO==================================================================================
 
-            // Atualiza todas parcelas, dessa lead
-            $update = "UPDATE pagamentos SET st_status = 'C', dt_status = CURDATE(), vl_estorno = 0 WHERE nr_seq_lead = $lead";
+            // Atualiza todas parcelas, dessa lead para canceladas
+            $update = "UPDATE pagamentos SET st_status = 'C', dt_status = CURDATE() WHERE nr_seq_lead = $lead AND tp_tipo = 'N'";
             $rss_update = mysqli_query($conexao, $update);
             echo $update . "<br>";
 
         }
 
-        if ($status == "E") { // ESTORNO
+         if($status == "T"){ //================================================PENDENTE CLIENTE===============================================================================
+
+            // Atualiza as parcealas atual e futuras
+            $update = "UPDATE pagamentos SET st_status = 'T', dt_status = CURDATE() WHERE nr_seq_lead = $lead AND nr_parcela >= $nrparcela AND tp_tipo = 'N'";
+            $rss_update = mysqli_query($conexao, $update);
+            echo $update . "<br>";
+
+        }
+
+        if($status == "A"){ //====================================================RATEIO==================================================================================
+
+            // Busca informações da ultima parcela dessa lead
+            $sql_parcela = "SELECT nr_parcela, dt_parcela
+                            FROM pagamentos
+                            WHERE nr_seq_lead = $lead
+                            AND tp_tipo = 'N'
+                            ORDER BY nr_parcela DESC LIMIT 1";
+            $res_parcela = mysqli_query($conexao, $sql_parcela);
+            if ($lin_parcela = mysqli_fetch_row($res_parcela)) {
+                $ultima_parcela = $lin_parcela[0];
+                $dt_ultima_parcela = $lin_parcela[1];
+            }
+
+            $nova_parcela = $ultima_parcela + 1;
+            $nova_data = date('Y-m-d', strtotime($dt_ultima_parcela . ' +1 month'));
+
+            // Atualiza a parcela atual, jogando ela para ultima parcela
+            $update = "UPDATE pagamentos 
+                        SET nr_parcela = $nova_parcela, dt_parcela = '$nova_data', st_status = 'A', dt_status = CURDATE()
+                        WHERE nr_seq_lead = $lead 
+                        AND nr_parcela = $nrparcela
+                        AND tp_tipo = 'N'";
+            $rss_update = mysqli_query($conexao, $update);
+            echo $update . "<br>";
+
+        }
+
+        if ($status == "E") { // =====================================================ESTORNO======================================================================================
 
             // Busca informações da lead
             $sql = "SELECT c.nr_sequencial, l.nr_seq_administradora, l.vl_considerado
@@ -188,19 +228,65 @@
             if ($inseriu) {
                 $update = "UPDATE pagamentos 
                             SET st_status = 'E', dt_status = CURDATE()
-                            WHERE nr_sequencial >= $id 
-                            AND nr_seq_lead = $lead";
+                            WHERE nr_seq_lead = $lead 
+                            AND nr_parcela >= $nrparcela
+                            AND tp_tipo = 'N'";
                 $rss_update = mysqli_query($conexao, $update);
             }
         }
 
-        if($status == "T"){ //PENDENTE CLIENTE
+       //=====================================================================================================================================================================
 
-            // Atualiza as parcealas atual e futuras
-            $update = "UPDATE pagamentos SET st_status = 'T', dt_status = CURDATE(), vl_estorno = 0 WHERE nr_sequencial >= $id AND nr_seq_lead = $lead";
+        if ($rss_update) {
+            echo "<script language='JavaScript'>
+                    window.parent.Swal.fire({
+                        icon: 'success',
+                        title: 'Show...',
+                        text: 'Alteração registrada com sucesso!'
+                    });
+                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}parcela={$parcela}');
+                    window.parent.consultar(0);
+                </script>";
+        } else {
+            echo "<script language='JavaScript'>
+                    window.parent.Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Problemas ao gravar!'
+                    });
+                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}parcela={$parcela}');
+                    window.parent.consultar(0);
+                </script>";
+        }
+    }
+
+    //================================================-GRAVA STUTUS DAS PARCELAS DE ESTORNO-=========================================
+
+    if ($Tipo == "ESTORNO") {
+
+        if ($status == "R") { //=================================RECEBIDO=================================================================================================
+            
+            // Atualiza a parcela de estorno correspondente com o status RECEBIDO
+            $update = "UPDATE pagamentos 
+                        SET st_status = 'R', 
+                            dt_status = CURDATE()
+                        WHERE nr_sequencial = $id 
+                        AND tp_tipo = 'E'";
             $rss_update = mysqli_query($conexao, $update);
             echo $update . "<br>";
 
+        }
+
+        if ($status == "") { //=================================AGUARDANDO=================================================================================================
+
+            // Atualiza a parcela de estorno correspondente com o status VAZIU
+            $update = "UPDATE pagamentos 
+                        SET st_status = '', 
+                            dt_status = NULL
+                        WHERE nr_sequencial = $id 
+                        AND tp_tipo = 'E'";
+            $rss_update = mysqli_query($conexao, $update);
+            echo $update . "<br>";
         }
 
         if ($rss_update) {

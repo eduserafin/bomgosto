@@ -104,8 +104,9 @@
             <select name="pesquisastatus" id="pesquisastatus" class="form-control">
                 <option value="0">Todos</option>
                 <option value="">AGUARDANDO</option>
-                <option value="T">PENDENTE CLIENTE</option>
                 <option value="P">PAGO AO VENDEDOR</option>
+                <option value="T">PENDENTE CLIENTE</option>
+                <option value="A">RATEIO</option>
                 <option value="E">ESTORNO</option>
                 <option value="C">CANCELADO</option>
             </select>
