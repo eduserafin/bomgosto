@@ -1,4 +1,17 @@
+<?php
 
+    if($_SESSION["ST_ADMIN"] == 'G'){
+        $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $hidden = '';
+    } else if ($_SESSION["ST_ADMIN"] == 'C') {
+        $v_filtro_empresa = "AND ls.nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+        $hidden = 'hidden';
+    } else {
+        $v_filtro_empresa = "";
+        $hidden = '';
+    }
+
+?>
 <body onLoad="document.getElementById('txtnome').focus();">
 <input type="hidden" name="cd_lead" id="cd_lead" value="">
 <div class="form-group col-md-12">
@@ -10,12 +23,51 @@
 </div>
     <div class="row">
         <div class="col-md-3">
-            <label>NOME:</label>
-            <input type="text" name="txtnome" id="txtnome" size="10" maxlength="100" style="background:#E6FFE0;" class="form-control">
+            <label>NOME CLIENTE: <font color='red'>*</font></label>
+            <input type="text" name="txtnome" id="txtnome" size="10" maxlength="100" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label>VALOR:</label>
+            <input type="text" class="form-control" name="txtvalor" id="txtvalor" size="10" maxlength="20" style="text-align:right;" onkeypress="return formatar_moeda(this,'.',',',event);">
+        </div>
+        <div class="col-md-2">
+            <label>CONTATO:</label>
+            <input type="text" name="txtcontato" id="txtcontato" size="10" maxlength="15" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <label>E-MAIL:</label>
+            <input type="text" name="txtemail" id="txtemail" size="10" maxlength="100" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3" <?php echo $hidden; ?>>
+            <label for="txtvendedor">VENDEDOR:</label>                     
+            <select id="txtvendedor" class="form-control">
+                <option value='0'>Selecione um colaborador</option>
+                    <?php
+                        $sql = "SELECT u.nr_sequencial, c.ds_colaborador
+                                FROM colaboradores c
+                                INNER JOIN usuarios u ON c.nr_sequencial = u.nr_seq_colaborador
+                                WHERE u.st_status = 'A'
+                                $v_filtro_empresa
+                                ORDER BY c.ds_colaborador";
+                        $res = mysqli_query($conexao, $sql);
+                        while($lin=mysqli_fetch_row($res)){
+                            $cdg = $lin[0];
+                            $desc = $lin[1];
+                
+                            if($cdg == $colaborador){ $sel = "selected"; }
+                            else { $sel = ""; }
+
+                            echo "<option value=$cdg $sel>$desc</option>";
+                        }
+                        
+                    ?>
+            </select>
         </div>
         <div class="col-md-3">
             <label for="txtmunicipio">CIDADE:</label>
-            <select name="txtmunicipio" id="txtmunicipio" class="form-control" style="background:#E0FFFF;">
+            <select name="txtmunicipio" id="txtmunicipio" class="form-control">
                 <option value="0">Selecione</option>
                 <?php
                     $sel = "SELECT c.nr_sequencial, c.ds_municipio, e.sg_estado
@@ -54,24 +106,13 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-2">
-            <label>VALOR:</label>
-            <input type="text" class="form-control" name="txtvalor" id="txtvalor" size="10" maxlength="20" style="text-align:right;" onkeypress="return formatar_moeda(this,'.',',',event);">
-        </div>
-        <div class="col-md-2">
-            <label>CONTATO:</label>
-            <input type="text" name="txtcontato" id="txtcontato" size="10" maxlength="15" class="form-control">
-        </div>
-        <div class="col-md-4">
-            <label>E-MAIL:</label>
-            <input type="text" name="txtemail" id="txtemail" size="10" maxlength="100" class="form-control">
-        </div>
-    </div>
-
 </body>
 
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#txtvendedor').select2();
+    });
 
     $(document).ready(function() {
         $('#txtmunicipio').select2();
@@ -142,6 +183,7 @@
             document.getElementById('txtvalor').value = "";
             document.getElementById('txtsegmento').value = "0";
             document.getElementById('txtemail').value = "";
+            document.getElementById('txtvendedor').value = "0";
             document.getElementById('txtnome').focus();
         }
         else if (id=="save"){  
@@ -152,6 +194,7 @@
             var valor = document.getElementById('txtvalor').value;
             var segmento = document.getElementById('txtsegmento').value;
             var email = document.getElementById('txtemail').value;
+            var vendedor = document.getElementById('txtvendedor').value;
 
             if (valor != '') {
                 valor = valor.replace(/\./g, '');     // remove todos os pontos
@@ -174,7 +217,7 @@
                     Tipo = "A";
                 }
 
-                window.open('crm/leads/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&contato=' + contato + '&cidade=' + cidade + '&valor=' + valor + '&segmento=' + segmento + '&email=' + email, "acao");
+                window.open('crm/leads/acao.php?' + 'Tipo=' + Tipo + '&codigo=' + codigo + '&nome=' + nome + '&contato=' + contato + '&cidade=' + cidade + '&valor=' + valor + '&segmento=' + segmento + '&email=' + email + '&vendedor=' + vendedor, "acao");
             }
         } else if (id == "delete") {
 

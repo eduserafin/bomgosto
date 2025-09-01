@@ -1,45 +1,52 @@
 <?php
 
 if($_SESSION["ST_ADMIN"] == 'G'){
-    $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
+    $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"];
     $v_filtro_colaborador = "";
 } else if ($_SESSION["ST_ADMIN"] == 'C') {
-    $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
-    $v_filtro_colaborador = "AND nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"] . "";
+    $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"];
+    $v_filtro_colaborador = "AND nr_seq_usercadastro = " . $_SESSION["CD_USUARIO"];
 } else {
     $v_filtro_empresa = "";
     $v_filtro_colaborador = "";
 }
 
-// Busca as datas no banco
-$SQL = "SELECT dt_agenda 
+
+$SQL = "SELECT nr_sequencial, dt_agenda 
         FROM lead 
-        WHERE nr_seq_situacao = 6
+        WHERE nr_seq_situacao = 3
         " . $v_filtro_empresa . "
-        " . $v_filtro_colaborador . "";
-//echo "<pre>$SQL</pre>";
+        " . $v_filtro_colaborador;
+
 $RSS = mysqli_query($conexao, $SQL);
+
 $datas = [];
-while ($linha = mysqli_fetch_row($RSS)) {
-    $datas[] = $linha[0];  // dt_agenda
+while ($linha = mysqli_fetch_assoc($RSS)) {
+    $datas[] = [
+        'nr_sequencial' => $linha['nr_sequencial'],
+        'dt_agenda' => $linha['dt_agenda']
+    ];
 }
 
-// Converte para JSON
 $datas_json = json_encode($datas);
 ?>
 
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <title>Calendário de Agendamentos</title>
+
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    
+
     <style>
        #calendar {
             background-color: #fff;
-            margin: 20px auto;
+            margin: 0px auto;
             font-size: 0.8rem;
-            border: 1px solid #ddd;
-            padding: 10px;
+            border: 0px solid #ddd;
+            padding: 0px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -78,9 +85,7 @@ $datas_json = json_encode($datas);
             color: #007bff !important;
             font-weight: bold;
         }
-
     </style>
-
 </head>
 <body>
 
@@ -90,28 +95,43 @@ $datas_json = json_encode($datas);
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
     <script>
+        function detalharLead(nr_sequencial) {
+            const url = "https://conectasys.com/dashboard.php?form=crm/leads/index.php&id_menu=3&ds_men=Leads&ds_mod=CRM&id_smenu=11&codigo=" 
+                + encodeURIComponent(nr_sequencial) + "&tab=lista";
+            window.open(url, '_blank');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var datas = <?php echo $datas_json; ?>;
 
-            var eventos = datas.map(function(data) {
+            var eventos = datas.map(function(item) {
                 return {
-                    title: 'Agendada',
-                    start: data
+                    title: 'Agenda',
+                    start: item.dt_agenda,
+                    id: item.nr_sequencial
                 };
             });
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'pt-br',
-                height: 'auto',            
-                contentHeight: 400,         
+                height: 'auto',
+                contentHeight: 400,
                 headerToolbar: {
                     left: 'prev,next',
                     center: 'title',
-                    right: ''           
+                    right: ''
                 },
-                events: eventos
+                events: eventos,
+                eventClick: function(info) {
+                    detalharLead(info.event.id);
+                },
+                eventContent: function(arg) {
+                    return { 
+                        html: '<div style="background-color: red; color: white; font-weight: bold; padding: 2px 4px; border-radius: 3px;">Agenda</div>' 
+                    };
+                }
             });
 
             calendar.render();
@@ -119,3 +139,4 @@ $datas_json = json_encode($datas);
     </script>
 
 </body>
+</html>

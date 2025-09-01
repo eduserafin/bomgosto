@@ -15,7 +15,7 @@
 
     if ($Tipo == "STATUS") {
 
-        if ($status == "") { // =====================================================AGUARDANDO=======================================================================================
+        if ($status == "") { //========================================================AGUARDANDO=================================================================================
 
             if($ano_mes != "") {
 
@@ -24,12 +24,12 @@
 
                 // Buscar a data da parcela anterior
                 $busca_anterior = "SELECT dt_parcela 
-                                FROM pagamentos 
-                                WHERE nr_seq_lead = $lead 
-                                AND nr_parcela < $nrparcela
-                                AND tp_tipo = 'N'
-                                ORDER BY nr_parcela DESC
-                                LIMIT 1";
+                                    FROM pagamentos 
+                                    WHERE nr_seq_lead = $lead 
+                                    AND nr_parcela < $nrparcela
+                                    AND tp_tipo = 'N'
+                                    ORDER BY nr_parcela DESC
+                                    LIMIT 1";
                 $res_anterior = mysqli_query($conexao, $busca_anterior);
                 $row_anterior = mysqli_fetch_assoc($res_anterior);
 
@@ -42,7 +42,7 @@
                                     title: 'Oops...',
                                     text: 'A data da parcela não pode ser igual ou anterior à parcela anterior ({$dt_anterior->format('m/Y')})!'
                                 });
-                                window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}parcela={$parcela}');
+                                window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}&parcela={$parcela}');
                                 window.parent.consultar(0);
                             </script>";
                         exit;
@@ -50,45 +50,65 @@
                 }
 
                 // Buscar todas as parcelas a partir da escolhida
-                $busca_parcelas = "SELECT nr_parcela 
-                                FROM pagamentos 
-                                WHERE nr_seq_lead = $lead 
-                                AND nr_parcela >= $nrparcela 
-                                AND tp_tipo = 'N' 
-                                ORDER BY nr_parcela ASC";
+                $busca_parcelas = "SELECT nr_parcela, st_status 
+                                    FROM pagamentos 
+                                    WHERE nr_seq_lead = $lead 
+                                    AND nr_parcela >= $nrparcela 
+                                    AND tp_tipo = 'N' 
+                                    ORDER BY nr_parcela ASC";
                 $rss_parcelas = mysqli_query($conexao, $busca_parcelas);
 
                 while ($linha = mysqli_fetch_assoc($rss_parcelas)) {
                     $nr_parcela_atual = $linha['nr_parcela'];
+
+                    // Se a parcela está com status 'A', não atualiza, mas ainda assim avança a data-base
+                    if ($linha['st_status'] === 'A') {
+                        $data_base->modify('+1 month');
+                        continue;
+                    }
+
+                    // Atualiza a parcela com a data corrente do data_base
                     $data_proxima = $data_base->format('Y-m-10');
 
                     $update = "UPDATE pagamentos 
-                            SET st_status = '', dt_status = NULL, dt_parcela = '$data_proxima' 
-                            WHERE nr_seq_lead = $lead 
-                            AND nr_parcela = $nr_parcela_atual 
-                            AND tp_tipo = 'N'";
+                                SET st_status = '', 
+                                    dt_status = NULL, 
+                                    dt_parcela = '$data_proxima' 
+                                WHERE nr_seq_lead = $lead 
+                                AND nr_parcela = $nr_parcela_atual 
+                                AND tp_tipo = 'N'";
                     $rss_update = mysqli_query($conexao, $update);
                     echo $update . "<br>";
 
                     // Incrementa 1 mês para a próxima parcela
                     $data_base->modify('+1 month');
                 }
-            
+
             } else {
 
-                // Atualiza apenas a parcela informada
-                $update = "UPDATE pagamentos SET st_status = '', dt_status = NULL WHERE nr_seq_lead = $lead AND nr_parcela = $nrparcela AND tp_tipo = 'N'";
+                // Atualiza apenas a parcela informada, se não for 'A'
+                $update = "UPDATE pagamentos 
+                            SET st_status = '', 
+                                dt_status = NULL 
+                            WHERE nr_seq_lead = $lead 
+                            AND nr_parcela = $nrparcela 
+                            AND tp_tipo = 'N'
+                            AND st_status != 'A'";
                 $rss_update = mysqli_query($conexao, $update);
                 echo $update . "<br>";
-
             }
-
         }
 
         if($status == "P"){ //=====================================================PAGO VENDEDOR================================================================================
 
             // Atualiza a parcela informada
-            $update = "UPDATE pagamentos SET st_status = 'P', dt_status = CURDATE() WHERE nr_seq_lead = $lead AND nr_parcela = $nrparcela AND tp_tipo = 'N'";
+            $update = "UPDATE pagamentos 
+                        SET st_status = 'P', 
+                            dt_status = CURDATE() 
+                        WHERE nr_seq_lead = $lead 
+                        AND nr_parcela = $nrparcela 
+                        AND tp_tipo = 'N'
+                        AND st_status != 'A'";
             $rss_update = mysqli_query($conexao, $update);
             echo $update . "<br>";
 
@@ -97,7 +117,11 @@
         if($status == "C"){ //======================================================CANCELADO==================================================================================
 
             // Atualiza todas parcelas, dessa lead para canceladas
-            $update = "UPDATE pagamentos SET st_status = 'C', dt_status = CURDATE() WHERE nr_seq_lead = $lead AND tp_tipo = 'N'";
+            $update = "UPDATE pagamentos 
+                        SET st_status = 'C', 
+                            dt_status = CURDATE() 
+                        WHERE nr_seq_lead = $lead 
+                        AND tp_tipo = 'N'";
             $rss_update = mysqli_query($conexao, $update);
             echo $update . "<br>";
 
@@ -105,8 +129,14 @@
 
          if($status == "T"){ //================================================PENDENTE CLIENTE===============================================================================
 
-            // Atualiza as parcealas atual e futuras
-            $update = "UPDATE pagamentos SET st_status = 'T', dt_status = CURDATE() WHERE nr_seq_lead = $lead AND nr_parcela >= $nrparcela AND tp_tipo = 'N'";
+            // Atualiza as parcealas atual e futuras, sem alterar parcelas de RATEIO
+            $update = "UPDATE pagamentos 
+                        SET st_status = 'T', 
+                            dt_status = CURDATE() 
+                        WHERE nr_seq_lead = $lead 
+                        AND nr_parcela >= $nrparcela 
+                        AND tp_tipo = 'N'
+                        AND st_status != 'A'";
             $rss_update = mysqli_query($conexao, $update);
             echo $update . "<br>";
 
@@ -114,29 +144,57 @@
 
         if($status == "A"){ //====================================================RATEIO==================================================================================
 
+            // Busca informações da parcela dessa lead
+            $sql1 = "SELECT nr_sequencial, vl_comissao, vl_parcela
+                            FROM pagamentos
+                            WHERE nr_seq_lead = $lead
+                            AND nr_parcela = $nrparcela
+                            AND tp_tipo = 'N'";
+            $res1 = mysqli_query($conexao, $sql1);
+            if ($lin1 = mysqli_fetch_row($res1)) {
+                $nr_seq_parcela = $lin1[0];
+                $vl_comissao = $lin1[1];
+                $vl_parcela = $lin1[2];
+            }
+
             // Busca informações da ultima parcela dessa lead
-            $sql_parcela = "SELECT nr_parcela, dt_parcela
+            $sql2 = "SELECT nr_parcela, dt_parcela
                             FROM pagamentos
                             WHERE nr_seq_lead = $lead
                             AND tp_tipo = 'N'
                             ORDER BY nr_parcela DESC LIMIT 1";
-            $res_parcela = mysqli_query($conexao, $sql_parcela);
-            if ($lin_parcela = mysqli_fetch_row($res_parcela)) {
-                $ultima_parcela = $lin_parcela[0];
-                $dt_ultima_parcela = $lin_parcela[1];
+            $res2 = mysqli_query($conexao, $sql2);
+            if ($lin2 = mysqli_fetch_row($res2)) {
+                $ultima_parcela = $lin2[0];
+                $dt_ultima_parcela = $lin2[1];
             }
 
             $nova_parcela = $ultima_parcela + 1;
             $nova_data = date('Y-m-d', strtotime($dt_ultima_parcela . ' +1 month'));
+            $inseriu = false;
 
-            // Atualiza a parcela atual, jogando ela para ultima parcela
-            $update = "UPDATE pagamentos 
-                        SET nr_parcela = $nova_parcela, dt_parcela = '$nova_data', st_status = 'A', dt_status = CURDATE()
-                        WHERE nr_seq_lead = $lead 
-                        AND nr_parcela = $nrparcela
-                        AND tp_tipo = 'N'";
-            $rss_update = mysqli_query($conexao, $update);
-            echo $update . "<br>";
+            // Insere uma nova parcela após a ultima parcela cadastrada
+            $insert = "INSERT INTO pagamentos (nr_seq_lead, nr_parcela, st_status, dt_status, dt_parcela, vl_comissao, vl_parcela, tp_tipo) 
+                        VALUES ($lead, $nova_parcela, '', NULL, '$nova_data', $vl_comissao, $vl_parcela, 'N')";
+            if (mysqli_query($conexao, $insert)) {
+                $inseriu = true;
+            } else {
+                echo "Erro no INSERT: " . mysqli_error($conexao);
+            }
+
+            if ($inseriu) {
+
+                // Após inserir a parcela nova, atualiza a parcela atual zerando os valores e incluindo status RATEIO
+                $update = "UPDATE pagamentos 
+                            SET st_status = 'A', 
+                                vl_comissao = 0, 
+                                vl_parcela = 0, 
+                                dt_status = CURDATE()
+                            WHERE nr_sequencial = $nr_seq_parcela ";
+                $rss_update = mysqli_query($conexao, $update);
+                echo $update . "<br>";
+
+            }
 
         }
 
@@ -212,10 +270,8 @@
                     }
 
                     // Insere a parcela de estorno
-                    $insert = "INSERT INTO pagamentos 
-                                (nr_seq_lead, nr_parcela, st_status, dt_status, dt_parcela, vl_percentual, vl_estorno, tp_tipo) 
+                    $insert = "INSERT INTO pagamentos (nr_seq_lead, nr_parcela, st_status, dt_status, dt_parcela, vl_percentual, vl_estorno, tp_tipo) 
                                 VALUES ($lead, $i + 1, '', CURDATE(), '$dt_parcela', $pc_parcela, $vl_parcela, 'E')";
-                    
                     if (mysqli_query($conexao, $insert)) {
                         $inseriu = true;
                     } else {
@@ -227,10 +283,12 @@
             // Atualiza as parcelas correspondentes para ESTORNO apenas se houve insert
             if ($inseriu) {
                 $update = "UPDATE pagamentos 
-                            SET st_status = 'E', dt_status = CURDATE()
+                            SET st_status = 'E', 
+                                dt_status = CURDATE()
                             WHERE nr_seq_lead = $lead 
                             AND nr_parcela >= $nrparcela
-                            AND tp_tipo = 'N'";
+                            AND tp_tipo = 'N'
+                            AND st_status != 'A'";
                 $rss_update = mysqli_query($conexao, $update);
             }
         }
@@ -244,7 +302,7 @@
                         title: 'Show...',
                         text: 'Alteração registrada com sucesso!'
                     });
-                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}parcela={$parcela}');
+                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}&parcela={$parcela}');
                     window.parent.consultar(0);
                 </script>";
         } else {
@@ -254,7 +312,7 @@
                         title: 'Oops...',
                         text: 'Problemas ao gravar!'
                     });
-                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}parcela={$parcela}');
+                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}&parcela={$parcela}');
                     window.parent.consultar(0);
                 </script>";
         }
@@ -296,7 +354,7 @@
                         title: 'Show...',
                         text: 'Alteração registrada com sucesso!'
                     });
-                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}parcela={$parcela}');
+                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}&parcela={$parcela}');
                     window.parent.consultar(0);
                 </script>";
         } else {
@@ -306,7 +364,7 @@
                         title: 'Oops...',
                         text: 'Problemas ao gravar!'
                     });
-                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}parcela={$parcela}');
+                    window.parent.AbrirModal('relatorios/comissao/parcelas.php?lead={$lead}&parcela={$parcela}');
                     window.parent.consultar(0);
                 </script>";
         }

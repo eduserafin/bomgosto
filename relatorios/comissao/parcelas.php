@@ -194,6 +194,10 @@
                         $disabled = "disabled";
                     }
 
+                    if ($st_status == "A") {
+                        $disabled = "disabled";
+                    }
+
                     $select_class = ($disabled != "") ? "select-bloqueado" : "";
                     ?>
                     <tr <?php if ($parcela == $nr_parcela) echo "class='linha-destaque'"; ?>>
@@ -208,20 +212,20 @@
                             <?php echo $disabled; ?>>
                                 <option value="" <?php if($st_status == '') echo 'selected'; ?>>AGUARDANDO</option>
                                 <option value="P" <?php if($st_status == 'P') echo 'selected'; ?>
-                                    <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
-                                    PAGO AO VENDEDOR <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
+                                    <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo 'disabled'; ?>>
+                                    PAGO AO VENDEDOR <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo '(bloqueado)'; ?>
                                 </option>
                                 <option value="T" <?php if($st_status == 'T') echo 'selected'; ?>
-                                    <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
-                                    PENDENTE CLIENTE <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
+                                    <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo 'disabled'; ?>>
+                                    PENDENTE CLIENTE <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo '(bloqueado)'; ?>
                                 </option>
                                 <option value="A" <?php if($st_status == 'A') echo 'selected'; ?>
-                                    <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
-                                    RATEIO <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
+                                    <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo 'disabled'; ?>>
+                                    RATEIO <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo '(bloqueado)'; ?>
                                 </option>
                                 <option value="E" <?php if($st_status == 'E') echo 'selected'; ?>
-                                    <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>
-                                    ESTORNO <?php if($st_status == 'T' || $st_status == 'E') echo '(bloqueado)'; ?>
+                                    <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo 'disabled'; ?>>
+                                    ESTORNO <?php if($st_status == 'T' || $st_status == 'E' || $parcela != $nr_parcela) echo '(bloqueado)'; ?>
                                 </option>
                                 <option value="C" <?php if($st_status == 'C') echo 'selected'; ?>
                                     <?php if($st_status == 'T' || $st_status == 'E') echo 'disabled'; ?>>

@@ -1,4 +1,8 @@
 <?php 
+
+    //error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+    //ini_set('display_errors', '0');
+
     require_once('config/servers.php'); 
     if (isset($_SESSION['CD_USUARIO']) && strlen($_SESSION['CD_USUARIO']) > 0 && isset($_SESSION['ALIAS_EMPRESA']) && strlen($_SESSION['ALIAS_EMPRESA']) > 0) {
         header('location: dashboard.php');
@@ -8,7 +12,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>Csimulador | Login</title>
+    <link rel="icon" type="image/png" href="img/icone.png">
+    <title>ConectaSys | Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <!-- Fontes e Estilos -->
@@ -35,7 +40,7 @@
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            padding: 40px;
+            padding: 20px;
             width: 100%;
             max-width: 400px;
         }
@@ -44,7 +49,7 @@
             text-align: center;
             font-weight: 600;
             font-size: 26px;
-            margin-bottom: 30px;
+            margin-bottom: 15px; /* antes era 30px */
         }
 
         .inputBox {
@@ -111,6 +116,12 @@
 
     <div class="form-login">
         <form action="conecta.php" method="post">
+        
+            <!-- Logo adicionada -->
+           <div style="text-align: center; margin-bottom: 0;">
+                <img src="img/logo2.png" alt="Logo ConectaSys" style="max-height: 150px; height: auto; margin-bottom: 5px;">
+            </div>
+            
             <h3>Login</h3>
 
             <div class="inputBox">
@@ -134,6 +145,17 @@
             <div style="text-align:center; margin-top: 15px;">
                 <a href="recuperar.php" style="color: #612db5; text-decoration: none; font-size: 14px;">
                     Esqueci minha senha
+                </a>
+            </div>
+            
+            <!-- política e termos -->
+            <div style="text-align:center; margin-top: 10px; font-size: 13px;">
+                <a href="politica.html" target="_blank" style="color: #777; text-decoration: none; margin-right: 10px;">
+                    Política de Privacidade
+                </a>
+                |
+                <a href="termo.html" target="_blank" style="color: #777; text-decoration: none; margin-left: 10px;">
+                    Termos de Uso
                 </a>
             </div>
         </form>

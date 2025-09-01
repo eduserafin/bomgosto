@@ -30,4 +30,5 @@ return array(
     'Google\\Auth\\Subscriber\\SimpleSubscriber' => $vendorDir . '/google/auth/src/Subscriber/SimpleSubscriber.php',
     'Google_Service_Exception' => $vendorDir . '/google/apiclient/src/Google/Service/Exception.php',
     'Google_Service_Resource' => $vendorDir . '/google/apiclient/src/Google/Service/Resource.php',
+    'Stringable' => $vendorDir . '/myclabs/php-enum/stubs/Stringable.php',
 );

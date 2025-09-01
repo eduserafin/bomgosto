@@ -1,6 +1,9 @@
 
 <?php 
 
+    $mes = date('m'); 
+    $ano = date('Y'); 
+
     if($_SESSION["ST_ADMIN"] == 'G'){
         $v_filtro_empresa = "AND nr_seq_empresa = " . $_SESSION["CD_EMPRESA"] . "";
         $v_filtro_colaborador = "";
@@ -12,10 +15,19 @@
         $v_filtro_colaborador = "";
     }
 
+    if($_SESSION["ST_PERIODO"] == 'M'){
+        $v_filtro_cadastro = "AND MONTH(dt_cadastro) = $mes";
+    } else if ($_SESSION["ST_PERIODO"] == 'N') {
+        $v_filtro_cadastro = "AND YEAR(dt_cadastro) = $ano";
+    } else {
+        $v_filtro_cadastro = "";
+    }
+
     //ABERTA
     $leads_novas = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 4
+            WHERE nr_seq_situacao = 2
+            "  . $v_filtro_cadastro . "
             "  . $v_filtro_empresa . "
             "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
@@ -26,7 +38,8 @@
     //AGENDADA
     $leads_contato = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 6
+            WHERE nr_seq_situacao = 3
+            "  . $v_filtro_cadastro . "
             "  . $v_filtro_empresa . "
             "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
@@ -37,7 +50,8 @@
     //PERDIDA
     $leads_perdidas = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 5
+            WHERE nr_seq_situacao = 4
+            "  . $v_filtro_cadastro . "
             "  . $v_filtro_empresa . "
             "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
@@ -48,7 +62,8 @@
     //EM ANDAMENTO
     $leads_andamento = 0;
     $SQL = "SELECT COUNT(*) FROM lead
-            WHERE nr_seq_situacao = 3
+            WHERE nr_seq_situacao = 5
+            "  . $v_filtro_cadastro . "
             "  . $v_filtro_empresa . "
             "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
@@ -60,6 +75,7 @@
     $leads_contratadas = 0;
     $SQL = "SELECT COUNT(*) FROM lead
             WHERE nr_seq_situacao = 1
+            "  . $v_filtro_cadastro . "
             "  . $v_filtro_empresa . "
             "  . $v_filtro_colaborador . "";
     $RSS = mysqli_query($conexao, $SQL);
@@ -164,7 +180,7 @@
                 <div class="inner">
                     <h1><?php echo number_format($leads_novas, 0, ",", "."); ?></h1>
                     <p>NOVAS</p>
-                    <button type="button" class="btn btn-info" onclick="detalhar(4);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                    <button type="button" class="btn btn-info" onclick="detalhar(2);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
                 </div>
                 <div class="icon">
                     <i class="fa fa-group"></i>
@@ -176,7 +192,7 @@
                 <div class="inner">
                     <h1><?php echo number_format($leads_contato, 0, ",", "."); ?></h1>
                     <p>AGENDADAS</p>
-                    <button type="button" class="btn btn-info" onclick="detalhar(6);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                    <button type="button" class="btn btn-info" onclick="detalhar(3);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
                 </div>
                 <div class="icon">
                     <i class="fa fa-phone"></i>
@@ -187,25 +203,25 @@
         <div class="col-lg-2 col-xs-6">
             <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h1><?php echo number_format($leads_perdidas, 0, ",", "."); ?></h1>
-                    <p>PERDIDAS</p>
+                    <h1><?php echo number_format($leads_andamento, 0, ",", "."); ?></h1>
+                    <p>ANDAMENTO</p>
                     <button type="button" class="btn btn-info" onclick="detalhar(5);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-lock"></i>
+                    <i class="fa fa-unlock"></i>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-2 col-xs-6">
+        
+         <div class="col-lg-2 col-xs-6">
             <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h1><?php echo number_format($leads_andamento, 0, ",", "."); ?></h1>
-                    <p>ANDAMENTO</p>
-                    <button type="button" class="btn btn-info" onclick="detalhar(3);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
+                    <h1><?php echo number_format($leads_perdidas, 0, ",", "."); ?></h1>
+                    <p>PERDIDAS</p>
+                    <button type="button" class="btn btn-info" onclick="detalhar(4);"><span class="glyphicon glyphicon-filter"></span> CONSULTAR</button>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-unlock"></i>
+                    <i class="fa fa-lock"></i>
                 </div>
             </div>
         </div>

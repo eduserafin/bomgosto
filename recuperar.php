@@ -1,6 +1,3 @@
-<?php
-// recuperar_senha.php
-?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -44,12 +41,18 @@
         .btn-submit:hover {
             background: #4e2391;
         }
+
+        .swal-compact {
+            max-width: 300px !important; /* ou ajuste como quiser */
+            padding: 1.5em !important;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="form-recover">
-    <form action="processa.php" method="post">
+    <form id="form-recover">
         <h3>Recuperar Senha</h3>
         <div class="mb-3">
             <label for="email" class="form-label">Digite seu e-mail</label>
@@ -61,3 +64,44 @@
 
 </body>
 </html>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById('form-recover').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita o envio tradicional
+
+        const formData = new FormData(this);
+
+        fetch('processa.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            Swal.fire({
+                icon: data.status,
+                title: data.title,
+                text: data.message,
+                confirmButtonText: 'OK'
+            }).then(() => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                }
+            });
+        })
+       .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Não foi possível enviar o e-mail. Tente novamente.',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'swal-compact'
+                }
+            });
+            console.error('Erro:', error);
+        });
+    });
+</script>
+

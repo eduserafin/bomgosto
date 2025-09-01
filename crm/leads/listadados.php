@@ -133,7 +133,8 @@
     <body>
       <table width="100%" class="table table-bordered table-striped modern-table">
         <tr>
-          <th style="vertical-align:middle;">NOME</th>
+          <th style="vertical-align:middle;">VENDEDOR</th>
+          <th style="vertical-align:middle;">CLIENTE</th>
           <th style="vertical-align:middle;">VALOR</th>
           <th style="vertical-align:middle;">CIDADE</th>
           <th style="vertical-align:middle;">CONTATO</th>
@@ -148,8 +149,10 @@
         
           $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento,
                     ls.nr_telefone AS contato, CONCAT(c.ds_municipio, ' - ', e.sg_estado) AS municipio_estado,
-                    st.ds_situacao, ls.dt_agenda
+                    st.ds_situacao, ls.dt_agenda, co.ds_colaborador, ls.vl_contratado
                     FROM lead ls
+                    INNER JOIN usuarios u ON u.nr_sequencial = ls.nr_seq_usercadastro
+                    INNER JOIN colaboradores co ON u.nr_seq_colaborador = co.nr_sequencial
                     LEFT JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
                     LEFT JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
                     LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
@@ -165,7 +168,6 @@
             $nr_sequencial = $linha[0];
             $ds_nome = $linha[1];
             $vl_valor = $linha[2]; 
-            $valor = number_format($vl_valor, 2, ',', '.');
             $dt_cadastro = date('d/m/Y', strtotime($linha[3]));
             $ds_segmento = $linha[4];
             $contato = formatarTelefone($linha[5]);
@@ -173,10 +175,19 @@
             $ds_situacao = $linha[7];
             $dt_agenda = $linha[8];
             if($dt_agenda != "") { $dt_agenda = date('d/m/Y', strtotime($dt_agenda)); }
+            $ds_colaborador = $linha[9];
+            $vl_contratado = $linha[10];
+
+            if($vl_contratado == ""){
+              $valor = number_format($vl_valor, 2, ',', '.');
+            } else {
+              $valor = number_format($vl_contratado, 2, ',', '.');
+            }
 
             ?>
 
             <tr>
+              <td><?php echo $ds_colaborador; ?></td>
               <td><?php echo $ds_nome; ?></td>
               <td><?php echo $valor; ?></td>
               <td><?php echo $municipio_estado; ?></td>

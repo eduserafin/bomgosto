@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Smalot\\PdfParser\\' => array($vendorDir . '/smalot/pdfparser/src'),
+    'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
     'Google_' => array($vendorDir . '/google/apiclient/src'),
 );

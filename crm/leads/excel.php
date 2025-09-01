@@ -22,7 +22,10 @@ $objPHPExcel->getProperties()
 
 $linha = 1;
 $coluna = 0;
-$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'NOME');
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'VENDEDOR');
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
+$coluna++;
+$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'CLIENTE');
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($coluna)->setAutoSize(true);
 $coluna++;
 $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, 'CIDADE');
@@ -84,7 +87,7 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
     }
 
     if ($segmento != 0) {
-      $v_sql .= " AND ls.nr_seq_segmento = $segmento";
+        $v_sql .= " AND ls.nr_seq_segmento = $segmento";
     }
 
     if ($data1 != "") {
@@ -96,11 +99,11 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
     }
 
     if ($dataagenda1 != "") {
-      $v_sql .= " AND ls.dt_agenda >= '$dataagenda1'";
+        $v_sql .= " AND ls.dt_agenda >= '$dataagenda1'";
     }
-  
+
     if ($dataagenda2 != "") {
-      $v_sql .= " AND ls.dt_agenda <= '$dataagenda2'";
+        $v_sql .= " AND ls.dt_agenda <= '$dataagenda2'";
     }
 
     if($_SESSION["ST_ADMIN"] == 'G'){
@@ -116,8 +119,10 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
 
     $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento, ls.nr_telefone, 
             c.ds_municipio, e.sg_estado, st.ds_situacao, ls.ds_email, ls.dt_agenda, a.ds_administradora, ls.ds_grupo,
-            ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado
+            ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado, co.ds_colaborador
             FROM lead ls
+            INNER JOIN usuarios u ON u.nr_sequencial = ls.nr_seq_usercadastro
+            INNER JOIN colaboradores co ON u.nr_seq_colaborador = co.nr_sequencial
             LEFT JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
             LEFT JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
             LEFT JOIN segmentos s ON ls.nr_seq_segmento = s.nr_sequencial
@@ -149,6 +154,13 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
         if($pc_reduzido == "") { $pc_reduzido = 0; }
         $vl_contratado = $lin[15];
         $vl_considerado = $lin[16];
+        $ds_colaborador = $lin[17];
+
+        if($vl_contratado == ""){
+            $valor = $vl_valor;
+        } else {
+            $valor = $vl_contratado;
+        }
 
         if ($corlinha == "FFFFFF") {
             $corlinha = "DDDDDD";
@@ -158,6 +170,8 @@ $ultimaColuna = PHPExcel_Cell::stringFromColumnIndex($coluna);
         
         $linha++;
         $coluna = 0;
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_colaborador);
+        $coluna++;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $ds_nome);
         $coluna++;
         $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($coluna, $linha, $municipio);

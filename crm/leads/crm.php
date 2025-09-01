@@ -24,7 +24,8 @@
         $SQL = "SELECT ls.nr_sequencial, ls.ds_nome, ls.vl_valor, ls.dt_cadastro, s.ds_segmento, ls.nr_telefone, 
                 CONCAT(c.ds_municipio, ' - ', e.sg_estado) AS municipio_estado, st.ds_situacao, 
                 ls.ds_email, ls.dt_agenda, ls.nr_seq_situacao, ls.nr_seq_administradora, ls.ds_grupo,
-                ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado, ls.nr_seq_segmento
+                ls.nr_cota, ls.pc_reduzido, ls.vl_contratado, ls.vl_considerado, ls.nr_seq_segmento, 
+                ls.nr_seq_cidade, ls.nr_contrato
                 FROM lead ls
                 LEFT JOIN cidades c ON c.nr_sequencial = ls.nr_seq_cidade
                 LEFT JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
@@ -57,7 +58,9 @@
             $vl_considerado = $linha[16];
             $valor_considerado = number_format($vl_considerado, 2, ',', '.');
             $nr_seq_segmento = $linha[17];
-            
+            $nr_seq_cidade = $linha[18];
+            $nr_contrato = $linha[19];
+
             // Se não estiver vazio, ajustar o formato
             if (!empty($dt_agenda)) {
                 // Se vier no formato 'DD/MM/YYYY'
@@ -196,8 +199,9 @@
             <div class="col-md-4">
                 <!-- Status -->
                 <div class="panel panel-primary">
-                    <div class="panel-heading panel-heading-custom text-center">
-                        <span class="glyphicon glyphicon-star" style="margin-right: 5px;"></span> STATUS LEAD
+                    <div class="panel-heading panel-heading-custom text-center" style="cursor: pointer;" onclick="togglePanelBody(this)">
+                        <span class="glyphicon glyphicon-star" style="margin-right: 5px;"></span> STATUS
+                        <span class="pull-right glyphicon glyphicon-chevron-down" style="margin-top: 3px;"></span>
                     </div>
                     <div class="panel-body">
                         <label>Status:</label>
@@ -223,13 +227,29 @@
 
                 <!-- Valor do Crédito -->
                 <div class="panel panel-primary">
-                     <div class="panel-heading panel-heading-custom text-center" style="cursor: pointer;" onclick="togglePanelBody(this)">
+                    <div class="panel-heading panel-heading-custom text-center" style="cursor: pointer;" onclick="togglePanelBody(this)">
                         <span class="glyphicon glyphicon-usd" style="margin-right: 5px;"></span> CRÉDITO CONTRATADO
                         <span class="pull-right glyphicon glyphicon-chevron-down" style="margin-top: 3px;"></span>
                     </div>
                     <div class="panel-body" style="display: none;">
                         <p><strong>Valor Solicitado:</strong> <?php echo $valor; ?></p>
                         <p><strong>Tipo do Crédito:</strong> <?php echo $ds_segmento; ?></p>
+
+                        <label for="txtmunicipiocrm">Cidade:</label>
+                        <select name="txtmunicipiocrm" id="txtmunicipiocrm" class="form-control">
+                            <option value="0">Selecione</option>
+                            <?php
+                                $sel = "SELECT c.nr_sequencial, c.ds_municipio, e.sg_estado
+                                        FROM cidades c
+                                        INNER JOIN estados e ON c.nr_seq_estado = e.nr_sequencial
+                                        ORDER BY c.ds_municipio";
+                                $res = mysqli_query($conexao, $sel);
+                                while($lin=mysqli_fetch_row($res)){
+                                    $selecionado = $lin[0] == $nr_seq_cidade ? "selected" : "";
+                                    echo "<option $selecionado value=$lin[0]>$lin[1] - $lin[2]</option>";
+                                }
+                            ?>
+                        </select>
                         
                         <label class="mt-2">Segmento: <font color='red'>*</font></label>
                         <select class="form-control" name="selsegmentocrm" id="selsegmentocrm">
@@ -247,6 +267,9 @@
                                 }
                             ?>
                         </select>
+
+                        <label>Contrato: <font color='red'>*</font></label>
+                        <input type="text" name="txtcontrato" id="txtcontrato" class="form-control" value="<?php echo $nr_contrato; ?>">
 
                         <label>Grupo: <font color='red'>*</font></label>
                         <input type="text" name="txtgrupo" id="txtgrupo" class="form-control" value="<?php echo $ds_grupo; ?>">
@@ -289,8 +312,9 @@
 
                 <!-- Cliente -->
                 <div class="panel panel-primary">
-                    <div class="panel-heading panel-heading-custom text-center">
+                    <div class="panel-heading panel-heading-custom text-center" style="cursor: pointer;" onclick="togglePanelBody(this)">
                         <span class="glyphicon glyphicon-user" style="margin-right: 5px;"></span> CLIENTE
+                        <span class="pull-right glyphicon glyphicon-chevron-down" style="margin-top: 3px;"></span>
                     </div>
                     <div class="panel-body">
                         <p><strong>Nome:</strong> <?php echo $ds_nome; ?></p>
@@ -326,8 +350,9 @@
 
                 <!-- Histórico de Comentários -->
                 <div class="panel panel-primary">
-                    <div class="panel-heading panel-heading-custom">
+                    <div class="panel-heading panel-heading-custom text-center" style="cursor: pointer;" onclick="togglePanelBody(this)">
                         <span class="glyphicon glyphicon-time" style="margin-right: 5px;"></span> HISTÓRICO
+                        <span class="pull-right glyphicon glyphicon-chevron-down" style="margin-top: 3px;"></span>
                     </div>
                     <div class="panel-body" id="divcomentarios">
                         <?php
@@ -337,38 +362,33 @@
                             while ($linha0 = mysqli_fetch_row($RS0)) {
                                 $comentarios = $linha0[0];
                             }
+                            $SQL1 = "SELECT DISTINCT(DATE(dt_cadastro)) FROM anexos_lead WHERE nr_seq_lead = $lead ORDER BY DATE(dt_cadastro) DESC";
+                            $RS1 = mysqli_query($conexao, $SQL1);
 
-                            if ($comentarios == 0) {
-                                echo '<div class="alert alert-info text-center">SEM OBSERVAÇÕES</div>';
-                            } else {
-                                $SQL1 = "SELECT DISTINCT(DATE(dt_cadastro)) FROM anexos_lead WHERE nr_seq_lead = $lead ORDER BY DATE(dt_cadastro) DESC";
-                                $RS1 = mysqli_query($conexao, $SQL1);
+                            while ($linha1 = mysqli_fetch_row($RS1)) {
+                                $dt_cadastro = $linha1[0];
+                                echo '<div>';
+                                echo '<div class="section-title"><span class="glyphicon glyphicon-calendar"></span> ' . date('d/m/Y', strtotime($dt_cadastro)) . '</div>';
 
-                                while ($linha1 = mysqli_fetch_row($RS1)) {
-                                    $dt_cadastro = $linha1[0];
-                                    echo '<div>';
-                                    echo '<div class="section-title"><span class="glyphicon glyphicon-calendar"></span> ' . date('d/m/Y', strtotime($dt_cadastro)) . '</div>';
+                                $SQL = "SELECT nr_sequencial, UPPER(ds_comentario), ds_arquivo FROM anexos_lead WHERE nr_seq_lead = $lead AND DATE(dt_cadastro) = DATE('$dt_cadastro') ORDER BY nr_sequencial DESC";
+                                $RS = mysqli_query($conexao, $SQL);
 
-                                    $SQL = "SELECT nr_sequencial, UPPER(ds_comentario), ds_arquivo FROM anexos_lead WHERE nr_seq_lead = $lead AND DATE(dt_cadastro) = DATE('$dt_cadastro') ORDER BY nr_sequencial DESC";
-                                    $RS = mysqli_query($conexao, $SQL);
+                                while ($linha = mysqli_fetch_row($RS)) {
+                                    $nr_sequencial = $linha[0];
+                                    $ds_comentario = $linha[1];
+                                    $ds_arquivo = $linha[2];
 
-                                    while ($linha = mysqli_fetch_row($RS)) {
-                                        $nr_sequencial = $linha[0];
-                                        $ds_comentario = $linha[1];
-                                        $ds_arquivo = $linha[2];
-
-                                        if ($ds_comentario != "") {
-                                            echo '<div class="panel panel-default panel-comment">';
-                                            echo '<div class="panel-body"><textarea class="form-control" rows="3" disabled>' . $ds_comentario . '</textarea></div></div>';
-                                        }
-
-                                        if ($ds_arquivo != "") {
-                                            echo '<a class="btn btn-default btn-sm" href="crm/leads/arquivos/' . $ds_arquivo . '" target="_blank">';
-                                            echo '<span class="glyphicon glyphicon-file"></span> ' . $ds_arquivo . '</a><br>';
-                                        }
+                                    if ($ds_comentario != "") {
+                                        echo '<div class="panel panel-default panel-comment">';
+                                        echo '<div class="panel-body"><textarea class="form-control" rows="3" disabled>' . $ds_comentario . '</textarea></div></div>';
                                     }
-                                    echo '</div>';
+
+                                    if ($ds_arquivo != "") {
+                                        echo '<a class="btn btn-default btn-sm" href="crm/leads/arquivos/' . $ds_arquivo . '" target="_blank">';
+                                        echo '<span class="glyphicon glyphicon-file"></span> ' . $ds_arquivo . '</a><br>';
+                                    }
                                 }
+                                echo '</div>';
                             }
                         ?>
                     </div>
@@ -380,6 +400,10 @@
 
             let statusAnterior = document.getElementById("selstatus").value;
 
+            $(document).ready(function() {
+                $('#txtmunicipiocrm').select2();
+            });
+
             function AlteraStatus(selectElement) {
                 const status = selectElement.value;
                 const codigo = document.getElementById("nr_seq_lead").value;
@@ -389,16 +413,19 @@
                 const percentual = document.getElementById("txtpercentual").value.trim();
                 const administratadora = document.getElementById("seladministradora").value;
                 const valorfinal = document.getElementById("txtvalorfinal").value.trim();
-                const segmento = document.getElementById("selsegmentocrm").value.trim();
-
-                // Validação única para status 1 (CONTRATADA)
+                const segmento = document.getElementById("selsegmentocrm").value;
+                const cidade = document.getElementById("txtmunicipiocrm").value;
+                const contrato = document.getElementById("txtcontrato").value.trim();
+                
                 if (status == 1) {
                     const camposInvalidos = (
                         grupo == "" ||
                         cota == "" ||
+                        contrato == "" ||
                         valorcontratado == "" ||
                         administratadora == 0 ||
-                        segmento == 0
+                        segmento == 0 ||
+                        cidade == 0
                     );
 
                     if (camposInvalidos) {
@@ -470,13 +497,15 @@
 
             function Contratar() {
                 var codigo = document.getElementById("nr_seq_lead").value;
-                var grupo = document.getElementById("txtgrupo").value;
-                var cota = document.getElementById("txtcota").value;
+                var grupo = document.getElementById("txtgrupo").value.trim();
+                var cota = document.getElementById("txtcota").value.trim();
                 var valorcontratado = document.getElementById("txtvalorcontratado").value;
                 var percentual = document.getElementById("txtpercentual").value;
                 var administratadora = document.getElementById("seladministradora").value;
                 var valorfinal = document.getElementById("txtvalorfinal").value;
                 var segmento = document.getElementById("selsegmentocrm").value;
+                var cidade = document.getElementById("txtmunicipiocrm").value;
+                var contrato = document.getElementById("txtcontrato").value.trim();
 
                 if (valorcontratado != '') {
                     valorcontratado = valorcontratado.replace(/\./g, '');     // remove todos os pontos
@@ -501,6 +530,15 @@
                     document.getElementById('selsegmentocrm').focus();
                     return;
                 } 
+                else if (cidade == 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe a cidade do cliente!'
+                    });
+                    document.getElementById('txtmunicipiocrm').focus();
+                    return;
+                } 
                 else if (grupo == "") {
                     Swal.fire({
                         icon: 'warning',
@@ -517,6 +555,15 @@
                         text: 'Informe a Cota!'
                     });
                     document.getElementById('txtcota').focus();
+                    return;
+                } 
+                else if (contrato == "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Informe o numero do contrato!'
+                    });
+                    document.getElementById('txtcontrato').focus();
                     return;
                 } 
                 else if (valorcontratado == "") {
@@ -539,7 +586,7 @@
                 } 
                 else{
 
-                    window.open('crm/leads/acao.php?Tipo=CONTRATAR&codigo=' + codigo + '&grupo=' + grupo + '&cota=' + cota + '&valorcontratado=' + valorcontratado + '&percentual=' + percentual + '&administratadora=' + administratadora + '&valorfinal=' + valorfinal + '&segmento=' + segmento, "acao");
+                    window.open('crm/leads/acao.php?Tipo=CONTRATAR&codigo=' + codigo + '&grupo=' + grupo + '&cota=' + cota + '&valorcontratado=' + valorcontratado + '&percentual=' + percentual + '&administratadora=' + administratadora + '&valorfinal=' + valorfinal + '&segmento=' + segmento + '&contrato=' + contrato + '&cidade=' + cidade, "acao");
 
                 }
             }
@@ -631,7 +678,6 @@
 
             }
 
-
             function removerArquivo(arquivo, nr_sequencial, codigo){
                 if(!confirm('Deseja realmente excluir o arquivo?')){
                     return false;
@@ -696,5 +742,4 @@
 
         </script>
 
-   
 <?php } ?>
